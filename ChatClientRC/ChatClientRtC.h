@@ -1,6 +1,6 @@
 #pragma once
 
-#include <chatClientAPI\IChatClient.h>
+#include <IChatClient.h>
 #include <memory>
 
 namespace ChatClientRC

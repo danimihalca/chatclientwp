@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ChatClientRtC.h"
 #include "utils.h"
-#include <chatClientAPI\ChatClient.h>
+#include <ChatClient.h>
 
 using namespace ChatClientRC;
 using namespace Platform;
