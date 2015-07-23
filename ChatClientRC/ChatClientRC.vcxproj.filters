@@ -10,10 +10,12 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="ChatClientRtC.cpp" />
     <ClCompile Include="utils.cpp" />
+    <ClCompile Include="ProxyChatClientListener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="ChatClientRtC.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="ProxyChatClientListener.h" />
   </ItemGroup>
 </Project>

@@ -9,8 +9,20 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Button x:Name="connectButton" Content="Connect" Height="100" Width="100" Margin="10,61,0,479" Click="connectButton_Click"/>
-        <Button x:Name="sendButton"  Content="Send" HorizontalAlignment="Left" Margin="280,309,0,0" Click="sendButton_Click" VerticalAlignment="Top"/>
+        <Button x:Name="connectButton" Content="Connect" Height="58" Width="139" Margin="250,1,0,581" Click="connectButton_Click"/>
+        <Button x:Name="sendButton"  Content="Send" HorizontalAlignment="Left" Margin="281,582,0,0" Click="sendButton_Click" VerticalAlignment="Top"/>
+        <Button x:Name="disconnectButton" Content="Disconnect" HorizontalAlignment="Left" Margin="250,45,0,0" VerticalAlignment="Top" Click="disconnectButton_Click" Width="139"/>
+        <TextBox x:Name="addressTextBox" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="192.168.0.3" VerticalAlignment="Top" Width="235"/>
+        <TextBox x:Name="portTextBox" HorizontalAlignment="Left" Margin="10,54,0,0" TextWrapping="Wrap" Text="9003" VerticalAlignment="Top" Height="37" Width="235"/>
+        <Popup x:Name="StandardPopup" Height="53" Width="300" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="50,0,50,53">
+            <Border BorderBrush="{StaticResource ApplicationForegroundThemeBrush}" 
+                Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
+                BorderThickness="2" Width="302" Height="50">
+                <TextBlock x:Name="popupText" Text="Simple Popup" FontSize="24.667" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,8.333,23,8.333" Width="267" TextAlignment="Center" />
+            </Border>
+        </Popup>
+        <TextBox x:Name="messageTextBox" HorizontalAlignment="Left" Margin="10,592,0,0" TextWrapping="Wrap" Text="Hello from WP" VerticalAlignment="Top" Width="266"/>
+        <TextBox x:Name="messagesTextBox" HorizontalAlignment="Left" Margin="10,96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Height="491" Width="379"/>
 
     </Grid>
 </Page>

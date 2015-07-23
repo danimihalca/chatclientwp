@@ -14,23 +14,77 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
 
-using ChatClientRC;
+
+using Windows.UI.Notifications;
+using Windows.Data.Xml.Dom;
+
+using Windows.UI.Core;
 
 namespace ChatClientWP
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, IChatClientListener
     {
-        private ChatClientRtC chatClientRtc;
+        Popup popup;
+        private ChatClient chatClient;
+        //ToastNotification toast;
+        //ToastNotifier toastNotifier;
         public MainPage()
         {
             this.InitializeComponent();
 
-            chatClientRtc = new ChatClientRtC();
-            chatClientRtc.initialize();
-            chatClientRtc.startService();
+            //ChatClientRC.AbstractRTChatClientListener asd = new AbstractRTChatClientListener();
+            connectButton.IsEnabled = true;
+            disconnectButton.IsEnabled = false;
+
+            chatClient = new ChatClient();
+            chatClient.addListener(this);
+ 
+
+        }
+
+        private Popup CreatePopup()
+        {
+            // text
+            TextBlock tb = new TextBlock();
+            //tb.Foreground = (Brush)this.Resources["PhoneForegroundBrush"];
+            //tb.FontSize = (double)this.Resources["PhoneFontSizeMedium"];
+            //tb.Margin = new Thickness(24, 32, 24, 12);
+            tb.Text = "Custom toast message";
+
+            // grid wrapper
+            Grid grid = new Grid();
+            //grid.Background = (Brush)this.Resources["PhoneAccentBrush"];
+            grid.Children.Add(tb);
+            grid.Width = this.ActualWidth;
+
+            // popup
+            Popup popup = new Popup();
+            popup.Child = grid;
+
+            return popup;
+        }
+
+        // hides popup
+        private void HidePopup()
+        {
+            //SystemTray.BackgroundColor = (Color)this.Resources["PhoneBackgroundColor"];
+            this.popup.IsOpen = false;
+        }
+
+        // shows popup
+        private void ShowPopup()
+        {
+            //SystemTray.BackgroundColor = (Color)this.Resources["PhoneAccentColor"];
+
+            if (this.popup == null)
+            {
+                this.popup = this.CreatePopup();
+            }
+
+            this.popup.IsOpen = true;
         }
 
         /// <summary>
@@ -51,14 +105,67 @@ namespace ChatClientWP
 
         private void sendButton_Click(object sender, RoutedEventArgs e)
         {
-            string dummy = "dummy";
-            chatClientRtc.sendMessage(dummy);
+            String message = messageTextBox.Text;
+
+            chatClient.sendMessage(message);
         }
 
         private void connectButton_Click(object sender, RoutedEventArgs e)
         {
-            //string dummy = "dummy";
-            chatClientRtc.connect("192.168.0.3",1234);
+            string address = addressTextBox.Text;
+            UInt16 port = Convert.ToUInt16(portTextBox.Text);
+            chatClient.connect(address, port);
+            connectButton.IsEnabled = false;
+            disconnectButton.IsEnabled = true;
+
+            //StandardPopup.IsOpen = true;
+            //toastNotifier.Show(toast);
         }
+
+        private void disconnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            chatClient.disconnect();
+            connectButton.IsEnabled = true;
+            disconnectButton.IsEnabled = false;
+
+        }
+
+        public void onConnected()
+        {
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                messagesTextBox.Text += "Connected\n";
+            });
+        }
+        public void onDisconnected()
+        {
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {            
+                messagesTextBox.Text += "Disonnected\n";
+            });
+        }
+        public void onMessage(string message)
+        {
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {      
+                messagesTextBox.Text += message + "\n";
+            });
+        }
+
+        private void ClosePopupClicked(object sender, RoutedEventArgs e)
+        {
+            // if the Popup is open, then close it 
+            if (StandardPopup.IsOpen) { StandardPopup.IsOpen = false; }
+        }
+
+        // Handles the Click event on the Button on the page and opens the Popup. 
+        private void ShowPopupOffsetClicked(object sender, RoutedEventArgs e)
+        {
+            // open the Popup if it isn't open already 
+            if (!StandardPopup.IsOpen) { StandardPopup.IsOpen = true; }
+        } 
     }
 }

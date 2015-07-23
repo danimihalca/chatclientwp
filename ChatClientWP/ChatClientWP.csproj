@@ -90,6 +90,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChatClient.cs" />
+    <Compile Include="IChatClientListener.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -110,9 +112,7 @@
     <Content Include="D:\thesis\dist\lib\Debug\WindowsPhone\chatClientAPI.dll">
       <Link>chatClientAPI.dll</Link>
     </Content>
-    <Content Include="D:\thesis\dist\lib\Debug\WindowsPhone\libwebsockets.dll">
-      <Link>libwebsockets.dll</Link>
-    </Content>
+    <Content Include="websockets_shared.dll" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

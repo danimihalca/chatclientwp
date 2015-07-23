@@ -1,21 +1,24 @@
 #pragma once
 
-#include <IChatClient.h>
+#include <ChatClient/IChatClient.h>
 #include <memory>
 
 namespace ChatClientRC
 {
+	public delegate void onConnectedCallback();
+	public delegate void onDisconnectedCallback();
+	public delegate void onMessageCallback(Platform::String^ message);
+
 	public ref class ChatClientRtC sealed
 	{
+
 	public:
 		ChatClientRtC();
-		void initialize();
 		void connect(Platform::String^ address, uint16 port);
-		void startService();
 		void sendMessage(Platform::String^ message);
-		void closeConnection();
+		void disconnect();
 
-	private:
+		void setNotificationCallbacks(onConnectedCallback^ c, onDisconnectedCallback^ d, onMessageCallback^ m);
 
 	private:
 		std::unique_ptr<IChatClient> m_chatClient;
