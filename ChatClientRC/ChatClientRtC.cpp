@@ -14,7 +14,9 @@ m_chatClient(new ChatClient())
 
 void ChatClientRtC::connect(Platform::String^ address, uint16 port)
 {
-	m_chatClient->connect(ToStdString(address),port);
+	m_chatClient->setServerProperties(ToStdString(address), port);
+	m_chatClient->login("user3", "pwd3");
+
 }
 
 

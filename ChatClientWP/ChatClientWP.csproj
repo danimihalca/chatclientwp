@@ -103,6 +103,12 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\..\dist\lib\Debug\WindowsPhone\jsoncpp.dll">
+      <Link>jsoncpp.dll</Link>
+    </Content>
+    <Content Include="..\..\..\dist\lib\Debug\WindowsPhone\websockets_shared.dll">
+      <Link>websockets_shared.dll</Link>
+    </Content>
     <Content Include="Assets\Logo.scale-240.png" />
     <Content Include="Assets\SmallLogo.scale-240.png" />
     <Content Include="Assets\SplashScreen.scale-240.png" />
@@ -112,7 +118,6 @@
     <Content Include="D:\thesis\dist\lib\Debug\WindowsPhone\chatClientAPI.dll">
       <Link>chatClientAPI.dll</Link>
     </Content>
-    <Content Include="websockets_shared.dll" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

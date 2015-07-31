@@ -35,3 +35,18 @@ void ProxyChatClientListener::onMessageReceived(const std::string& message)
 ProxyChatClientListener::~ProxyChatClientListener()
 {
 }
+
+
+void ProxyChatClientListener::onLoginFailed(const std::string& message)
+{
+	if (_m != nullptr)
+		_m(ToPlatformString("FAILED"));
+}
+void ProxyChatClientListener::onConnectionError(){
+	if (_m != nullptr)
+		_m(ToPlatformString("ERROR"));
+}
+void ProxyChatClientListener::onLoginSuccessfull(){
+	if (_m != nullptr)
+		_m(ToPlatformString("SUCCESS"));
+}

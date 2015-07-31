@@ -19,6 +19,7 @@ using Windows.UI.Notifications;
 using Windows.Data.Xml.Dom;
 
 using Windows.UI.Core;
+using Windows.ApplicationModel.Core;
 
 namespace ChatClientWP
 {
@@ -130,25 +131,26 @@ namespace ChatClientWP
 
         }
 
-        public void onConnected()
+         public async  void  onConnected()
         {
-            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
                 messagesTextBox.Text += "Connected\n";
             });
+
         }
-        public void onDisconnected()
+         public async void onDisconnected()
         {
-            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
-            {            
+            {
                 messagesTextBox.Text += "Disonnected\n";
             });
         }
-        public void onMessage(string message)
+        public async void onMessage(string message)
         {
-            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {      
                 messagesTextBox.Text += message + "\n";

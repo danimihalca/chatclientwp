@@ -20,7 +20,9 @@ namespace ChatClientRC
 		void onConnected();
 		void onDisconnected();
 		void onMessageReceived(const std::string& message);
-
+		void onLoginFailed(const std::string& message);
+		void onConnectionError();
+		void onLoginSuccessfull();
 	private:
 		onConnectedCallback^ _c;
 		onDisconnectedCallback^ _d;
