@@ -12,13 +12,13 @@ namespace ChatClientWP
 {
     public class RCChatClientController : IChatClientController
     {
-        private ChatClientRtC chatClientRtc;
+        private NativeChatClientRC m_nativeChatClient;
         private IList<IChatClientListener> listeners;
 
         public RCChatClientController()
         {
-            chatClientRtc = new ChatClientRtC();
-            chatClientRtc.setNotificationCallbacks(notifyOnConnected, notifyOnDisconnected, notifyOnMessage);
+            m_nativeChatClient = new NativeChatClientRC();
+            m_nativeChatClient.setNotificationCallbacks(notifyOnConnected, notifyOnDisconnected, notifyOnMessage);
             listeners = new List<IChatClientListener>();
         }
 
@@ -29,22 +29,22 @@ namespace ChatClientWP
 
         public void SetServerProperties(string address, int port)
         {
-            chatClientRtc.setServerProperties(address, port);
+            m_nativeChatClient.setServerProperties(address, port);
         }
     
         public void Login(string username, string password)
         {
-            chatClientRtc.login(username, password);
+            m_nativeChatClient.login(username, password);
         }
         
         public void Disconnect()
         {
-            chatClientRtc.disconnect();
+            m_nativeChatClient.disconnect();
         }
 
         public void SendMessage(int userId, string message)
         {
-            chatClientRtc.sendMessage(userId,message);
+            m_nativeChatClient.sendMessage(userId, message);
         }
 
         private void notifyOnConnected()

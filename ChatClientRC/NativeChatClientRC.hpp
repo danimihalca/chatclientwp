@@ -9,11 +9,11 @@ namespace ChatClientRC
 	public delegate void onDisconnectedCallback();
 	public delegate void onMessageCallback(Platform::String^ message);
 
-	public ref class ChatClientRtC sealed
+	public ref class NativeChatClientRC sealed
 	{
 
 	public:
-		ChatClientRtC();
+		NativeChatClientRC();
 		void setServerProperties(Platform::String^ address, int port);
 		void login(Platform::String^ userName, Platform::String^ password);
 		void sendMessage(int receiverId, Platform::String^ message);

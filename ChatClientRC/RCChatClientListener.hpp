@@ -2,20 +2,16 @@
 
 #include <ChatClient\IChatClientListener.hpp>
 
-//#include <AbstractRTChatClientListener.h>
-
-//ref class AbstractRTChatClientListener;
-
-#include "ChatClientRtC.h"
+#include "NativeChatClientRC.hpp"
 
 namespace ChatClientRC
 {
 
-	class ProxyChatClientListener:public IChatClientListener
+	class RCChatClientListener :public IChatClientListener
 	{
 	public:
-		ProxyChatClientListener(onConnectedCallback^ c, onDisconnectedCallback^ d, onMessageCallback^ m);
-		~ProxyChatClientListener();
+		RCChatClientListener(onConnectedCallback^ c, onDisconnectedCallback^ d, onMessageCallback^ m);
+		~RCChatClientListener();
 
 		void onConnected();
 		void onDisconnected();

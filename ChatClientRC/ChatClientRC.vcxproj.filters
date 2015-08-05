@@ -8,14 +8,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="ChatClientRtC.cpp" />
     <ClCompile Include="utils.cpp" />
-    <ClCompile Include="ProxyChatClientListener.cpp" />
+    <ClCompile Include="NativeChatClientRC.cpp" />
+    <ClCompile Include="RCChatClientListener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="ChatClientRtC.h" />
     <ClInclude Include="utils.h" />
-    <ClInclude Include="ProxyChatClientListener.h" />
+    <ClInclude Include="RCChatClientListener.hpp" />
+    <ClInclude Include="NativeChatClientRC.hpp" />
   </ItemGroup>
 </Project>
