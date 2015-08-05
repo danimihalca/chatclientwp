@@ -18,8 +18,14 @@ namespace ChatClientWP
         public RCChatClientController()
         {
             m_nativeChatClient = new NativeChatClientRC();
-            m_nativeChatClient.setNotificationCallbacks(notifyOnConnected, notifyOnDisconnected, notifyOnMessage);
             listeners = new List<IChatClientListener>();
+
+            RCChatClientNotifier notifier = new RCChatClientNotifier();
+            notifier.OnConnected = notifyOnConnected;
+            notifier.OnDisconnected = notifyOnDisconnected;
+            notifier.OnMessage = notifyOnMessage;
+            m_nativeChatClient.setNotifier(notifier);
+
         }
 
         public void AddListener(IChatClientListener listener)
@@ -63,12 +69,22 @@ namespace ChatClientWP
             }
         }
 
-        private void notifyOnMessage(string message)
+        private void notifyOnMessage(int senderId, string message)
         {
             foreach (var listener in listeners)
             {
                 listener.OnMessage(message);
             }
+        }
+
+        private void notifyOnLoginSuccessful()
+        {
+
+        }
+
+        private void notifyOnLoginFailed(string message)
+        {
+
         }
     }
 }

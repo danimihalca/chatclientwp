@@ -2,6 +2,7 @@
 using ChatClientWP.controller;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -123,8 +124,8 @@ namespace ChatClientWP.page
             m_controller.Login(userName, password);
         }
 
-        public void OnConnected() { }
-        public void OnDisconnected() { }
-        public void OnMessage(string message) { }
+        public void OnConnected() { Debug.WriteLine("C"); }
+        public void OnDisconnected() { Debug.WriteLine("D"); }
+        public void OnMessage(string message) { Debug.WriteLine(message); }
     }
 }

@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "NativeChatClientRC.hpp"
 #include "utils.h"
 #include <ChatClient/ChatClient.hpp>
@@ -33,8 +32,8 @@ void NativeChatClientRC::disconnect()
 }
 
 
-void NativeChatClientRC::setNotificationCallbacks(onConnectedCallback^ c, onDisconnectedCallback^ d, onMessageCallback^ m)
+void NativeChatClientRC::setNotifier(RCChatClientNotifier^ notifier)
 {
-	std::shared_ptr<IChatClientListener> listener(new RCChatClientListener(c, d, m));
+	std::shared_ptr<IChatClientListener> listener(new RCChatClientListener(notifier));
 	m_chatClient->addListener(listener);
 }

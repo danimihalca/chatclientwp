@@ -7,15 +7,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp" />
-    <ClCompile Include="utils.cpp" />
-    <ClCompile Include="NativeChatClientRC.cpp" />
-    <ClCompile Include="RCChatClientListener.cpp" />
+    <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\NativeChatClientRC.cpp" />
+    <ClCompile Include="src\RCChatClientListener.cpp" />
+    <ClCompile Include="src\RCChatClientNotifier.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="utils.h" />
-    <ClInclude Include="RCChatClientListener.hpp" />
-    <ClInclude Include="NativeChatClientRC.hpp" />
+    <ClInclude Include="inc\NativeChatClientRC.hpp" />
+    <ClInclude Include="inc\RCChatClientListener.hpp" />
+    <ClInclude Include="inc\RCChatClientNotifier.hpp" />
+    <ClInclude Include="inc\utils.h" />
   </ItemGroup>
 </Project>

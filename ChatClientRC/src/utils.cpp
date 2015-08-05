@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "utils.h"
 
 std::string ToStdString(Platform::String^ s)

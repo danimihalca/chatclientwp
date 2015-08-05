@@ -3,11 +3,11 @@
 #include <ChatClient/IChatClient.hpp>
 #include <memory>
 
+#include "RCChatClientNotifier.hpp"
+
 namespace ChatClientRC
 {
-	public delegate void onConnectedCallback();
-	public delegate void onDisconnectedCallback();
-	public delegate void onMessageCallback(Platform::String^ message);
+
 
 	public ref class NativeChatClientRC sealed
 	{
@@ -19,7 +19,7 @@ namespace ChatClientRC
 		void sendMessage(int receiverId, Platform::String^ message);
 		void disconnect();
 
-		void setNotificationCallbacks(onConnectedCallback^ c, onDisconnectedCallback^ d, onMessageCallback^ m);
+		void setNotifier(RCChatClientNotifier^ notifier);
 
 	private:
 		std::unique_ptr<IChatClient> m_chatClient;
