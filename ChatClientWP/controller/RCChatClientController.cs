@@ -5,47 +5,53 @@ using System.Text;
 using System.Threading.Tasks;
 
 using ChatClientRC;
+using ChatClientWP.controller;
 
 
 namespace ChatClientWP
 {
-    public class ChatClient
+    public class RCChatClientController : IChatClientController
     {
         private ChatClientRtC chatClientRtc;
         private IList<IChatClientListener> listeners;
 
-        public ChatClient()
+        public RCChatClientController()
         {
             chatClientRtc = new ChatClientRtC();
             chatClientRtc.setNotificationCallbacks(notifyOnConnected, notifyOnDisconnected, notifyOnMessage);
             listeners = new List<IChatClientListener>();
         }
 
-        public void addListener(IChatClientListener listener)
+        public void AddListener(IChatClientListener listener)
         {
             listeners.Add(listener);
         }
 
-        public void connect(string address, UInt16 port)
+        public void SetServerProperties(string address, int port)
         {
-            chatClientRtc.connect(address, port);
+            chatClientRtc.setServerProperties(address, port);
         }
-
-        public void disconnect()
+    
+        public void Login(string username, string password)
+        {
+            chatClientRtc.login(username, password);
+        }
+        
+        public void Disconnect()
         {
             chatClientRtc.disconnect();
         }
 
-        public void sendMessage(string message)
+        public void SendMessage(int userId, string message)
         {
-            chatClientRtc.sendMessage(message);
+            chatClientRtc.sendMessage(userId,message);
         }
 
         private void notifyOnConnected()
         {
             foreach(var listener in listeners)
             {
-                listener.onConnected();
+                listener.OnConnected();
             }
         }
 
@@ -53,7 +59,7 @@ namespace ChatClientWP
         {
             foreach (var listener in listeners)
             {
-                listener.onDisconnected();
+                listener.OnDisconnected();
             }
         }
 
@@ -61,7 +67,7 @@ namespace ChatClientWP
         {
             foreach (var listener in listeners)
             {
-                listener.onMessage(message);
+                listener.OnMessage(message);
             }
         }
     }

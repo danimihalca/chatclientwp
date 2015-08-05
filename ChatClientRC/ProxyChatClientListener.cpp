@@ -24,7 +24,7 @@ void ProxyChatClientListener::onDisconnected()
 		_d();
 }
 
-void ProxyChatClientListener::onMessageReceived(const std::string& message)
+void ProxyChatClientListener::onMessageReceived(int senderId, const std::string& message)
 {
 	//m_actualListener.onMessageReceived(message);
 	//m_actualListener->onMessageReceived(ToPlatformString(message));
@@ -46,7 +46,17 @@ void ProxyChatClientListener::onConnectionError(){
 	if (_m != nullptr)
 		_m(ToPlatformString("ERROR"));
 }
-void ProxyChatClientListener::onLoginSuccessfull(){
+void ProxyChatClientListener::onLoginSuccessful(){
 	if (_m != nullptr)
 		_m(ToPlatformString("SUCCESS"));
+}
+
+void ProxyChatClientListener::onContactsReceived(const Contacts& contacts)
+{
+
+}
+
+void ProxyChatClientListener::onContactOnlineStatusChanged(int contactId, bool isOnline)
+{
+
 }

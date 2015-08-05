@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ChatClientRtC.h"
 #include "utils.h"
-#include <ChatClient/ChatClient.h>
+#include <ChatClient/ChatClient.hpp>
 #include "ProxyChatClientListener.h"
 
 using namespace ChatClientRC;
@@ -12,17 +12,19 @@ m_chatClient(new ChatClient())
 {
 }
 
-void ChatClientRtC::connect(Platform::String^ address, uint16 port)
+void ChatClientRtC::setServerProperties(Platform::String^ address, int port)
 {
 	m_chatClient->setServerProperties(ToStdString(address), port);
-	m_chatClient->login("user3", "pwd3");
 
 }
-
-
-void ChatClientRtC::sendMessage(Platform::String^ message)
+void ChatClientRtC::login(Platform::String^ userName, Platform::String^ password)
 {
-	m_chatClient->sendMessage(ToStdString(message));
+	m_chatClient->login(ToStdString(userName), ToStdString(password));
+}
+
+void ChatClientRtC::sendMessage(int receiverId, Platform::String^ message)
+{
+	m_chatClient->sendMessage(receiverId, ToStdString(message));
 }
 
 void ChatClientRtC::disconnect()
@@ -34,5 +36,5 @@ void ChatClientRtC::disconnect()
 void ChatClientRtC::setNotificationCallbacks(onConnectedCallback^ c, onDisconnectedCallback^ d, onMessageCallback^ m)
 {
 	std::shared_ptr<IChatClientListener> listener(new ProxyChatClientListener(c, d, m));
-	m_chatClient->addChatClientListener(listener);
+	m_chatClient->addListener(listener);
 }

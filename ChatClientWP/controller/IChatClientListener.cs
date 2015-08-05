@@ -8,8 +8,8 @@ namespace ChatClientWP
 {
     public interface IChatClientListener
     {
-        void onConnected();
-        void onDisconnected();
-        void onMessage(string message);
+        void OnConnected();
+        void OnDisconnected();
+        void OnMessage(string message);
     }
 }

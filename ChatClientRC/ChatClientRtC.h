@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ChatClient/IChatClient.h>
+#include <ChatClient/IChatClient.hpp>
 #include <memory>
 
 namespace ChatClientRC
@@ -14,8 +14,9 @@ namespace ChatClientRC
 
 	public:
 		ChatClientRtC();
-		void connect(Platform::String^ address, uint16 port);
-		void sendMessage(Platform::String^ message);
+		void setServerProperties(Platform::String^ address, int port);
+		void login(Platform::String^ userName, Platform::String^ password);
+		void sendMessage(int receiverId, Platform::String^ message);
 		void disconnect();
 
 		void setNotificationCallbacks(onConnectedCallback^ c, onDisconnectedCallback^ d, onMessageCallback^ m);

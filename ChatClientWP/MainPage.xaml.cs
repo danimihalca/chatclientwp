@@ -26,10 +26,10 @@ namespace ChatClientWP
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page, IChatClientListener
+    public sealed partial class MainPage : Page//, IChatClientListener
     {
         Popup popup;
-        private ChatClient chatClient;
+        private RCChatClientController chatClient;
         //ToastNotification toast;
         //ToastNotifier toastNotifier;
         public MainPage()
@@ -40,8 +40,8 @@ namespace ChatClientWP
             connectButton.IsEnabled = true;
             disconnectButton.IsEnabled = false;
 
-            chatClient = new ChatClient();
-            chatClient.addListener(this);
+            chatClient = new RCChatClientController();
+            //chatClient.addListener(this);
  
 
         }
@@ -108,14 +108,14 @@ namespace ChatClientWP
         {
             String message = messageTextBox.Text;
 
-            chatClient.sendMessage(message);
+            //chatClient.sendMessage(message);
         }
 
         private void connectButton_Click(object sender, RoutedEventArgs e)
         {
             string address = addressTextBox.Text;
             UInt16 port = Convert.ToUInt16(portTextBox.Text);
-            chatClient.connect(address, port);
+            //chatClient.connect(address, port);
             connectButton.IsEnabled = false;
             disconnectButton.IsEnabled = true;
 
@@ -125,7 +125,7 @@ namespace ChatClientWP
 
         private void disconnectButton_Click(object sender, RoutedEventArgs e)
         {
-            chatClient.disconnect();
+            //chatClient.disconnect();
             connectButton.IsEnabled = true;
             disconnectButton.IsEnabled = false;
 
