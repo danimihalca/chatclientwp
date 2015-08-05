@@ -23,10 +23,17 @@ namespace ChatClientWP
             RCChatClientNotifier notifier = new RCChatClientNotifier();
             notifier.OnConnected = notifyOnConnected;
             notifier.OnDisconnected = notifyOnDisconnected;
-            notifier.OnMessage = notifyOnMessage;
+            notifier.OnMessageReceived = notifyOnMessageReceived;
+            notifier.OnConnectionError = notifyOnConnectionError;
+            notifier.OnContactOnlineStatusChanged = notifyOnContactOnlineStatusChanged;
+            notifier.OnLoginSuccessful = notifyOnLoginSuccessful;
+            notifier.OnLoginFailed = notifyOnLoginFailed;
+
             m_nativeChatClient.setNotifier(notifier);
 
         }
+
+
 
         public void AddListener(IChatClientListener listener)
         {
@@ -69,22 +76,44 @@ namespace ChatClientWP
             }
         }
 
-        private void notifyOnMessage(int senderId, string message)
+        private void notifyOnMessageReceived(int senderId, string message)
         {
             foreach (var listener in listeners)
             {
-                listener.OnMessage(message);
+                listener.OnMessageReceived(senderId, message);
             }
         }
 
         private void notifyOnLoginSuccessful()
         {
-
+            foreach (var listener in listeners)
+            {
+                listener.OnLoginSuccessful();
+            }
         }
 
         private void notifyOnLoginFailed(string message)
         {
+            foreach (var listener in listeners)
+            {
+                listener.OnLoginFailed(message);
+            }
+        }
 
+        private void notifyOnContactOnlineStatusChanged(int contactId, bool isOnline)
+        {
+            foreach (var listener in listeners)
+            {
+                listener.OnContactOnlineStatusChanged(contactId, isOnline);
+            }
+        }
+
+        private void notifyOnConnectionError()
+        {
+            foreach (var listener in listeners)
+            {
+                listener.OnConnectionError();
+            }
         }
     }
 }

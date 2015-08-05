@@ -124,8 +124,39 @@ namespace ChatClientWP.page
             m_controller.Login(userName, password);
         }
 
-        public void OnConnected() { Debug.WriteLine("C"); }
-        public void OnDisconnected() { Debug.WriteLine("D"); }
-        public void OnMessage(string message) { Debug.WriteLine(message); }
+        public void OnConnected()
+        {
+            Debug.WriteLine("C");
+        }
+
+        public void OnDisconnected() 
+        {
+            Debug.WriteLine("D");
+        }
+
+        public void OnMessageReceived(int senderId, string message)
+        {
+            Debug.WriteLine("R"+senderId+":" + message);
+        }
+
+        public void OnLoginSuccessful()
+        {
+            Debug.WriteLine("LS");
+        }
+
+        public void OnLoginFailed(string message)
+        {
+            Debug.WriteLine("LF:"+ message);
+        }
+
+        public void OnContactOnlineStatusChanged(int contactId, bool isOnline)
+        {
+            Debug.WriteLine("O" + contactId + ":" + isOnline);
+        }
+
+        public void OnConnectionError()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

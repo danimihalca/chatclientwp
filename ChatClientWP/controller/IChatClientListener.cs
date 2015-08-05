@@ -10,6 +10,15 @@ namespace ChatClientWP
     {
         void OnConnected();
         void OnDisconnected();
-        void OnMessage(string message);
+
+        void OnMessageReceived(int senderId, string message);
+
+        void OnLoginSuccessful();
+
+        void OnLoginFailed(string message);
+
+        void OnContactOnlineStatusChanged(int contactId, bool isOnline);
+
+        void OnConnectionError();
     }
 }

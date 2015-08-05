@@ -8,6 +8,10 @@ m_notifier(notifier)
 {
 }
 
+RCChatClientListener::~RCChatClientListener()
+{
+}
+
 void RCChatClientListener::onConnected()
 {
 	if (m_notifier != nullptr && m_notifier->OnConnected != nullptr)
@@ -27,14 +31,10 @@ void RCChatClientListener::onDisconnected()
 
 void RCChatClientListener::onMessageReceived(int senderId, const std::string& message)
 {
-	if (m_notifier!= nullptr && m_notifier->OnMessage != nullptr)
+	if (m_notifier != nullptr && m_notifier->OnMessageReceived != nullptr)
 	{
-		m_notifier->OnMessage(senderId, ToPlatformString(message));
+		m_notifier->OnMessageReceived(senderId, ToPlatformString(message));
 	}
-}
-
-RCChatClientListener::~RCChatClientListener()
-{
 }
 
 void RCChatClientListener::onLoginFailed(const std::string& message)
@@ -45,13 +45,16 @@ void RCChatClientListener::onLoginFailed(const std::string& message)
 	}
 }
 
-void RCChatClientListener::onConnectionError(){
+void RCChatClientListener::onConnectionError()
+{
 	if (m_notifier != nullptr && m_notifier->OnConnectionError != nullptr)
 	{
 		m_notifier->OnConnectionError();
 	}
 }
-void RCChatClientListener::onLoginSuccessful(){
+
+void RCChatClientListener::onLoginSuccessful()
+{
 	if (m_notifier != nullptr && m_notifier->OnLoginSuccessful != nullptr)
 	{
 		m_notifier->OnLoginSuccessful();
@@ -60,8 +63,17 @@ void RCChatClientListener::onLoginSuccessful(){
 
 void RCChatClientListener::onContactsReceived(const Contacts& contacts)
 {
+	//if (m_notifier != nullptr && m_notifier->OnContactsReceived != nullptr)
+	//{
+	//	//TODO: wrap native contacts to referenced ones
+	//	m_notifier->OnContactsReceived();
+	//}
 }
 
 void RCChatClientListener::onContactOnlineStatusChanged(int contactId, bool isOnline)
 {
+	if (m_notifier != nullptr && m_notifier->OnContactOnlineStatusChanged != nullptr)
+	{
+		m_notifier->OnContactOnlineStatusChanged(contactId, isOnline);
+	}
 }

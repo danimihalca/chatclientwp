@@ -9,6 +9,7 @@ namespace ChatClientWP.controller
     public interface IChatClientController
     {
         void AddListener(IChatClientListener listener);
+        void RemoveListener(IChatClientListener listener);
 
         void SetServerProperties(string address, int port);
         void Login(string userName, String password);
