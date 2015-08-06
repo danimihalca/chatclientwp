@@ -1,4 +1,6 @@
 #include "RCChatClientListener.hpp"
+#include "RCContact.hpp"
+
 #include "utils.h"
 
 using namespace ChatClientRC;
@@ -63,11 +65,21 @@ void RCChatClientListener::onLoginSuccessful()
 
 void RCChatClientListener::onContactsReceived(const Contacts& contacts)
 {
-	//if (m_notifier != nullptr && m_notifier->OnContactsReceived != nullptr)
-	//{
-	//	//TODO: wrap native contacts to referenced ones
-	//	m_notifier->OnContactsReceived();
-	//}
+	if (m_notifier != nullptr && m_notifier->OnContactsReceived != nullptr)
+	{
+		//TODO: wrap native contacts to referenced ones
+		Platform::Array<RCContact^>^ contactArray = ref new Platform::Array<RCContact^>(contacts.size());
+		int count = 0;
+		for (Contact c : contacts)
+		{
+			contactArray->set(count++, ref new RCContact(c.getDetails().getId(),
+				ToPlatformString(c.getUserName()),
+				ToPlatformString(c.getDetails().getFullName()),
+				c.isOnline()));
+		}
+
+		m_notifier->OnContactsReceived(contactArray);
+	}
 }
 
 void RCChatClientListener::onContactOnlineStatusChanged(int contactId, bool isOnline)

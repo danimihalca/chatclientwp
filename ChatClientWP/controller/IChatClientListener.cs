@@ -20,5 +20,7 @@ namespace ChatClientWP
         void OnContactOnlineStatusChanged(int contactId, bool isOnline);
 
         void OnConnectionError();
+
+        void OnContactsReceived();
     }
 }

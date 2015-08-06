@@ -18,6 +18,7 @@ namespace ChatClientRC
 		void login(Platform::String^ userName, Platform::String^ password);
 		void sendMessage(int receiverId, Platform::String^ message);
 		void disconnect();
+		void requestContacts();
 
 		void setNotifier(RCChatClientNotifier^ notifier);
 

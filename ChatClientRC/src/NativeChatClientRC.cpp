@@ -30,6 +30,10 @@ void NativeChatClientRC::disconnect()
 {
 	m_chatClient->disconnect();
 }
+void NativeChatClientRC::requestContacts()
+{
+	m_chatClient->getContacts();
+}
 
 
 void NativeChatClientRC::setNotifier(RCChatClientNotifier^ notifier)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using ChatClientRC;
 using ChatClientWP.controller;
+using System.Diagnostics;
 
 
 namespace ChatClientWP
@@ -15,22 +16,44 @@ namespace ChatClientWP
         private NativeChatClientRC m_nativeChatClient;
         private IList<IChatClientListener> listeners;
 
+        IDictionary<int, Contact> m_contacts;
+
         public RCChatClientController()
         {
             m_nativeChatClient = new NativeChatClientRC();
             listeners = new List<IChatClientListener>();
-
+            m_contacts = new Dictionary<int, Contact>();
             RCChatClientNotifier notifier = new RCChatClientNotifier();
             notifier.OnConnected = notifyOnConnected;
             notifier.OnDisconnected = notifyOnDisconnected;
             notifier.OnMessageReceived = notifyOnMessageReceived;
             notifier.OnConnectionError = notifyOnConnectionError;
             notifier.OnContactOnlineStatusChanged = notifyOnContactOnlineStatusChanged;
+            notifier.OnContactsReceived = notifiyOnContactsReceived;
             notifier.OnLoginSuccessful = notifyOnLoginSuccessful;
             notifier.OnLoginFailed = notifyOnLoginFailed;
 
             m_nativeChatClient.setNotifier(notifier);
 
+        }
+
+        private void notifiyOnContactsReceived(RCContact[] contacts)
+        {
+            //throw new NotImplementedException();
+            for(int i =0 ; i< contacts.Length; i++)
+            {
+                Contact c = new Contact() ;
+                c.ID = contacts[i].GetId();
+                c.UserName = contacts[i].GetUserName();
+                c.FullName = contacts[i].GetFullName();
+                c.IsOnline= contacts[i].IsOnline();
+
+                m_contacts.Add(c.ID ,c);
+            }
+            foreach (var listener in listeners)
+            {
+                listener.OnContactsReceived();
+            }
         }
 
 
@@ -39,7 +62,10 @@ namespace ChatClientWP
         {
             listeners.Add(listener);
         }
-
+        public void RemoveListener(IChatClientListener listener)
+        {
+            listeners.Remove(listener);
+        }
         public void SetServerProperties(string address, int port)
         {
             m_nativeChatClient.setServerProperties(address, port);
@@ -86,10 +112,19 @@ namespace ChatClientWP
 
         private void notifyOnLoginSuccessful()
         {
-            foreach (var listener in listeners)
+            IList<IChatClientListener> copy = listeners.ToList<IChatClientListener>();
+            foreach (var listener in copy)
             {
                 listener.OnLoginSuccessful();
             }
+            //lock(listeners)
+            //{
+            //    foreach (var listener in listeners)
+            //    {
+            //        listener.OnLoginSuccessful();
+            //    }
+            //}
+            Debug.WriteLine("notifyOnLoginSuccessful");
         }
 
         private void notifyOnLoginFailed(string message)
@@ -102,6 +137,7 @@ namespace ChatClientWP
 
         private void notifyOnContactOnlineStatusChanged(int contactId, bool isOnline)
         {
+            m_contacts.ElementAt(contactId).Value.IsOnline = isOnline;
             foreach (var listener in listeners)
             {
                 listener.OnContactOnlineStatusChanged(contactId, isOnline);
@@ -114,6 +150,18 @@ namespace ChatClientWP
             {
                 listener.OnConnectionError();
             }
+        }
+
+
+        public IList<Contact> GetContacts()
+        {
+            return m_contacts.Values.ToList();
+        }
+
+
+        public void RequestContacts()
+        {
+            m_nativeChatClient.requestContacts();
         }
     }
 }

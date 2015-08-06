@@ -22,12 +22,14 @@
     <ClCompile Include="src\NativeChatClientRC.cpp" />
     <ClCompile Include="src\RCChatClientListener.cpp" />
     <ClCompile Include="src\RCChatClientNotifier.cpp" />
+    <ClCompile Include="src\RcContact.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\NativeChatClientRC.hpp" />
     <ClInclude Include="inc\RCChatClientListener.hpp" />
     <ClInclude Include="inc\RCChatClientNotifier.hpp" />
+    <ClInclude Include="inc\RcContact.hpp" />
     <ClInclude Include="inc\utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -90,7 +92,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PreprocessorDefinitions>_WINRT_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>

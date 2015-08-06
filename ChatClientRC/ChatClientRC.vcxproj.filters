@@ -11,11 +11,13 @@
     <ClCompile Include="src\NativeChatClientRC.cpp" />
     <ClCompile Include="src\RCChatClientListener.cpp" />
     <ClCompile Include="src\RCChatClientNotifier.cpp" />
+    <ClCompile Include="src\RcContact.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\NativeChatClientRC.hpp" />
     <ClInclude Include="inc\RCChatClientListener.hpp" />
     <ClInclude Include="inc\RCChatClientNotifier.hpp" />
     <ClInclude Include="inc\utils.h" />
+    <ClInclude Include="inc\RcContact.hpp" />
   </ItemGroup>
 </Project>

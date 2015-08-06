@@ -1,4 +1,5 @@
 #pragma once
+#include "RCContact.hpp"
 
 namespace ChatClientRC
 {
@@ -8,7 +9,7 @@ namespace ChatClientRC
 	public delegate void onLoginFailedCallback(Platform::String^ message);
 	public delegate void onConnectionErrorCallback();
 	public delegate void onLoginSuccessfulCallback();
-	//public delegate void onContactsReceivedCallback(Contacts^ contacts);
+	public delegate void onContactsReceivedCallback(const Platform::Array<RCContact^>^ contacts);
 	public delegate void onContactOnlineStatusChangedCallback(int contactId, bool isOnline);
 
 	public ref class RCChatClientNotifier sealed
@@ -22,7 +23,7 @@ namespace ChatClientRC
 		property onLoginFailedCallback^ OnLoginFailed;
 		property onConnectionErrorCallback^ OnConnectionError;
 		property onLoginSuccessfulCallback^ OnLoginSuccessful;
-		//property onContactsReceivedCallback^ OnContactsReceived;
+		property onContactsReceivedCallback^ OnContactsReceived;
 		property onContactOnlineStatusChangedCallback^ OnContactOnlineStatusChanged;
 	};
 }

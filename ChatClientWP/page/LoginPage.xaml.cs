@@ -6,9 +6,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -139,9 +141,14 @@ namespace ChatClientWP.page
             Debug.WriteLine("R"+senderId+":" + message);
         }
 
-        public void OnLoginSuccessful()
+        public async void OnLoginSuccessful()
         {
             Debug.WriteLine("LS");
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                Frame.Navigate(typeof(ContactListPage));
+            });
         }
 
         public void OnLoginFailed(string message)
@@ -156,7 +163,13 @@ namespace ChatClientWP.page
 
         public void OnConnectionError()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+        }
+
+
+        public void OnContactsReceived()
+        {
+            //throw new NotImplementedException();
         }
     }
 }
