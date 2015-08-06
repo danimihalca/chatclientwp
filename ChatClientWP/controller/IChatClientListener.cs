@@ -17,7 +17,7 @@ namespace ChatClientWP
 
         void OnLoginFailed(string message);
 
-        void OnContactOnlineStatusChanged(int contactId, bool isOnline);
+        void OnContactOnlineStatusChanged(Contact c);
 
         void OnConnectionError();
 

@@ -137,10 +137,12 @@ namespace ChatClientWP
 
         private void notifyOnContactOnlineStatusChanged(int contactId, bool isOnline)
         {
-            m_contacts.ElementAt(contactId).Value.IsOnline = isOnline;
+            Contact c;
+            m_contacts.TryGetValue(contactId, out c);
+                c.IsOnline = isOnline;
             foreach (var listener in listeners)
             {
-                listener.OnContactOnlineStatusChanged(contactId, isOnline);
+                listener.OnContactOnlineStatusChanged(c);
             }
         }
 

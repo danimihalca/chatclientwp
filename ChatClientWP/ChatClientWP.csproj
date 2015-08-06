@@ -95,7 +95,7 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
-    <Compile Include="Contact.cs" />
+    <Compile Include="Model\Contact.cs" />
     <Compile Include="controller\IChatClientController.cs" />
     <Compile Include="controller\RCChatClientController.cs" />
     <Compile Include="controller\IChatClientListener.cs" />
@@ -109,6 +109,7 @@
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ObservablePropertyCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

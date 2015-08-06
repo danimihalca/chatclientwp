@@ -1,23 +1,16 @@
 ﻿using ChatClientWP.Common;
 using ChatClientWP.controller;
+using ChatClientWP.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Display;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
@@ -27,15 +20,17 @@ namespace ChatClientWP.page
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class LoginPage : Page, IChatClientListener
+    public sealed partial class ContactListPage : Page, IChatClientListener
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
         private IChatClientController m_controller;
+        ObservablePropertyCollection<Contact> collection;
 
-        public LoginPage()
+        public ContactListPage()
         {
+            Debug.WriteLine("ContactListPage");
             this.InitializeComponent();
 
             this.navigationHelper = new NavigationHelper(this);
@@ -43,6 +38,9 @@ namespace ChatClientWP.page
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
             m_controller = (Application.Current as App).GetController();
+            m_controller.AddListener(this);
+
+            m_controller.RequestContacts();
         }
 
         /// <summary>
@@ -106,6 +104,7 @@ namespace ChatClientWP.page
         /// handlers that cannot cancel the navigation request.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            Debug.WriteLine("OnNavigatedTo");
             this.navigationHelper.OnNavigatedTo(e);
         }
 
@@ -116,60 +115,45 @@ namespace ChatClientWP.page
 
         #endregion
 
-        private void loginButton_Click(object sender, RoutedEventArgs e)
-        {
-            m_controller.AddListener(this);
-            String userName = userNameInput.Text;
-            String password = passwordInput.Password;
-
-            m_controller.SetServerProperties("192.168.0.3", 9003);
-            m_controller.Login(userName, password);
-        }
-
         public void OnConnected()
         {
-            Debug.WriteLine("C");
         }
 
-        public void OnDisconnected() 
+        public void OnDisconnected()
         {
-            Debug.WriteLine("D");
         }
 
         public void OnMessageReceived(int senderId, string message)
         {
-            Debug.WriteLine("R"+senderId+":" + message);
         }
 
-        public async void OnLoginSuccessful()
+        public void OnLoginSuccessful()
         {
-            Debug.WriteLine("LS");
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                Frame.Navigate(typeof(ContactListPage));
-            });
         }
 
         public void OnLoginFailed(string message)
         {
-            Debug.WriteLine("LF:"+ message);
         }
 
         public void OnContactOnlineStatusChanged(Contact c)
         {
-            Debug.WriteLine("O" + c.ID + ":" + c.IsOnline);
         }
 
         public void OnConnectionError()
         {
-            //throw new NotImplementedException();
         }
 
-
-        public void OnContactsReceived()
+        public async void OnContactsReceived()
         {
-            //throw new NotImplementedException();
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                IList<Contact> contacts = m_controller.GetContacts();
+                collection = new ObservablePropertyCollection<Contact>(contacts);
+                ContactListView.ItemsSource = collection;
+                Debug.WriteLine("set contacts");
+            });
         }
     }
 }
