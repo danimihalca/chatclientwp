@@ -31,17 +31,17 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ListView x:Name="ContactListView" Grid.Row="0" Margin="5,5,5,5">
+            <!--<ListView x:Name="ContactListView" Grid.Row="0" Margin="5,5,5,5">
                 <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid  Grid.ColumnSpan="2" Width="auto" Height="auto" >
+                    <DataTemplate>-->
+                        <Grid  Grid.ColumnSpan="2" Width="auto" Height="75" >
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="FullNameText" Text="{Binding FullName}" FontSize="20"/>
-                            <Image x:Name="onlineStatusImage" Width="30" Height="30" Grid.Row="0" Grid.Column="1" xmlns:ic="using:Microsoft.Xaml.Interactions.Core" xmlns:i="using:Microsoft.Xaml.Interactivity" HorizontalAlignment="Right">
+                            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="FullNameText" Text="FullNameText" FontSize="20"/>
+                            <Image x:Name="onlineStatusImage" Width="30" Height="30" Grid.Row="0" Grid.Column="1" xmlns:ic="using:Microsoft.Xaml.Interactions.Core" xmlns:i="using:Microsoft.Xaml.Interactivity" HorizontalAlignment="right">
                                 <i:Interaction.Behaviors>
                                     <ic:DataTriggerBehavior Binding="{Binding IsOnline, Mode=OneWay}" Value="False" ComparisonCondition="Equal">
                                         <ic:ChangePropertyAction PropertyName="Source" Value="ms-appx:///Assets/offline.png"/>
@@ -51,12 +51,12 @@
                                     </ic:DataTriggerBehavior>
                                 </i:Interaction.Behaviors>
                             </Image>
-                            <TextBlock Grid.Row="1" Grid.Column="0" x:Name="UserNameText" Text="{Binding UserName}" />
-                            <Line Grid.Row="2" X1="0" Y1="0" X2="400" Y2="0" Stroke="Gray" StrokeThickness="2" Stretch="Fill"></Line>
+                <TextBlock Grid.Row="1" Grid.Column="0" x:Name="UserNameText" Text="UserNameText" />
+                            <Line Grid.Row="2" X1="0" Y1="0" X2="300" Y2="0" Stroke="Gray" StrokeThickness="2" Stretch="Fill"></Line>
                         </Grid>
-                    </DataTemplate>
+                    <!--</DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </ListView>-->
         </Grid>
     </Grid>
 </Page>
