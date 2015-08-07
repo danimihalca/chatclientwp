@@ -1,0 +1,61 @@
+﻿<Page
+    x:Class="ChatClientWP.page.ConversationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ChatClientWP.page"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid x:Name="LayoutRoot">
+
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title Panel -->
+        <StackPanel Grid.Row="0" Margin="19,0,0,0">
+            <TextBlock Text="Conversation" Style="{ThemeResource TitleTextBlockStyle}" FontSize="30" Margin="0,12,0,0"/>
+        </StackPanel>
+
+        <!--TODO: Content should be placed within the following grid-->
+        <Grid  Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2" x:Name="ContentRoot" Margin="19,9.5,19,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <ListView x:Name="MessageListView" Grid.Row="0" HorizontalAlignment="Left" Margin="5,5,5,5" Height="auto" VerticalAlignment="Top">
+                <ListView.ItemTemplate >
+                    <DataTemplate>
+                        <Grid Width="auto" Height="auto" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" x:Name="FullNameText" Text="{Binding SenderName}" FontSize="20"/>
+                            <TextBlock Grid.Row="1" x:Name="UserNameText" Text="{Binding MessageText}" />
+                            <Line Grid.Row="2" X1="0" Y1="0" X2="400" Y2="0" Stroke="Gray" StrokeThickness="2" Stretch="Fill"></Line>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+            <TextBox Margin="5,5,5,5" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+            <Button Grid.Row="1" Grid.Column="1" Content="Button" HorizontalAlignment="Left" Margin="5,5,5,5" VerticalAlignment="Bottom"/>
+        </Grid>
+    </Grid>
+</Page>

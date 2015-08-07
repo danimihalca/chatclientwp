@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatClientWP.Model;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -11,14 +12,10 @@ using Windows.UI.Core;
 
 namespace ChatClientWP
 {
-    public class Contact : INotifyPropertyChanged
+    public class Contact :BaseUser, INotifyPropertyChanged
     {
         private bool _IsOnline;
         private int _UnreadMessagesCount = 0;
-
-        public int Id { get; set; }
-        public string UserName { get; set; }
-        public string FullName { get; set; }
 
         public bool IsOnline
         {

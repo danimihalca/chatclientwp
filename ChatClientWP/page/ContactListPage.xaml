@@ -31,10 +31,10 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <ListView x:Name="ContactListView" Grid.Row="0" Margin="5,5,5,5">
-                <ListView.ItemTemplate>
+            <ListView x:Name="ContactListView" Grid.Row="0" Margin="5,5,5,5" IsItemClickEnabled="True" ItemClick="ContactListView_ItemClick">
+                <ListView.ItemTemplate >
                     <DataTemplate>
-                        <Grid  Grid.ColumnSpan="2" Width="auto" Height="auto" >
+                        <Grid Grid.ColumnSpan="2" Width="auto" Height="auto" >
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>

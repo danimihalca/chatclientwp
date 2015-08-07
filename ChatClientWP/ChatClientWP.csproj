@@ -95,6 +95,8 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Model\BaseUser.cs" />
+    <Compile Include="Model\ClientInstanceUser.cs" />
     <Compile Include="Model\Contact.cs" />
     <Compile Include="controller\IChatClientController.cs" />
     <Compile Include="controller\RCChatClientController.cs" />
@@ -102,15 +104,21 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\Message.cs" />
     <Compile Include="page\ContactListPage.xaml.cs">
       <DependentUpon>ContactListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="page\ConversationPage.xaml.cs">
+      <DependentUpon>ConversationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="page\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IContactRepository.cs" />
+    <Compile Include="Repository\IMessageRepository.cs" />
     <Compile Include="Repository\InMemoryContactRepository.cs" />
+    <Compile Include="Repository\InMemoryMessageRepository.cs" />
     <Compile Include="Utils\ObservablePropertyCollection.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +155,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="page\ContactListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="page\ConversationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

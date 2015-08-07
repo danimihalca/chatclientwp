@@ -8,6 +8,7 @@ using ChatClientRC;
 using ChatClientWP.controller;
 using System.Diagnostics;
 using ChatClientWP.Repository;
+using ChatClientWP.Model;
 
 
 namespace ChatClientWP
@@ -18,12 +19,21 @@ namespace ChatClientWP
         private IList<IChatClientListener> listeners;
 
         IContactRepository  m_contactRepository;
+        IMessageRepository m_messageRepository;
+
+        ClientInstanceUser m_user;
 
         public RCChatClientController()
         {
             m_nativeChatClient = new NativeChatClientRC();
             listeners = new List<IChatClientListener>();
             m_contactRepository = new InMemoryContactRepository();
+            m_messageRepository = new InMemoryMessageRepository();
+
+            m_user = new ClientInstanceUser();
+            m_user.Id = 9999;
+            m_user.FullName="ME";
+            m_user.UserName = "me";
 
             RCChatClientNotifier notifier = new RCChatClientNotifier();
             notifier.OnConnected = notifyOnConnected;
@@ -31,7 +41,7 @@ namespace ChatClientWP
             notifier.OnMessageReceived = notifyOnMessageReceived;
             notifier.OnConnectionError = notifyOnConnectionError;
             notifier.OnContactOnlineStatusChanged = notifyOnContactOnlineStatusChanged;
-            notifier.OnContactsReceived = notifiyOnContactsReceived;
+            notifier.OnContactsReceived = notifyOnContactsReceived;
             notifier.OnLoginSuccessful = notifyOnLoginSuccessful;
             notifier.OnLoginFailed = notifyOnLoginFailed;
 
@@ -39,7 +49,7 @@ namespace ChatClientWP
 
         }
 
-        private void notifiyOnContactsReceived(RCContact[] contacts)
+        private void notifyOnContactsReceived(RCContact[] contacts)
         {
             //throw new NotImplementedException();
             for(int i =0 ; i< contacts.Length; i++)
@@ -85,6 +95,12 @@ namespace ChatClientWP
 
         public void SendMessage(int userId, string message)
         {
+            Message m = new Message();
+            m.Sender = m_user;
+            m.Receiver = m_contactRepository.FindContact(userId);
+            m.MessageText = message;
+            m_messageRepository.AddMessage(m);
+
             m_nativeChatClient.sendMessage(userId, message);
         }
 
@@ -108,6 +124,13 @@ namespace ChatClientWP
         {
             Contact c  = m_contactRepository.FindContact(senderId);
             c.UnreadMesssagesCount++;
+
+            Message m = new Message();
+            m.Sender = c;
+            m.Receiver = m_user;
+            m.MessageText = message;
+            m_messageRepository.AddMessage(m);
+
             foreach (var listener in listeners)
             {
                 listener.OnMessageReceived(senderId, message);
@@ -167,6 +190,13 @@ namespace ChatClientWP
         public void RequestContacts()
         {
             m_nativeChatClient.requestContacts();
+        }
+
+
+        public IList<Message> getMessages(int contactId)
+        {
+            Contact c = m_contactRepository.FindContact(contactId);
+            return m_messageRepository.GetMessagesWithContact(c);
         }
     }
 }

@@ -1,16 +1,22 @@
 ﻿using ChatClientWP.Common;
 using ChatClientWP.controller;
+using ChatClientWP.Model;
 using ChatClientWP.Utils;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.Graphics.Display;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
@@ -20,17 +26,18 @@ namespace ChatClientWP.page
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ContactListPage : Page, IChatClientListener
+    public sealed partial class ConversationPage : Page
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
-
+       
         private IChatClientController m_controller;
-        ObservablePropertyCollection<Contact> collection;
+        private Contact m_contact;
+        ObservablePropertyCollection<Message> collection;
 
-        public ContactListPage()
+
+        public ConversationPage()
         {
-            Debug.WriteLine("ContactListPage");
             this.InitializeComponent();
 
             this.navigationHelper = new NavigationHelper(this);
@@ -38,9 +45,7 @@ namespace ChatClientWP.page
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
             m_controller = (Application.Current as App).GetController();
-            m_controller.AddListener(this);
 
-            m_controller.RequestContacts();
         }
 
         /// <summary>
@@ -73,6 +78,9 @@ namespace ChatClientWP.page
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            m_contact = e.NavigationParameter as Contact;
+            collection = new ObservablePropertyCollection<Message>(m_controller.getMessages(m_contact.Id));
+            MessageListView.ItemsSource = collection;
         }
 
         /// <summary>
@@ -104,7 +112,6 @@ namespace ChatClientWP.page
         /// handlers that cannot cancel the navigation request.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Debug.WriteLine("OnNavigatedTo");
             this.navigationHelper.OnNavigatedTo(e);
         }
 
@@ -114,52 +121,5 @@ namespace ChatClientWP.page
         }
 
         #endregion
-
-        public void OnConnected()
-        {
-        }
-
-        public void OnDisconnected()
-        {
-        }
-
-        public void OnMessageReceived(int senderId, string message)
-        {
-        }
-
-        public void OnLoginSuccessful()
-        {
-        }
-
-        public void OnLoginFailed(string message)
-        {
-        }
-
-        public void OnContactOnlineStatusChanged(Contact c)
-        {
-        }
-
-        public void OnConnectionError()
-        {
-        }
-
-        public async void OnContactsReceived()
-        {
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                IList<Contact> contacts = m_controller.GetContacts();
-                collection = new ObservablePropertyCollection<Contact>(contacts);
-                ContactListView.ItemsSource = collection;
-                //ContactListView.Visibility += visibility;
-                Debug.WriteLine("set contacts");
-            });
-        }
-
-        private void ContactListView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            Frame.Navigate(typeof(ConversationPage),e.ClickedItem as Contact);
-        }
     }
 }

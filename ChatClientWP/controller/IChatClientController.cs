@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using ChatClientRC;
+using ChatClientWP.Model;
 
 namespace ChatClientWP.controller
 {
@@ -20,6 +21,8 @@ namespace ChatClientWP.controller
         void Disconnect();
 
         void SendMessage(int userId, string message);
+
+        IList<Message> getMessages(int contactId);
 
         IList<Contact> GetContacts();
     }
