@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatClientWP.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,6 @@ namespace ChatClientWP
         void OnConnected();
         void OnDisconnected();
 
-        void OnMessageReceived(int senderId, string message);
-
         void OnLoginSuccessful();
 
         void OnLoginFailed(string message);
@@ -22,5 +21,7 @@ namespace ChatClientWP
         void OnConnectionError();
 
         void OnContactsReceived();
+
+        void OnMessageReceived(Message m);
     }
 }

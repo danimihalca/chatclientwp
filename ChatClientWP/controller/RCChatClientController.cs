@@ -21,7 +21,7 @@ namespace ChatClientWP
         IContactRepository  m_contactRepository;
         IMessageRepository m_messageRepository;
 
-        ClientInstanceUser m_user;
+        private ClientInstanceUser m_user;
 
         public RCChatClientController()
         {
@@ -47,6 +47,11 @@ namespace ChatClientWP
 
             m_nativeChatClient.setNotifier(notifier);
 
+        }
+
+        public ClientInstanceUser GetUser()
+        {
+            return m_user;
         }
 
         private void notifyOnContactsReceived(RCContact[] contacts)
@@ -93,15 +98,11 @@ namespace ChatClientWP
             m_nativeChatClient.disconnect();
         }
 
-        public void SendMessage(int userId, string message)
+        public void SendMessage(Message message)
         {
-            Message m = new Message();
-            m.Sender = m_user;
-            m.Receiver = m_contactRepository.FindContact(userId);
-            m.MessageText = message;
-            m_messageRepository.AddMessage(m);
+            m_messageRepository.AddMessage(message);
 
-            m_nativeChatClient.sendMessage(userId, message);
+            m_nativeChatClient.sendMessage(message.Receiver.Id, message.MessageText);
         }
 
         private void notifyOnConnected()
@@ -133,7 +134,7 @@ namespace ChatClientWP
 
             foreach (var listener in listeners)
             {
-                listener.OnMessageReceived(senderId, message);
+                listener.OnMessageReceived(m);
             }
         }
 

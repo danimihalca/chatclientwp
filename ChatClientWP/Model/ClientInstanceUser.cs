@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChatClientWP.Model
 {
-    class ClientInstanceUser: BaseUser
+    public class ClientInstanceUser: BaseUser
     {
         public string Password { get; set; }
     }

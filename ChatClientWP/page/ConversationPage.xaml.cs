@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,14 +28,14 @@ namespace ChatClientWP.page
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ConversationPage : Page
+    public sealed partial class ConversationPage : Page, IChatClientListener
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
        
         private IChatClientController m_controller;
         private Contact m_contact;
-        ObservablePropertyCollection<Message> collection;
+        ObservablePropertyCollection<Message> m_messageCollection;
 
 
         public ConversationPage()
@@ -45,6 +47,7 @@ namespace ChatClientWP.page
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
             m_controller = (Application.Current as App).GetController();
+            m_controller.AddListener(this);
 
         }
 
@@ -79,8 +82,8 @@ namespace ChatClientWP.page
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             m_contact = e.NavigationParameter as Contact;
-            collection = new ObservablePropertyCollection<Message>(m_controller.getMessages(m_contact.Id));
-            MessageListView.ItemsSource = collection;
+            m_messageCollection = new ObservablePropertyCollection<Message>(m_controller.getMessages(m_contact.Id));
+            MessageListView.ItemsSource = m_messageCollection;
         }
 
         /// <summary>
@@ -118,8 +121,76 @@ namespace ChatClientWP.page
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             this.navigationHelper.OnNavigatedFrom(e);
+            m_controller.RemoveListener(this);
+
         }
 
         #endregion
+
+        public void OnConnected()
+        {
+        }
+
+        public void OnDisconnected()
+        {
+        }
+
+
+        public void OnLoginSuccessful()
+        {
+        }
+
+        public void OnLoginFailed(string message)
+        {
+        }
+
+        public void OnContactOnlineStatusChanged(Contact c)
+        {
+            //TODO: popup
+        }
+
+        public void OnConnectionError()
+        {
+        }
+
+        public void OnContactsReceived()
+        {
+        }
+
+        public async void OnMessageReceived(Message m)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                m_messageCollection.Add(m);
+            });
+        }
+
+        private void sendButton_Click(object sender, RoutedEventArgs e)
+        {
+            SendMessage();
+        }
+
+        private void messageInput_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                Windows.UI.ViewManagement.InputPane.GetForCurrentView().TryHide();
+                //SendMessage();
+            }
+        }
+
+        private void SendMessage()
+        {
+            Message message = new Message();
+            message.Sender = m_controller.GetUser();
+            message.MessageText = messageInput.Text;
+            message.Receiver = m_contact;
+
+            messageInput.Text = "";
+            m_controller.SendMessage(message);
+
+            m_messageCollection.Add(message);
+        }
     }
 }

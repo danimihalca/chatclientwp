@@ -1,5 +1,6 @@
 ﻿using ChatClientWP.Common;
 using ChatClientWP.controller;
+using ChatClientWP.Model;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -136,11 +137,6 @@ namespace ChatClientWP.page
             Debug.WriteLine("D");
         }
 
-        public void OnMessageReceived(int senderId, string message)
-        {
-            Debug.WriteLine("R"+senderId+":" + message);
-        }
-
         public async void OnLoginSuccessful()
         {
             Debug.WriteLine("LS");
@@ -163,13 +159,16 @@ namespace ChatClientWP.page
 
         public void OnConnectionError()
         {
-            //throw new NotImplementedException();
         }
 
 
         public void OnContactsReceived()
         {
-            //throw new NotImplementedException();
+        }
+
+
+        public void OnMessageReceived(Message m)
+        {
         }
     }
 }

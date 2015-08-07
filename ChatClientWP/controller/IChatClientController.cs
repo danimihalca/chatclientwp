@@ -20,10 +20,12 @@ namespace ChatClientWP.controller
 
         void Disconnect();
 
-        void SendMessage(int userId, string message);
+        void SendMessage(Message message);
 
         IList<Message> getMessages(int contactId);
 
         IList<Contact> GetContacts();
+
+        ClientInstanceUser GetUser();
     }
 }

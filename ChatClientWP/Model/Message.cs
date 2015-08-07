@@ -13,13 +13,20 @@ namespace ChatClientWP.Model
         public BaseUser Receiver { get; set; }
         public string MessageText { get; set; }
 
-        public string SenderName
+        public DateTime Date
         {
             get
             {
-                return Sender.FullName;
+                return _Date;
+            }
+            set
+            {
+                _Date = value;
             }
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private DateTime _Date = DateTime.Now;
     }
 }

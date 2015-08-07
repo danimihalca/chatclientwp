@@ -23,10 +23,9 @@ namespace ChatClientWP.page
     public sealed partial class ContactListPage : Page, IChatClientListener
     {
         private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
         private IChatClientController m_controller;
-        ObservablePropertyCollection<Contact> collection;
+        ObservablePropertyCollection<Contact> m_contactCollection;
 
         public ContactListPage()
         {
@@ -37,10 +36,6 @@ namespace ChatClientWP.page
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
-            m_controller = (Application.Current as App).GetController();
-            m_controller.AddListener(this);
-
-            m_controller.RequestContacts();
         }
 
         /// <summary>
@@ -49,15 +44,6 @@ namespace ChatClientWP.page
         public NavigationHelper NavigationHelper
         {
             get { return this.navigationHelper; }
-        }
-
-        /// <summary>
-        /// Gets the view model for this <see cref="Page"/>.
-        /// This can be changed to a strongly typed view model.
-        /// </summary>
-        public ObservableDictionary DefaultViewModel
-        {
-            get { return this.defaultViewModel; }
         }
 
         /// <summary>
@@ -73,6 +59,21 @@ namespace ChatClientWP.page
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            Debug.WriteLine("NavigationHelper_LoadState");
+
+            if (e.PageState == null)
+            {
+                m_controller = (Application.Current as App).GetController();
+                m_controller.AddListener(this);
+
+                m_controller.RequestContacts();
+            }
+            else
+            {
+                m_contactCollection = e.PageState["Contacts"] as ObservablePropertyCollection<Contact>;
+                ContactListView.ItemsSource = m_contactCollection;
+
+            }
         }
 
         /// <summary>
@@ -85,6 +86,8 @@ namespace ChatClientWP.page
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
+            Debug.WriteLine("NavigationHelper_SaveState");
+            e.PageState["Contacts"] = m_contactCollection;
         }
 
         #region NavigationHelper registration
@@ -110,6 +113,7 @@ namespace ChatClientWP.page
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            Debug.WriteLine("OnNavigatedFrom");
             this.navigationHelper.OnNavigatedFrom(e);
         }
 
@@ -120,10 +124,6 @@ namespace ChatClientWP.page
         }
 
         public void OnDisconnected()
-        {
-        }
-
-        public void OnMessageReceived(int senderId, string message)
         {
         }
 
@@ -150,9 +150,8 @@ namespace ChatClientWP.page
             () =>
             {
                 IList<Contact> contacts = m_controller.GetContacts();
-                collection = new ObservablePropertyCollection<Contact>(contacts);
-                ContactListView.ItemsSource = collection;
-                //ContactListView.Visibility += visibility;
+                m_contactCollection = new ObservablePropertyCollection<Contact>(contacts);
+                ContactListView.ItemsSource = m_contactCollection;
                 Debug.WriteLine("set contacts");
             });
         }
@@ -160,6 +159,11 @@ namespace ChatClientWP.page
         private void ContactListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             Frame.Navigate(typeof(ConversationPage),e.ClickedItem as Contact);
+        }
+
+
+        public void OnMessageReceived(Model.Message m)
+        {
         }
     }
 }
