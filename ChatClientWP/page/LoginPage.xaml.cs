@@ -138,7 +138,7 @@ namespace ChatClientWP.page
 
         public async void OnDisconnected() 
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
                 PopupDisplayer.DisplayPopup("Disconnected");

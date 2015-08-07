@@ -3,8 +3,8 @@ using ChatClientWP.controller;
 using ChatClientWP.Utils;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -134,14 +134,15 @@ namespace ChatClientWP.page
         {
         }
 
-        public async void OnDisconnected()
+        public void OnDisconnected()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            IAsyncAction action = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
                 m_controller.RemoveListener(this);
                 navigationHelper.GoBack();
             });
+            action.AsTask().Wait();
         }
 
         public void OnLoginSuccessful()
