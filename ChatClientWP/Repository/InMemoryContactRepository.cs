@@ -43,5 +43,11 @@ namespace ChatClientWP.Repository
             }
             return c;
         }
+
+
+        public void ClearContacts()
+        {
+            m_contacts.Clear();
+        }
     }
 }

@@ -24,6 +24,10 @@ namespace ChatClientWP.page
         private IChatClientController m_controller;
         ObservablePropertyCollection<Contact> m_contactCollection;
 
+
+        private RelayCommand GoBackCommand;
+        private bool goBackPressed;
+
         public ContactListPage()
         {
             Debug.WriteLine("ContactListPage");
@@ -33,6 +37,24 @@ namespace ChatClientWP.page
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
+
+            GoBackCommand = new RelayCommand(GoBackAction);
+            goBackPressed = false;
+            this.navigationHelper.GoBackCommand = GoBackCommand;
+        }
+
+        private void GoBackAction()
+        {
+            if (!goBackPressed)
+            {
+                goBackPressed = true;
+                PopupDisplayer.DisplayPopup("Press again to log out");
+            }
+            else
+            {
+                m_controller.Disconnect();
+                navigationHelper.GoBack();
+            }
         }
 
         /// <summary>
@@ -57,16 +79,18 @@ namespace ChatClientWP.page
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             Debug.WriteLine("NavigationHelper_LoadState");
+            m_controller = (Application.Current as App).GetController();
 
             if (e.PageState == null)
             {
-                m_controller = (Application.Current as App).GetController();
+                Debug.WriteLine("NavigationHelper_LoadState - pagestate ==null");
                 m_controller.AddListener(this);
 
                 m_controller.RequestContacts();
             }
             else
             {
+                Debug.WriteLine("NavigationHelper_LoadState - pagestate !=null");
                 m_contactCollection = e.PageState["Contacts"] as ObservablePropertyCollection<Contact>;
                 ContactListView.ItemsSource = m_contactCollection;
 
@@ -120,8 +144,15 @@ namespace ChatClientWP.page
         {
         }
 
-        public void OnDisconnected()
+        public async void OnDisconnected()
         {
+            Debug.WriteLine("CONTA:" + "OnDisconnected");
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                //PopupDisplayer.DisplayPopup("Disconnected");
+                navigationHelper.GoBack();
+            });
         }
 
         public void OnLoginSuccessful()
@@ -136,8 +167,14 @@ namespace ChatClientWP.page
         {
         }
 
-        public void OnConnectionError()
+        public async void OnConnectionError()
         {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                PopupDisplayer.DisplayPopup("Connection error");
+                navigationHelper.GoBack();
+            });
         }
 
         public async void OnContactsReceived()

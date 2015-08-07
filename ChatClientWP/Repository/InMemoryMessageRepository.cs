@@ -48,5 +48,11 @@ namespace ChatClientWP.Repository
             }
             return messagesWithContact;
         }
+
+
+        public void ClearMessages()
+        {
+            m_messages.Clear();
+        }
     }
 }

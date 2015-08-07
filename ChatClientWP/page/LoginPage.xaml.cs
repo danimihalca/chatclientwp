@@ -21,7 +21,6 @@ namespace ChatClientWP.page
     public sealed partial class LoginPage : Page, IChatClientListener
     {
         private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
         private IChatClientController m_controller;
 
@@ -44,14 +43,6 @@ namespace ChatClientWP.page
             get { return this.navigationHelper; }
         }
 
-        /// <summary>
-        /// Gets the view model for this <see cref="Page"/>.
-        /// This can be changed to a strongly typed view model.
-        /// </summary>
-        public ObservableDictionary DefaultViewModel
-        {
-            get { return this.defaultViewModel; }
-        }
 
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
@@ -66,6 +57,22 @@ namespace ChatClientWP.page
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            Debug.WriteLine("LOGIN:" + "NavigationHelper_LoadState");
+            if (e.PageState != null)
+            {
+                if (e.PageState.ContainsKey("userName"))
+                {
+                    userNameInput.Text = e.PageState["userName"] as String;
+                }
+                if (e.PageState.ContainsKey("password"))
+                {
+                    passwordInput.Password = e.PageState["password"] as String;
+                }
+                if (e.PageState.ContainsKey("rememberMe"))
+                {
+                    rememberMeCheckbox.IsChecked = e.PageState["rememberMe"] as bool?;
+                }
+            }
         }
 
         /// <summary>
@@ -78,6 +85,13 @@ namespace ChatClientWP.page
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
+            if (rememberMeCheckbox.IsChecked == true)
+            {
+                e.PageState["userName"] = userNameInput.Text;
+                e.PageState["password"] = passwordInput.Password;
+                e.PageState["rememberMe"] = rememberMeCheckbox.IsChecked;
+            }
+            Debug.WriteLine("LOGIN:"+"NavigationHelper_SaveState");
         }
 
         #region NavigationHelper registration
@@ -97,11 +111,14 @@ namespace ChatClientWP.page
         /// handlers that cannot cancel the navigation request.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            Debug.WriteLine("LOGIN:" + "OnNavigatedTo");
             this.navigationHelper.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+
+            Debug.WriteLine("LOGIN:" + "OnNavigatedFrom");
             this.navigationHelper.OnNavigatedFrom(e);
         }
 
@@ -124,6 +141,7 @@ namespace ChatClientWP.page
 
         public async void OnDisconnected() 
         {
+            Debug.WriteLine("LOGIN:" + "OnDisconnected");
             m_controller.RemoveListener(this);
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
@@ -164,7 +182,7 @@ namespace ChatClientWP.page
         {
             m_controller.RemoveListener(this);
 
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Idle,
             () =>
             {
                 PopupDisplayer.DisplayPopup("Connection error");

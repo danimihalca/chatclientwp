@@ -14,5 +14,7 @@ namespace ChatClientWP.Repository
         List<Contact> GetContacts();
 
         Contact FindContact(int contactId);
+
+        void ClearContacts();
     }
 }

@@ -3,6 +3,7 @@ using ChatClientWP.controller;
 using ChatClientWP.Model;
 using ChatClientWP.Utils;
 using System;
+using System.Diagnostics;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -35,10 +36,13 @@ namespace ChatClientWP.page
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
+
             m_controller = (Application.Current as App).GetController();
             m_controller.AddListener(this);
 
         }
+
+
 
         /// <summary>
         /// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
@@ -124,10 +128,12 @@ namespace ChatClientWP.page
 
         public async void OnDisconnected()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            Debug.WriteLine("CONV:" + "OnDisconnected");
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                PopupDisplayer.DisplayPopup("Disconnected");
+                //PopupDisplayer.DisplayPopup("Disconnected");
+                navigationHelper.GoBack();
             });
         }
 
@@ -151,10 +157,11 @@ namespace ChatClientWP.page
 
         public async void OnConnectionError()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                PopupDisplayer.DisplayPopup("Connection error");
+                //PopupDisplayer.DisplayPopup("Connection error");
+                navigationHelper.GoBack();
             });
         }
 

@@ -67,7 +67,9 @@ namespace ChatClientWP
 
                 m_contactRepository.AddContact(c);
             }
-            foreach (var listener in listeners.ToList<IChatClientListener>())
+            List<IChatClientListener> reverseList = listeners.ToList<IChatClientListener>();
+            reverseList.Reverse();
+            foreach (var listener in reverseList)
             {
                 listener.OnContactsReceived();
             }
@@ -96,6 +98,7 @@ namespace ChatClientWP
         public void Disconnect()
         {
             m_nativeChatClient.disconnect();
+            listeners.Clear();
         }
 
         public void SendMessage(Message message)
@@ -107,7 +110,9 @@ namespace ChatClientWP
 
         private void notifyOnConnected()
         {
-            foreach (var listener in listeners.ToList<IChatClientListener>())
+            List<IChatClientListener> reverseList = listeners.ToList<IChatClientListener>();
+            reverseList.Reverse();
+            foreach (var listener in reverseList)
             {
                 listener.OnConnected();
             }
@@ -115,10 +120,15 @@ namespace ChatClientWP
 
         private void notifyOnDisconnected()
         {
-            foreach (var listener in listeners.ToList<IChatClientListener>())
+            List<IChatClientListener> reverseList = listeners.ToList<IChatClientListener>();
+            reverseList.Reverse();
+            foreach (var listener in reverseList)
             {
                 listener.OnDisconnected();
             }
+            listeners.Clear();
+            m_messageRepository.ClearMessages();
+            m_contactRepository.ClearContacts();
         }
 
         private void notifyOnMessageReceived(int senderId, string message)
@@ -132,7 +142,9 @@ namespace ChatClientWP
             m.MessageText = message;
             m_messageRepository.AddMessage(m);
 
-            foreach (var listener in listeners.ToList<IChatClientListener>())
+            List<IChatClientListener> reverseList = listeners.ToList<IChatClientListener>();
+            reverseList.Reverse();
+            foreach (var listener in reverseList)
             {
                 listener.OnMessageReceived(m);
             }
@@ -140,24 +152,20 @@ namespace ChatClientWP
 
         private void notifyOnLoginSuccessful()
         {
-            //IList<IChatClientListener> copy = listeners.ToList<IChatClientListener>();
-            foreach (var listener in listeners.ToList<IChatClientListener>())
+            List<IChatClientListener> reverseList = listeners.ToList<IChatClientListener>();
+            reverseList.Reverse();
+            foreach (var listener in reverseList)
             {
                 listener.OnLoginSuccessful();
             }
-            //lock(listeners)
-            //{
-            //    foreach (var listener in listeners)
-            //    {
-            //        listener.OnLoginSuccessful();
-            //    }
-            //}
             Debug.WriteLine("notifyOnLoginSuccessful");
         }
 
         private void notifyOnLoginFailed(string message)
         {
-            foreach (var listener in listeners.ToList<IChatClientListener>())
+            List<IChatClientListener> reverseList = listeners.ToList<IChatClientListener>();
+            reverseList.Reverse();
+            foreach (var listener in reverseList)
             {
                 listener.OnLoginFailed(message);
             }
@@ -167,7 +175,9 @@ namespace ChatClientWP
         {
             Contact c = m_contactRepository.FindContact(contactId);
             c.IsOnline = isOnline;
-            foreach (var listener in listeners.ToList<IChatClientListener>())
+            List<IChatClientListener> reverseList = listeners.ToList<IChatClientListener>();
+            reverseList.Reverse();
+            foreach (var listener in reverseList)
             {
                 listener.OnContactOnlineStatusChanged(c);
             }
@@ -175,10 +185,15 @@ namespace ChatClientWP
 
         private void notifyOnConnectionError()
         {
-            foreach (var listener in listeners.ToList<IChatClientListener>())
+            List<IChatClientListener> reverseList = listeners.ToList<IChatClientListener>();
+            reverseList.Reverse();
+            foreach (var listener in reverseList)
             {
                 listener.OnConnectionError();
             }
+            listeners.Clear();
+            m_messageRepository.ClearMessages();
+            m_contactRepository.ClearContacts();
         }
 
 
