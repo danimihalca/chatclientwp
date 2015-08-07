@@ -158,7 +158,7 @@ namespace ChatClientWP.page
 
         public void OnContactOnlineStatusChanged(Contact c)
         {
-            Debug.WriteLine("O" + c.ID + ":" + c.IsOnline);
+            Debug.WriteLine("O" + c.Id + ":" + c.IsOnline);
         }
 
         public void OnConnectionError()

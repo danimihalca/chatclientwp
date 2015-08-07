@@ -152,6 +152,7 @@ namespace ChatClientWP.page
                 IList<Contact> contacts = m_controller.GetContacts();
                 collection = new ObservablePropertyCollection<Contact>(contacts);
                 ContactListView.ItemsSource = collection;
+                //ContactListView.Visibility += visibility;
                 Debug.WriteLine("set contacts");
             });
         }

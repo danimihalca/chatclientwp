@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ChatClientRC;
 using ChatClientWP.controller;
 using System.Diagnostics;
+using ChatClientWP.Repository;
 
 
 namespace ChatClientWP
@@ -16,13 +17,14 @@ namespace ChatClientWP
         private NativeChatClientRC m_nativeChatClient;
         private IList<IChatClientListener> listeners;
 
-        IDictionary<int, Contact> m_contacts;
+        IContactRepository  m_contactRepository;
 
         public RCChatClientController()
         {
             m_nativeChatClient = new NativeChatClientRC();
             listeners = new List<IChatClientListener>();
-            m_contacts = new Dictionary<int, Contact>();
+            m_contactRepository = new InMemoryContactRepository();
+
             RCChatClientNotifier notifier = new RCChatClientNotifier();
             notifier.OnConnected = notifyOnConnected;
             notifier.OnDisconnected = notifyOnDisconnected;
@@ -43,12 +45,12 @@ namespace ChatClientWP
             for(int i =0 ; i< contacts.Length; i++)
             {
                 Contact c = new Contact() ;
-                c.ID = contacts[i].GetId();
+                c.Id = contacts[i].GetId();
                 c.UserName = contacts[i].GetUserName();
                 c.FullName = contacts[i].GetFullName();
                 c.IsOnline= contacts[i].IsOnline();
 
-                m_contacts.Add(c.ID ,c);
+                m_contactRepository.AddContact(c);
             }
             foreach (var listener in listeners)
             {
@@ -104,6 +106,8 @@ namespace ChatClientWP
 
         private void notifyOnMessageReceived(int senderId, string message)
         {
+            Contact c  = m_contactRepository.FindContact(senderId);
+            c.UnreadMesssagesCount++;
             foreach (var listener in listeners)
             {
                 listener.OnMessageReceived(senderId, message);
@@ -137,9 +141,8 @@ namespace ChatClientWP
 
         private void notifyOnContactOnlineStatusChanged(int contactId, bool isOnline)
         {
-            Contact c;
-            m_contacts.TryGetValue(contactId, out c);
-                c.IsOnline = isOnline;
+            Contact c = m_contactRepository.FindContact(contactId);
+            c.IsOnline = isOnline;
             foreach (var listener in listeners)
             {
                 listener.OnContactOnlineStatusChanged(c);
@@ -157,7 +160,7 @@ namespace ChatClientWP
 
         public IList<Contact> GetContacts()
         {
-            return m_contacts.Values.ToList();
+            return m_contactRepository.GetContacts();
         }
 
 

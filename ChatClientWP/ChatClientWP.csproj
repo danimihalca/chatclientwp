@@ -109,6 +109,8 @@
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\IContactRepository.cs" />
+    <Compile Include="Repository\InMemoryContactRepository.cs" />
     <Compile Include="Utils\ObservablePropertyCollection.cs" />
   </ItemGroup>
   <ItemGroup>

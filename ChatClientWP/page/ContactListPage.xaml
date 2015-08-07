@@ -52,6 +52,16 @@
                                 </i:Interaction.Behaviors>
                             </Image>
                             <TextBlock Grid.Row="1" Grid.Column="0" x:Name="UserNameText" Text="{Binding UserName}" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="UnreadMessagesCountText" HorizontalAlignment="Right"  xmlns:ic="using:Microsoft.Xaml.Interactions.Core" xmlns:i="using:Microsoft.Xaml.Interactivity">
+                                <i:Interaction.Behaviors>
+                                    <ic:DataTriggerBehavior Binding="{Binding UnreadMesssagesCount, Mode=OneWay}" Value="0" ComparisonCondition="Equal">
+                                        <ic:ChangePropertyAction PropertyName="Text" Value=" "/>
+                                    </ic:DataTriggerBehavior>
+                                    <ic:DataTriggerBehavior Binding="{Binding UnreadMesssagesCount, Mode=OneWay}" Value="0" ComparisonCondition="GreaterThan">
+                                        <ic:ChangePropertyAction PropertyName="Text" Value="{Binding UnreadMesssagesCount, Mode=OneWay}"/>
+                                    </ic:DataTriggerBehavior>
+                                </i:Interaction.Behaviors>    
+                            </TextBlock>
                             <Line Grid.Row="2" X1="0" Y1="0" X2="400" Y2="0" Stroke="Gray" StrokeThickness="2" Stretch="Fill"></Line>
                         </Grid>
                     </DataTemplate>

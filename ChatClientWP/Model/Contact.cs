@@ -13,11 +13,13 @@ namespace ChatClientWP
 {
     public class Contact : INotifyPropertyChanged
     {
-        public int ID { get; set; }
+        private bool _IsOnline;
+        private int _UnreadMessagesCount = 0;
+
+        public int Id { get; set; }
         public string UserName { get; set; }
         public string FullName { get; set; }
 
-        private bool _IsOnline;
         public bool IsOnline
         {
             get
@@ -26,27 +28,41 @@ namespace ChatClientWP
             }
             set
             {
-                _IsOnline = value;
-                Debug.WriteLine(UserName+"->"+_IsOnline);
-                RaiseIsOnlineChanged();
+                if (_IsOnline != value)
+                {
+                    _IsOnline = value;
+                    RaiseIsOnlineChanged("IsOnline");
+                }
+            }
+        }
+        public int UnreadMesssagesCount
+        {
+            get
+            {
+                return _UnreadMessagesCount;
+            }
+            set
+            {
+                if (_UnreadMessagesCount != value)
+                {
+                    _UnreadMessagesCount = value;
+                    RaiseIsOnlineChanged("UnreadMesssagesCount");
+                }
             }
         }
 
-        private async void RaiseIsOnlineChanged()
+        private async void RaiseIsOnlineChanged(string propertyName)
         {
             if (PropertyChanged != null)
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    PropertyChanged(this, new PropertyChangedEventArgs("ID"));
-                    //CollectionChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace));
+                    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
                 });
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
     }
 }
