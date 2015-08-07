@@ -30,13 +30,11 @@ namespace ChatClientWP.page
 
         public ContactListPage()
         {
-            Debug.WriteLine("ContactListPage");
             this.InitializeComponent();
 
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-
 
             GoBackCommand = new RelayCommand(GoBackAction);
             goBackPressed = false;
@@ -78,22 +76,17 @@ namespace ChatClientWP.page
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            Debug.WriteLine("NavigationHelper_LoadState");
             m_controller = (Application.Current as App).GetController();
 
             if (e.PageState == null)
             {
-                Debug.WriteLine("NavigationHelper_LoadState - pagestate ==null");
                 m_controller.AddListener(this);
-
                 m_controller.RequestContacts();
             }
             else
             {
-                Debug.WriteLine("NavigationHelper_LoadState - pagestate !=null");
                 m_contactCollection = e.PageState["Contacts"] as ObservablePropertyCollection<Contact>;
                 ContactListView.ItemsSource = m_contactCollection;
-
             }
         }
 
@@ -107,7 +100,6 @@ namespace ChatClientWP.page
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            Debug.WriteLine("NavigationHelper_SaveState");
             e.PageState["Contacts"] = m_contactCollection;
         }
 
@@ -128,13 +120,11 @@ namespace ChatClientWP.page
         /// handlers that cannot cancel the navigation request.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Debug.WriteLine("OnNavigatedTo");
             this.navigationHelper.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            Debug.WriteLine("OnNavigatedFrom");
             this.navigationHelper.OnNavigatedFrom(e);
         }
 
@@ -146,11 +136,10 @@ namespace ChatClientWP.page
 
         public async void OnDisconnected()
         {
-            Debug.WriteLine("CONTA:" + "OnDisconnected");
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                //PopupDisplayer.DisplayPopup("Disconnected");
+                m_controller.RemoveListener(this);
                 navigationHelper.GoBack();
             });
         }
@@ -167,14 +156,8 @@ namespace ChatClientWP.page
         {
         }
 
-        public async void OnConnectionError()
+        public void OnConnectionError()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                PopupDisplayer.DisplayPopup("Connection error");
-                navigationHelper.GoBack();
-            });
         }
 
         public async void OnContactsReceived()
@@ -185,7 +168,6 @@ namespace ChatClientWP.page
                 IList<Contact> contacts = m_controller.GetContacts();
                 m_contactCollection = new ObservablePropertyCollection<Contact>(contacts);
                 ContactListView.ItemsSource = m_contactCollection;
-                Debug.WriteLine("set contacts");
             });
         }
 

@@ -98,7 +98,6 @@ namespace ChatClientWP
         public void Disconnect()
         {
             m_nativeChatClient.disconnect();
-            listeners.Clear();
         }
 
         public void SendMessage(Message message)
@@ -126,7 +125,6 @@ namespace ChatClientWP
             {
                 listener.OnDisconnected();
             }
-            listeners.Clear();
             m_messageRepository.ClearMessages();
             m_contactRepository.ClearContacts();
         }
@@ -191,7 +189,6 @@ namespace ChatClientWP
             {
                 listener.OnConnectionError();
             }
-            listeners.Clear();
             m_messageRepository.ClearMessages();
             m_contactRepository.ClearContacts();
         }

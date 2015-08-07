@@ -57,7 +57,6 @@ namespace ChatClientWP.page
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            Debug.WriteLine("LOGIN:" + "NavigationHelper_LoadState");
             if (e.PageState != null)
             {
                 if (e.PageState.ContainsKey("userName"))
@@ -72,6 +71,10 @@ namespace ChatClientWP.page
                 {
                     rememberMeCheckbox.IsChecked = e.PageState["rememberMe"] as bool?;
                 }
+            }
+            else
+            {
+                m_controller.AddListener(this);
             }
         }
 
@@ -91,7 +94,6 @@ namespace ChatClientWP.page
                 e.PageState["password"] = passwordInput.Password;
                 e.PageState["rememberMe"] = rememberMeCheckbox.IsChecked;
             }
-            Debug.WriteLine("LOGIN:"+"NavigationHelper_SaveState");
         }
 
         #region NavigationHelper registration
@@ -111,14 +113,11 @@ namespace ChatClientWP.page
         /// handlers that cannot cancel the navigation request.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Debug.WriteLine("LOGIN:" + "OnNavigatedTo");
             this.navigationHelper.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-
-            Debug.WriteLine("LOGIN:" + "OnNavigatedFrom");
             this.navigationHelper.OnNavigatedFrom(e);
         }
 
@@ -126,7 +125,6 @@ namespace ChatClientWP.page
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
         {
-            m_controller.AddListener(this);
             String userName = userNameInput.Text;
             String password = passwordInput.Password;
 
@@ -136,14 +134,11 @@ namespace ChatClientWP.page
 
         public void OnConnected()
         {
-            Debug.WriteLine("C");
         }
 
         public async void OnDisconnected() 
         {
-            Debug.WriteLine("LOGIN:" + "OnDisconnected");
-            m_controller.RemoveListener(this);
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Low,
             () =>
             {
                 PopupDisplayer.DisplayPopup("Disconnected");
@@ -152,20 +147,15 @@ namespace ChatClientWP.page
 
         public async void OnLoginSuccessful()
         {
-            Debug.WriteLine("LS");
-
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-
                 Frame.Navigate(typeof(ContactListPage));
             });
         }
 
         public async void OnLoginFailed(string message)
         {
-            m_controller.RemoveListener(this);
-
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
@@ -180,9 +170,7 @@ namespace ChatClientWP.page
 
         public async void OnConnectionError()
         {
-            m_controller.RemoveListener(this);
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Idle,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
                 PopupDisplayer.DisplayPopup("Connection error");
@@ -206,6 +194,5 @@ namespace ChatClientWP.page
                 Windows.UI.ViewManagement.InputPane.GetForCurrentView().TryHide();
             }
         }
-
     }
 }

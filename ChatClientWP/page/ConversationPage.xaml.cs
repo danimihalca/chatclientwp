@@ -21,7 +21,6 @@ namespace ChatClientWP.page
     public sealed partial class ConversationPage : Page, IChatClientListener
     {
         private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
        
         private IChatClientController m_controller;
         private Contact m_contact;
@@ -39,7 +38,6 @@ namespace ChatClientWP.page
 
             m_controller = (Application.Current as App).GetController();
             m_controller.AddListener(this);
-
         }
 
 
@@ -50,15 +48,6 @@ namespace ChatClientWP.page
         public NavigationHelper NavigationHelper
         {
             get { return this.navigationHelper; }
-        }
-
-        /// <summary>
-        /// Gets the view model for this <see cref="Page"/>.
-        /// This can be changed to a strongly typed view model.
-        /// </summary>
-        public ObservableDictionary DefaultViewModel
-        {
-            get { return this.defaultViewModel; }
         }
 
         /// <summary>
@@ -115,9 +104,8 @@ namespace ChatClientWP.page
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            this.navigationHelper.OnNavigatedFrom(e);
             m_controller.RemoveListener(this);
-
+            this.navigationHelper.OnNavigatedFrom(e);
         }
 
         #endregion
@@ -128,11 +116,10 @@ namespace ChatClientWP.page
 
         public async void OnDisconnected()
         {
-            Debug.WriteLine("CONV:" + "OnDisconnected");
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                //PopupDisplayer.DisplayPopup("Disconnected");
+                m_controller.RemoveListener(this);
                 navigationHelper.GoBack();
             });
         }
@@ -160,7 +147,6 @@ namespace ChatClientWP.page
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                //PopupDisplayer.DisplayPopup("Connection error");
                 navigationHelper.GoBack();
             });
         }
@@ -196,7 +182,6 @@ namespace ChatClientWP.page
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 Windows.UI.ViewManagement.InputPane.GetForCurrentView().TryHide();
-                //SendMessage();
             }
         }
 
