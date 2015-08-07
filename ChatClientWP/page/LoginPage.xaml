@@ -43,8 +43,8 @@
             <TextBlock TextWrapping="Wrap" Text="User name" FontSize="30" Width="auto" Grid.Row="0" Margin="5,5,5,5" Padding="5,5,0,0"/>
             <TextBlock TextWrapping="Wrap" Text="Password" FontSize="30" Width="auto" Grid.Row="1" Margin="5,5,5,5" Padding="5,5,0,0"/>
             <CheckBox x:Name="rememberMeCheckbox" Content="Remember me" Grid.Row="2" Grid.Column="1"  HorizontalAlignment="Right" HorizontalContentAlignment="Right" MinWidth="86" VerticalContentAlignment="Center" FlowDirection="LeftToRight" Padding="0,5,5,5"  />
-            <TextBox x:Name="userNameInput" Grid.Column="1" HorizontalAlignment="Stretch"  TextWrapping="Wrap" UseLayoutRounding="True" Margin="5" Text="user3"   />
-            <PasswordBox x:Name="passwordInput" Grid.Column="1" HorizontalAlignment="Stretch"   Grid.Row="1"  Margin="5" Password="pwd3" />
+            <TextBox x:Name="userNameInput" Grid.Column="1" HorizontalAlignment="Stretch"  TextWrapping="Wrap" UseLayoutRounding="True" Margin="5" Text="user3"  KeyDown="input_KeyDown" />
+            <PasswordBox x:Name="passwordInput" Grid.Column="1" HorizontalAlignment="Stretch"   Grid.Row="1"  Margin="5" Password="pwd3" KeyDown="input_KeyDown" />
             <Button Content="Advanced" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Top" Margin="5,5,0,0"/>
             <Button x:Name="loginButton" Content="Login" Grid.Column="1" HorizontalAlignment="Right" Grid.Row="3" Grid.RowSpan="2" VerticalAlignment="Top" Margin="0,5,5,0" Click="loginButton_Click"/>
 

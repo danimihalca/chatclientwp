@@ -67,7 +67,7 @@ namespace ChatClientWP
 
                 m_contactRepository.AddContact(c);
             }
-            foreach (var listener in listeners)
+            foreach (var listener in listeners.ToList<IChatClientListener>())
             {
                 listener.OnContactsReceived();
             }
@@ -107,7 +107,7 @@ namespace ChatClientWP
 
         private void notifyOnConnected()
         {
-            foreach(var listener in listeners)
+            foreach (var listener in listeners.ToList<IChatClientListener>())
             {
                 listener.OnConnected();
             }
@@ -115,7 +115,7 @@ namespace ChatClientWP
 
         private void notifyOnDisconnected()
         {
-            foreach (var listener in listeners)
+            foreach (var listener in listeners.ToList<IChatClientListener>())
             {
                 listener.OnDisconnected();
             }
@@ -132,7 +132,7 @@ namespace ChatClientWP
             m.MessageText = message;
             m_messageRepository.AddMessage(m);
 
-            foreach (var listener in listeners)
+            foreach (var listener in listeners.ToList<IChatClientListener>())
             {
                 listener.OnMessageReceived(m);
             }
@@ -140,8 +140,8 @@ namespace ChatClientWP
 
         private void notifyOnLoginSuccessful()
         {
-            IList<IChatClientListener> copy = listeners.ToList<IChatClientListener>();
-            foreach (var listener in copy)
+            //IList<IChatClientListener> copy = listeners.ToList<IChatClientListener>();
+            foreach (var listener in listeners.ToList<IChatClientListener>())
             {
                 listener.OnLoginSuccessful();
             }
@@ -157,7 +157,7 @@ namespace ChatClientWP
 
         private void notifyOnLoginFailed(string message)
         {
-            foreach (var listener in listeners)
+            foreach (var listener in listeners.ToList<IChatClientListener>())
             {
                 listener.OnLoginFailed(message);
             }
@@ -167,7 +167,7 @@ namespace ChatClientWP
         {
             Contact c = m_contactRepository.FindContact(contactId);
             c.IsOnline = isOnline;
-            foreach (var listener in listeners)
+            foreach (var listener in listeners.ToList<IChatClientListener>())
             {
                 listener.OnContactOnlineStatusChanged(c);
             }
@@ -175,7 +175,7 @@ namespace ChatClientWP
 
         private void notifyOnConnectionError()
         {
-            foreach (var listener in listeners)
+            foreach (var listener in listeners.ToList<IChatClientListener>())
             {
                 listener.OnConnectionError();
             }

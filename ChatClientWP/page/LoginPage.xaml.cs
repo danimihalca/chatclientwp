@@ -1,24 +1,14 @@
 ﻿using ChatClientWP.Common;
 using ChatClientWP.controller;
 using ChatClientWP.Model;
+using ChatClientWP.Utils;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Display;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
@@ -132,24 +122,37 @@ namespace ChatClientWP.page
             Debug.WriteLine("C");
         }
 
-        public void OnDisconnected() 
+        public async void OnDisconnected() 
         {
-            Debug.WriteLine("D");
+            m_controller.RemoveListener(this);
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                PopupDisplayer.DisplayPopup("Disconnected");
+            });
         }
 
         public async void OnLoginSuccessful()
         {
             Debug.WriteLine("LS");
+
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
+
                 Frame.Navigate(typeof(ContactListPage));
             });
         }
 
-        public void OnLoginFailed(string message)
+        public async void OnLoginFailed(string message)
         {
-            Debug.WriteLine("LF:"+ message);
+            m_controller.RemoveListener(this);
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                PopupDisplayer.DisplayPopup("Login failed");
+            });
         }
 
         public void OnContactOnlineStatusChanged(Contact c)
@@ -157,8 +160,15 @@ namespace ChatClientWP.page
             Debug.WriteLine("O" + c.Id + ":" + c.IsOnline);
         }
 
-        public void OnConnectionError()
+        public async void OnConnectionError()
         {
+            m_controller.RemoveListener(this);
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                PopupDisplayer.DisplayPopup("Connection error");
+            });
         }
 
 
@@ -170,5 +180,14 @@ namespace ChatClientWP.page
         public void OnMessageReceived(Message m)
         {
         }
+
+        private void input_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                Windows.UI.ViewManagement.InputPane.GetForCurrentView().TryHide();
+            }
+        }
+
     }
 }

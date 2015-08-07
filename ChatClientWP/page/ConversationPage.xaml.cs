@@ -3,22 +3,11 @@ using ChatClientWP.controller;
 using ChatClientWP.Model;
 using ChatClientWP.Utils;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Display;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
@@ -82,6 +71,8 @@ namespace ChatClientWP.page
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             m_contact = e.NavigationParameter as Contact;
+            m_contact.UnreadMesssagesCount = 0;
+
             m_messageCollection = new ObservablePropertyCollection<Message>(m_controller.getMessages(m_contact.Id));
             MessageListView.ItemsSource = m_messageCollection;
         }
@@ -131,8 +122,13 @@ namespace ChatClientWP.page
         {
         }
 
-        public void OnDisconnected()
+        public async void OnDisconnected()
         {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                PopupDisplayer.DisplayPopup("Disconnected");
+            });
         }
 
 
@@ -144,13 +140,22 @@ namespace ChatClientWP.page
         {
         }
 
-        public void OnContactOnlineStatusChanged(Contact c)
+        public async void OnContactOnlineStatusChanged(Contact c)
         {
-            //TODO: popup
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                PopupDisplayer.DisplayPopup(c.FullName + " is now " + (c.IsOnline ? "online" : "offline"));
+            });
         }
 
-        public void OnConnectionError()
+        public async void OnConnectionError()
         {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                PopupDisplayer.DisplayPopup("Connection error");
+            });
         }
 
         public void OnContactsReceived()
@@ -162,7 +167,15 @@ namespace ChatClientWP.page
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                m_messageCollection.Add(m);
+                if(m.Sender.Equals(m_contact))
+                {
+                    m_contact.UnreadMesssagesCount = 0;
+                    m_messageCollection.Add(m);
+                }
+                else
+                {
+                    PopupDisplayer.DisplayPopup(m.Sender.FullName + " send you a message");
+                }
             });
         }
 

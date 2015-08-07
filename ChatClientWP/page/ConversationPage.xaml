@@ -56,7 +56,7 @@
 
 
             <TextBox x:Name="messageInput" Margin="5,5,5,5" Grid.Row="1" TextWrapping="Wrap" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Center"  KeyDown="messageInput_KeyDown"/>
-            <Button x:Name="sendButton" Grid.Row="1" Grid.Column="1" Content="Button" HorizontalAlignment="Left" Margin="5,5,5,5" VerticalAlignment="Bottom" Click="sendButton_Click"/>
+            <Button x:Name="sendButton" Grid.Row="1" Grid.Column="1" Content="Send" HorizontalAlignment="Left" Margin="5,5,5,5" VerticalAlignment="Bottom" Click="sendButton_Click"/>
         </Grid>
     </Grid>
 </Page>
