@@ -1,7 +1,7 @@
 #pragma once
-#include "RCContact.hpp"
+#include "WinRTContact.hpp"
 
-namespace ChatClientRC
+namespace WinRTChat
 {
 	public delegate void onConnectedCallback();
 	public delegate void onDisconnectedCallback();
@@ -9,13 +9,15 @@ namespace ChatClientRC
 	public delegate void onLoginFailedCallback(Platform::String^ message);
 	public delegate void onConnectionErrorCallback();
 	public delegate void onLoginSuccessfulCallback();
-	public delegate void onContactsReceivedCallback(const Platform::Array<RCContact^>^ contacts);
-	public delegate void onContactOnlineStatusChangedCallback(int contactId, bool isOnline);
+	public delegate void onContactsReceivedCallback(const Platform::Array<WinRTContact^>^ contacts);
+	public delegate void onContactStatusChangedCallback(int contactId, bool isOnline);
 
-	public ref class RCChatClientNotifier sealed
+	public ref class WinRTChatClientNotifierProxy sealed
 	{
 	public:
-		RCChatClientNotifier();
+		inline WinRTChatClientNotifierProxy()
+		{
+		}
 
 		property onConnectedCallback^ OnConnected;
 		property onDisconnectedCallback^ OnDisconnected;
@@ -24,6 +26,6 @@ namespace ChatClientRC
 		property onConnectionErrorCallback^ OnConnectionError;
 		property onLoginSuccessfulCallback^ OnLoginSuccessful;
 		property onContactsReceivedCallback^ OnContactsReceived;
-		property onContactOnlineStatusChangedCallback^ OnContactOnlineStatusChanged;
+		property onContactStatusChangedCallback^ OnContactStatusChanged;
 	};
 }

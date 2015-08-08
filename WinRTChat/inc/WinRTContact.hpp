@@ -1,8 +1,8 @@
 #pragma once
 
-namespace ChatClientRC
+namespace WinRTChat
 {
-	public ref class RCContact sealed
+	public ref class WinRTContact sealed
 	{
 	private:
 		int m_id;
@@ -11,8 +11,8 @@ namespace ChatClientRC
 		bool m_isOnline;
 
 	public:
-		RCContact();
-		RCContact(int id, Platform::String^ userName, Platform::String^ fullName, bool isOnline);
+		WinRTContact();
+		WinRTContact(int id, Platform::String^ userName, Platform::String^ fullName, bool isOnline);
 
 		int GetId();
 		void SetId(int id);

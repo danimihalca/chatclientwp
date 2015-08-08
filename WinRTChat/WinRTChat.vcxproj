@@ -19,24 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\NativeChatClientRC.cpp" />
-    <ClCompile Include="src\RCChatClientListener.cpp" />
-    <ClCompile Include="src\RCChatClientNotifier.cpp" />
-    <ClCompile Include="src\RcContact.cpp" />
+    <ClCompile Include="src\WinRTChatClient.cpp" />
+    <ClCompile Include="src\WinRTChatClientListener.cpp" />
+    <ClCompile Include="src\WinRTContact.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\NativeChatClientRC.hpp" />
-    <ClInclude Include="inc\RCChatClientListener.hpp" />
-    <ClInclude Include="inc\RCChatClientNotifier.hpp" />
-    <ClInclude Include="inc\RcContact.hpp" />
+    <ClInclude Include="inc\WinRTChatClient.hpp" />
+    <ClInclude Include="inc\WinRTChatClientListener.hpp" />
+    <ClInclude Include="inc\WinRTChatClientNotifierProxy.hpp" />
+    <ClInclude Include="inc\WinRTContact.hpp" />
     <ClInclude Include="inc\utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1caed67a-81ec-4fc0-b5d3-ca6ab6a2d142}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <ProjectName>ChatClientRC</ProjectName>
-    <RootNamespace>ChatClientRC</RootNamespace>
+    <ProjectName>WinRTChat</ProjectName>
+    <RootNamespace>WinRTChat</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>

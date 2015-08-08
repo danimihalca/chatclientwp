@@ -8,16 +8,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\utils.cpp" />
-    <ClCompile Include="src\NativeChatClientRC.cpp" />
-    <ClCompile Include="src\RCChatClientListener.cpp" />
-    <ClCompile Include="src\RCChatClientNotifier.cpp" />
-    <ClCompile Include="src\RcContact.cpp" />
+    <ClCompile Include="src\WinRTContact.cpp" />
+    <ClCompile Include="src\WinRTChatClient.cpp" />
+    <ClCompile Include="src\WinRTChatClientListener.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\NativeChatClientRC.hpp" />
-    <ClInclude Include="inc\RCChatClientListener.hpp" />
-    <ClInclude Include="inc\RCChatClientNotifier.hpp" />
     <ClInclude Include="inc\utils.h" />
-    <ClInclude Include="inc\RcContact.hpp" />
+    <ClInclude Include="inc\WinRTContact.hpp" />
+    <ClInclude Include="inc\WinRTChatClient.hpp" />
+    <ClInclude Include="inc\WinRTChatClientNotifierProxy.hpp" />
+    <ClInclude Include="inc\WinRTChatClientListener.hpp" />
   </ItemGroup>
 </Project>

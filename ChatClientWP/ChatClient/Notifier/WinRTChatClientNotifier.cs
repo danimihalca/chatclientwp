@@ -1,4 +1,4 @@
-﻿using ChatClientRC;
+﻿using WinRTChat;
 using ChatClientWP.ChatClient.ChatClientListener;
 using ChatClientWP.controller;
 using ChatClientWP.Model;
@@ -13,7 +13,6 @@ namespace ChatClientWP.ChatClient.Notifier
     public class WinRTChatClientNotifier: IChatClientNotifier
     {
         private IChatClientController m_controller;
-        private RCChatClientNotifier m_nativeNotifier;
         private ILoginListener m_loginListener;
         private IList<IRuntimeListener> m_runtimeListeners;
 
@@ -21,7 +20,6 @@ namespace ChatClientWP.ChatClient.Notifier
         {
             m_controller = controller;
             m_runtimeListeners = new List<IRuntimeListener>();
-            InitializeNativeNotifier();
         }
 
         public void AddRuntimeListener(IRuntimeListener listener)
@@ -39,8 +37,20 @@ namespace ChatClientWP.ChatClient.Notifier
             m_loginListener = listener;
         }
 
-        public RCChatClientNotifier GetNativeNotifier()
+        public WinRTChatClientNotifierProxy CreateNotifierProxy()
         {
+            WinRTChatClientNotifierProxy m_nativeNotifier = m_nativeNotifier = new WinRTChatClientNotifierProxy();
+
+            m_nativeNotifier.OnConnected = NotifyOnConnected;
+            m_nativeNotifier.OnDisconnected = NotifyOnDisconnected;
+            m_nativeNotifier.OnConnectionError = NotifyOnConnectionError;
+            m_nativeNotifier.OnLoginSuccessful = NotifyOnLoginSuccessful;
+            m_nativeNotifier.OnLoginFailed = NotifyOnLoginFailed;
+
+            m_nativeNotifier.OnContactStatusChanged = NotifyOnContactStatusChangedFromNative;
+            m_nativeNotifier.OnMessageReceived = NotifyOnMessageReceivedFromNative;
+            m_nativeNotifier.OnContactsReceived = NotifyOnContactsReceivedFromNative;
+
             return m_nativeNotifier;
         }
 
@@ -130,22 +140,7 @@ namespace ChatClientWP.ChatClient.Notifier
             }
         }
 
-        private void InitializeNativeNotifier()
-        {
-            m_nativeNotifier = new RCChatClientNotifier();
-
-            m_nativeNotifier.OnConnected = NotifyOnConnected;
-            m_nativeNotifier.OnDisconnected = NotifyOnDisconnected;
-            m_nativeNotifier.OnConnectionError = NotifyOnConnectionError;
-            m_nativeNotifier.OnLoginSuccessful = NotifyOnLoginSuccessful;
-            m_nativeNotifier.OnLoginFailed = NotifyOnLoginFailed;
-
-            m_nativeNotifier.OnContactOnlineStatusChanged = NotifyOnContactStatusChangedFromNative;
-            m_nativeNotifier.OnMessageReceived = NotifyOnMessageReceivedFromNative;
-            m_nativeNotifier.OnContactsReceived = NotifyOnContactsReceivedFromNative;
-        }
-
-        private void NotifyOnContactsReceivedFromNative(RCContact[] contacts)
+        private void NotifyOnContactsReceivedFromNative(WinRTContact[] contacts)
         {
             IList<Contact> contactList = new List<Contact>();
             for (int i = 0; i < contacts.Length; i++)

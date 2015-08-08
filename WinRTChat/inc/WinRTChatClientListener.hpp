@@ -2,17 +2,17 @@
 
 #include <ChatClient\IChatClientListener.hpp>
 
-#include "NativeChatClientRC.hpp"
-#include "RCChatClientNotifier.hpp"
+#include "WinRTChatClient.hpp"
+#include "WinRTChatClientNotifierProxy.hpp"
 
-namespace ChatClientRC
+namespace WinRTChat
 {
 
-	class RCChatClientListener :public IChatClientListener
+	class WinRTChatClientListener :public IChatClientListener
 	{
 	public:
-		RCChatClientListener(RCChatClientNotifier^ notifier);
-		~RCChatClientListener();
+		WinRTChatClientListener(WinRTChatClientNotifierProxy^ notifier);
+		~WinRTChatClientListener();
 
 		void onConnected();
 		void onDisconnected();
@@ -23,7 +23,7 @@ namespace ChatClientRC
 		void onContactsReceived(const Contacts& contacts);
 		void onContactOnlineStatusChanged(int contactId, bool isOnline);
 	private:
-		RCChatClientNotifier^ m_notifier;
+		WinRTChatClientNotifierProxy^ m_notifier;
 	};
 }
 

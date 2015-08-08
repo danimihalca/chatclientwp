@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatClientWP", "ChatClientWP\ChatClientWP.csproj", "{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChatClientRC", "ChatClientRC\ChatClientRC.vcxproj", "{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinRTChat", "WinRTChat\WinRTChat.vcxproj", "{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

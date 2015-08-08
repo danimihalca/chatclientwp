@@ -1,4 +1,4 @@
-﻿using ChatClientRC;
+﻿using WinRTChat;
 using ChatClientWP.ChatClient.Notifier;
 using ChatClientWP.Model;
 using System;
@@ -11,15 +11,15 @@ namespace ChatClientWP.ChatClient
 {
     class ChatClientWinRTProxy: IChatClient
     {
-        private NativeChatClientRC m_nativeChatClient;
+        private WinRTChatClient m_nativeChatClient;
         
         public ChatClientWinRTProxy()
         {
-            m_nativeChatClient = new NativeChatClientRC();
+            m_nativeChatClient = new WinRTChatClient();
         }
         public void SetNotifier(IChatClientNotifier notifier)
         {
-            m_nativeChatClient.setNotifier((notifier as WinRTChatClientNotifier).GetNativeNotifier());
+            m_nativeChatClient.setNotifier((notifier as WinRTChatClientNotifier).CreateNotifierProxy());
         }
 
         public void SetServerProperties(string address, int port)

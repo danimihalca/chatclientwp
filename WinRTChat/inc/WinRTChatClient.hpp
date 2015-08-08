@@ -3,24 +3,22 @@
 #include <ChatClient/IChatClient.hpp>
 #include <memory>
 
-#include "RCChatClientNotifier.hpp"
+#include "WinRTChatClientNotifierProxy.hpp"
 
-namespace ChatClientRC
+namespace WinRTChat
 {
-
-
-	public ref class NativeChatClientRC sealed
+	public ref class WinRTChatClient sealed
 	{
 
 	public:
-		NativeChatClientRC();
+		WinRTChatClient();
 		void setServerProperties(Platform::String^ address, int port);
 		void login(Platform::String^ userName, Platform::String^ password);
 		void sendMessage(int receiverId, Platform::String^ message);
 		void disconnect();
 		void requestContacts();
 
-		void setNotifier(RCChatClientNotifier^ notifier);
+		void setNotifier(WinRTChatClientNotifierProxy^ notifier);
 
 	private:
 		std::unique_ptr<IChatClient> m_chatClient;
