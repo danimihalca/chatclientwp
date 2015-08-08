@@ -1,4 +1,5 @@
-﻿using ChatClientWP.Common;
+﻿using ChatClientWP.ChatClient.ChatClientListener;
+using ChatClientWP.Common;
 using ChatClientWP.controller;
 using ChatClientWP.Model;
 using ChatClientWP.Utils;
@@ -18,7 +19,7 @@ namespace ChatClientWP.page
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class LoginPage : Page, IChatClientListener
+    public sealed partial class LoginPage : Page, ILoginListener
     {
         private NavigationHelper navigationHelper;
 
@@ -74,7 +75,7 @@ namespace ChatClientWP.page
             }
             else
             {
-                m_controller.AddListener(this);
+                m_controller.SetLoginListener(this);
             }
         }
 
@@ -163,10 +164,6 @@ namespace ChatClientWP.page
             });
         }
 
-        public void OnContactOnlineStatusChanged(Contact c)
-        {
-            Debug.WriteLine("O" + c.Id + ":" + c.IsOnline);
-        }
 
         public async void OnConnectionError()
         {
@@ -175,16 +172,6 @@ namespace ChatClientWP.page
             {
                 PopupDisplayer.DisplayPopup("Connection error");
             });
-        }
-
-
-        public void OnContactsReceived()
-        {
-        }
-
-
-        public void OnMessageReceived(Message m)
-        {
         }
 
         private void input_KeyDown(object sender, KeyRoutedEventArgs e)

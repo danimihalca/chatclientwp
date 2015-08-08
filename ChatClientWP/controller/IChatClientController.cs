@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 using ChatClientRC;
 using ChatClientWP.Model;
+using ChatClientWP.ChatClient.ChatClientListener;
 
 namespace ChatClientWP.controller
 {
     public interface IChatClientController
     {
-        void AddListener(IChatClientListener listener);
-        void RemoveListener(IChatClientListener listener);
+        void AddRuntimeListener(IRuntimeListener listener);
+        void RemoveRuntimeListener(IRuntimeListener listener);
+        void SetLoginListener(ILoginListener listener);
+
         void RequestContacts();
 
         void SetServerProperties(string address, int port);
@@ -22,9 +25,17 @@ namespace ChatClientWP.controller
 
         void SendMessage(Message message);
 
-        IList<Message> getMessages(int contactId);
+        void AddReceivedMessage(Message message);
+
+        IList<Message> getMessages(Contact contact);
 
         IList<Contact> GetContacts();
+
+        void SetContacts(IList<Contact> contacts);
+        Contact GetContact(int contactId);
+
+        void ClearMessages();
+        void ClearContacts();
 
         ClientInstanceUser GetUser();
     }

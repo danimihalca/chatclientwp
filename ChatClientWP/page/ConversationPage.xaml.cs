@@ -1,4 +1,5 @@
-﻿using ChatClientWP.Common;
+﻿using ChatClientWP.ChatClient.ChatClientListener;
+using ChatClientWP.Common;
 using ChatClientWP.controller;
 using ChatClientWP.Model;
 using ChatClientWP.Utils;
@@ -18,7 +19,7 @@ namespace ChatClientWP.page
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ConversationPage : Page, IChatClientListener
+    public sealed partial class ConversationPage : Page, IRuntimeListener
     {
         private NavigationHelper navigationHelper;
        
@@ -37,7 +38,7 @@ namespace ChatClientWP.page
 
 
             m_controller = (Application.Current as App).GetController();
-            m_controller.AddListener(this);
+            m_controller.AddRuntimeListener(this);
         }
 
 
@@ -66,7 +67,7 @@ namespace ChatClientWP.page
             m_contact = e.NavigationParameter as Contact;
             m_contact.UnreadMesssagesCount = 0;
 
-            m_messageCollection = new ObservablePropertyCollection<Message>(m_controller.getMessages(m_contact.Id));
+            m_messageCollection = new ObservablePropertyCollection<Message>(m_controller.getMessages(m_contact));
             MessageListView.ItemsSource = m_messageCollection;
         }
 
@@ -104,37 +105,24 @@ namespace ChatClientWP.page
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            m_controller.RemoveListener(this);
+            m_controller.RemoveRuntimeListener(this);
             this.navigationHelper.OnNavigatedFrom(e);
         }
 
         #endregion
-
-        public void OnConnected()
-        {
-        }
 
         public void OnDisconnected()
         {
             IAsyncAction action = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                m_controller.RemoveListener(this);
+                m_controller.RemoveRuntimeListener(this);
                 navigationHelper.GoBack();
             });
             action.AsTask().Wait();
         }
 
-
-        public void OnLoginSuccessful()
-        {
-        }
-
-        public void OnLoginFailed(string message)
-        {
-        }
-
-        public async void OnContactOnlineStatusChanged(Contact c)
+        public async void OnContactStatusChanged(Contact c)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
@@ -143,18 +131,6 @@ namespace ChatClientWP.page
             });
         }
 
-        public async void OnConnectionError()
-        {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                navigationHelper.GoBack();
-            });
-        }
-
-        public void OnContactsReceived()
-        {
-        }
 
         public async void OnMessageReceived(Message m)
         {
@@ -197,6 +173,10 @@ namespace ChatClientWP.page
             m_controller.SendMessage(message);
 
             m_messageCollection.Add(message);
+        }
+
+        public void OnContactsReceived()
+        {
         }
     }
 }

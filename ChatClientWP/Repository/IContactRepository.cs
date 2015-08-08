@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatClientWP.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,10 @@ namespace ChatClientWP.Repository
     {
         void AddContact(Contact c);
 
-        void AddContacts(List<Contact> contacts);
+        void AddContacts(IList<Contact> contacts);
         List<Contact> GetContacts();
-
-        Contact FindContact(int contactId);
+        void SetContacts(IList<Contact> contacts);
+        Contact GetContact(int contactId);
 
         void ClearContacts();
     }

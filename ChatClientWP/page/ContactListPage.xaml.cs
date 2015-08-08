@@ -1,5 +1,7 @@
-﻿using ChatClientWP.Common;
+﻿using ChatClientWP.ChatClient.ChatClientListener;
+using ChatClientWP.Common;
 using ChatClientWP.controller;
+using ChatClientWP.Model;
 using ChatClientWP.Utils;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ namespace ChatClientWP.page
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ContactListPage : Page, IChatClientListener
+    public sealed partial class ContactListPage : Page, IRuntimeListener
     {
         private NavigationHelper navigationHelper;
 
@@ -50,6 +52,7 @@ namespace ChatClientWP.page
             }
             else
             {
+                m_controller.RemoveRuntimeListener(this);
                 m_controller.Disconnect();
                 navigationHelper.GoBack();
             }
@@ -80,7 +83,7 @@ namespace ChatClientWP.page
 
             if (e.PageState == null)
             {
-                m_controller.AddListener(this);
+                m_controller.AddRuntimeListener(this);
                 m_controller.RequestContacts();
             }
             else
@@ -130,36 +133,18 @@ namespace ChatClientWP.page
 
         #endregion
 
-        public void OnConnected()
-        {
-        }
 
         public void OnDisconnected()
         {
             IAsyncAction action = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                m_controller.RemoveListener(this);
+                m_controller.RemoveRuntimeListener(this);
                 navigationHelper.GoBack();
             });
             action.AsTask().Wait();
         }
 
-        public void OnLoginSuccessful()
-        {
-        }
-
-        public void OnLoginFailed(string message)
-        {
-        }
-
-        public void OnContactOnlineStatusChanged(Contact c)
-        {
-        }
-
-        public void OnConnectionError()
-        {
-        }
 
         public async void OnContactsReceived()
         {
@@ -178,7 +163,12 @@ namespace ChatClientWP.page
         }
 
 
-        public void OnMessageReceived(Model.Message m)
+        public void OnMessageReceived(Message m)
+        {
+        }
+
+
+        public void OnContactStatusChanged(Contact contact)
         {
         }
     }

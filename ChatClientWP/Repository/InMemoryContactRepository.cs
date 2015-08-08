@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatClientWP.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace ChatClientWP.Repository
             m_contacts.Add(c.Id, c);
         }
 
-        public void AddContacts(List<Contact> contacts)
+        public void AddContacts(IList<Contact> contacts)
         {
             foreach(Contact c in contacts)
             {
@@ -33,7 +34,7 @@ namespace ChatClientWP.Repository
             return m_contacts.Values.ToList();
         }
 
-        public Contact FindContact(int contactId)
+        public Contact GetContact(int contactId)
         {
             Contact c;
             bool found = m_contacts.TryGetValue(contactId, out c);
@@ -48,6 +49,13 @@ namespace ChatClientWP.Repository
         public void ClearContacts()
         {
             m_contacts.Clear();
+        }
+
+
+        public void SetContacts(IList<Contact> contacts)
+        {
+            ClearContacts();
+            AddContacts(contacts);
         }
     }
 }

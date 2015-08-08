@@ -91,6 +91,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ChatClient\ChatClientWinRTProxy.cs" />
+    <Compile Include="ChatClient\IChatClient.cs" />
+    <Compile Include="ChatClient\Listener\BaseListener.cs" />
+    <Compile Include="ChatClient\Listener\ILoginListener.cs" />
+    <Compile Include="ChatClient\Listener\IRuntimeListener.cs" />
+    <Compile Include="ChatClient\Notifier\IChatClientNotifier.cs" />
+    <Compile Include="ChatClient\Notifier\WinRTChatClientNotifier.cs" />
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
@@ -100,7 +107,6 @@
     <Compile Include="Model\Contact.cs" />
     <Compile Include="controller\IChatClientController.cs" />
     <Compile Include="controller\RCChatClientController.cs" />
-    <Compile Include="controller\IChatClientListener.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -187,6 +193,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>

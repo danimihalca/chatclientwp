@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
-namespace ChatClientWP
+namespace ChatClientWP.Model
 {
     public class Contact :BaseUser, INotifyPropertyChanged
     {
