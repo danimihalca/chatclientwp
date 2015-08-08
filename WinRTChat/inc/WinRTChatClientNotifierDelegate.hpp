@@ -12,10 +12,10 @@ namespace WinRTChat
 	public delegate void onContactsReceivedCallback(const Platform::Array<WinRTContact^>^ contacts);
 	public delegate void onContactStatusChangedCallback(int contactId, bool isOnline);
 
-	public ref class WinRTChatClientNotifierProxy sealed
+	public ref class WinRTChatClientNotifierDelegate sealed
 	{
 	public:
-		inline WinRTChatClientNotifierProxy()
+		inline WinRTChatClientNotifierDelegate()
 		{
 		}
 

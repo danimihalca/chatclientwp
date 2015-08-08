@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace ChatClientWP.ChatClient.Notifier
 {
-    public class BaseChatClientNotifier:IChatClientNotifier
+    public class ChatClientNotifier:IChatClientNotifier
     {
         protected IChatClientController m_controller;
         private ILoginListener m_loginListener;
         private IList<IRuntimeListener> m_runtimeListeners;
 
-        public BaseChatClientNotifier(IChatClientController controller)
+        public ChatClientNotifier(IChatClientController controller)
         {
             m_controller = controller;
             m_runtimeListeners = new List<IRuntimeListener>();

@@ -3,7 +3,7 @@
 #include <ChatClient/IChatClient.hpp>
 #include <memory>
 
-#include "WinRTChatClientNotifierProxy.hpp"
+#include "WinRTChatClientNotifierDelegate.hpp"
 
 namespace WinRTChat
 {
@@ -18,7 +18,7 @@ namespace WinRTChat
 		void disconnect();
 		void requestContacts();
 
-		void setNotifier(WinRTChatClientNotifierProxy^ notifier);
+		void setNotifier(WinRTChatClientNotifierDelegate^ notifier);
 
 	private:
 		std::unique_ptr<IChatClient> m_chatClient;

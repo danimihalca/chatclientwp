@@ -19,7 +19,7 @@ namespace ChatClientWP.ChatClient
         }
         public void SetNotifier(IChatClientNotifier notifier)
         {
-            m_nativeChatClient.setNotifier((notifier as WinRTChatClientNotifier).CreateNotifierProxy());
+            m_nativeChatClient.setNotifier((notifier as WinRTChatClientNotifier).CreateNotifierDelegate());
         }
 
         public void SetServerProperties(string address, int port)

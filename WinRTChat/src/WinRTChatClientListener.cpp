@@ -6,7 +6,7 @@
 namespace WinRTChat
 {
 
-	WinRTChatClientListener::WinRTChatClientListener(WinRTChatClientNotifierProxy^ notifier) :
+	WinRTChatClientListener::WinRTChatClientListener(WinRTChatClientNotifierDelegate^ notifier) :
 		m_notifier(notifier)
 	{
 	}

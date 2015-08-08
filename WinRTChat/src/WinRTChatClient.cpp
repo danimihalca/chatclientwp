@@ -37,7 +37,7 @@ namespace WinRTChat
 	}
 
 
-	void WinRTChatClient::setNotifier(WinRTChatClientNotifierProxy^ notifier)
+	void WinRTChatClient::setNotifier(WinRTChatClientNotifierDelegate^ notifier)
 	{
 		std::shared_ptr<IChatClientListener> listener(new WinRTChatClientListener(notifier));
 		m_chatClient->addListener(listener);

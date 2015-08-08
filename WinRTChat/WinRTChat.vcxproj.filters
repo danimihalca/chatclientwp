@@ -16,7 +16,7 @@
     <ClInclude Include="inc\utils.h" />
     <ClInclude Include="inc\WinRTContact.hpp" />
     <ClInclude Include="inc\WinRTChatClient.hpp" />
-    <ClInclude Include="inc\WinRTChatClientNotifierProxy.hpp" />
     <ClInclude Include="inc\WinRTChatClientListener.hpp" />
+    <ClInclude Include="inc\WinRTChatClientNotifierDelegate.hpp" />
   </ItemGroup>
 </Project>

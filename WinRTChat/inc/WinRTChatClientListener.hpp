@@ -3,7 +3,7 @@
 #include <ChatClient\IChatClientListener.hpp>
 
 #include "WinRTChatClient.hpp"
-#include "WinRTChatClientNotifierProxy.hpp"
+#include "WinRTChatClientNotifierDelegate.hpp"
 
 namespace WinRTChat
 {
@@ -11,7 +11,7 @@ namespace WinRTChat
 	class WinRTChatClientListener :public IChatClientListener
 	{
 	public:
-		WinRTChatClientListener(WinRTChatClientNotifierProxy^ notifier);
+		WinRTChatClientListener(WinRTChatClientNotifierDelegate^ notifier);
 		~WinRTChatClientListener();
 
 		void onConnected();
@@ -23,7 +23,7 @@ namespace WinRTChat
 		void onContactsReceived(const Contacts& contacts);
 		void onContactOnlineStatusChanged(int contactId, bool isOnline);
 	private:
-		WinRTChatClientNotifierProxy^ m_notifier;
+		WinRTChatClientNotifierDelegate^ m_notifier;
 	};
 }
 

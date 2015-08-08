@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace ChatClientWP.ChatClient.Notifier
 {
-    public class WinRTChatClientNotifier : BaseChatClientNotifier
+    public class WinRTChatClientNotifier : ChatClientNotifier
     {
         public WinRTChatClientNotifier(IChatClientController controller):
              base(controller)
         {
         }
 
-        public WinRTChatClientNotifierProxy CreateNotifierProxy()
+        public WinRTChatClientNotifierDelegate CreateNotifierDelegate()
         {
-            WinRTChatClientNotifierProxy m_nativeNotifier = m_nativeNotifier = new WinRTChatClientNotifierProxy();
+            WinRTChatClientNotifierDelegate m_nativeNotifier = m_nativeNotifier = new WinRTChatClientNotifierDelegate();
 
             m_nativeNotifier.OnConnected = NotifyOnConnected;
             m_nativeNotifier.OnDisconnected = NotifyOnDisconnected;
