@@ -1,5 +1,5 @@
 ﻿using ChatClientWP.controller;
-using ChatClientWP.page;
+using ChatClientWP.View;
 using System;
 using System.Collections.Generic;
 using System.IO;
