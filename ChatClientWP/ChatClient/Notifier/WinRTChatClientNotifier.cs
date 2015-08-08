@@ -10,31 +10,11 @@ using System.Threading.Tasks;
 
 namespace ChatClientWP.ChatClient.Notifier
 {
-    public class WinRTChatClientNotifier: IChatClientNotifier
+    public class WinRTChatClientNotifier : BaseChatClientNotifier
     {
-        private IChatClientController m_controller;
-        private ILoginListener m_loginListener;
-        private IList<IRuntimeListener> m_runtimeListeners;
-
-        public WinRTChatClientNotifier(IChatClientController controller)
+        public WinRTChatClientNotifier(IChatClientController controller):
+             base(controller)
         {
-            m_controller = controller;
-            m_runtimeListeners = new List<IRuntimeListener>();
-        }
-
-        public void AddRuntimeListener(IRuntimeListener listener)
-        {
-            m_runtimeListeners.Add(listener);
-        }
-        
-        public void RemoveRuntimeListener(IRuntimeListener listener)
-        {
-            m_runtimeListeners.Remove(listener);
-        }
-
-        public void SetLoginListener(ILoginListener listener)
-        {
-            m_loginListener = listener;
         }
 
         public WinRTChatClientNotifierProxy CreateNotifierProxy()
@@ -52,92 +32,6 @@ namespace ChatClientWP.ChatClient.Notifier
             m_nativeNotifier.OnContactsReceived = NotifyOnContactsReceivedFromNative;
 
             return m_nativeNotifier;
-        }
-
-        public void NotifyOnConnected()
-        {
-            if (m_loginListener != null)
-            {
-                m_loginListener.OnConnected();
-            }
-        }
-
-        public void NotifyOnDisconnected()
-        {
-            m_controller.ClearContacts();
-            m_controller.ClearMessages();
-
-            List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
-            reverseList.Reverse();
-            foreach (IRuntimeListener listener in reverseList)
-            {
-                listener.OnDisconnected();
-            }
-
-            if (m_loginListener != null)
-            {
-                m_loginListener.OnDisconnected();
-            }
-        }
-
-        public void NotifyOnConnectionError()
-        {
-            if (m_loginListener != null)
-            {
-                m_loginListener.OnConnectionError();
-            }
-        }
-
-        public void NotifyOnLoginSuccessful()
-        {
-            if (m_loginListener != null)
-            {
-                m_loginListener.OnLoginSuccessful();
-            }
-        }
-
-        public void NotifyOnLoginFailed(string reason)
-        {
-            if (m_loginListener != null)
-            {
-                m_loginListener.OnLoginFailed(reason);
-            }
-        }
-
-        public void NotifyOnContactsReceived(IList<Contact> contacts)
-        {
-            m_controller.SetContacts(contacts);
-            
-            List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
-            reverseList.Reverse();
-            foreach (IRuntimeListener listener in reverseList)
-            {
-                listener.OnContactsReceived();
-            }
-        }
-
-        public void NotifyOnContactStatusChanged(Contact contact)
-        {
-            List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
-            reverseList.Reverse();
-            foreach (IRuntimeListener listener in reverseList)
-            {
-                listener.OnContactStatusChanged(contact);
-            }
-        }
-
-        public void NotifyOnMessageReceived(Message message)
-        {
-            Contact contact = message.Sender as Contact;
-            contact.UnreadMesssagesCount++;
-            m_controller.AddReceivedMessage(message);
-
-            List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
-            reverseList.Reverse();
-            foreach (IRuntimeListener listener in reverseList)
-            {
-                listener.OnMessageReceived(message);
-            }
         }
 
         private void NotifyOnContactsReceivedFromNative(WinRTContact[] contacts)

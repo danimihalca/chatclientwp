@@ -89,6 +89,7 @@
     <Compile Include="ChatClient\Listener\BaseListener.cs" />
     <Compile Include="ChatClient\Listener\ILoginListener.cs" />
     <Compile Include="ChatClient\Listener\IRuntimeListener.cs" />
+    <Compile Include="ChatClient\Notifier\BaseChatClientNotifier.cs" />
     <Compile Include="ChatClient\Notifier\IChatClientNotifier.cs" />
     <Compile Include="ChatClient\Notifier\WinRTChatClientNotifier.cs" />
     <Compile Include="Common\NavigationHelper.cs" />
