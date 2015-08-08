@@ -1,5 +1,5 @@
 ﻿using ChatClientWP.controller;
-using ChatClientWP.page;
+using ChatClientWP.View;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,7 +40,7 @@ namespace ChatClientWP
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
 
-            m_controller = new RCChatClientController();
+            m_controller = new ChatClientController();
         }
 
         public IChatClientController GetController()

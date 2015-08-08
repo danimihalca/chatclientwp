@@ -4,8 +4,8 @@ using ChatClientWP.controller;
 using ChatClientWP.Model;
 using ChatClientWP.Utils;
 using System;
-using System.Diagnostics;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,18 +14,21 @@ using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
-namespace ChatClientWP.page
+namespace ChatClientWP.View
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class LoginPage : Page, ILoginListener
+    public sealed partial class ConversationPage : Page, IRuntimeListener
     {
         private NavigationHelper navigationHelper;
-
+       
         private IChatClientController m_controller;
+        private Contact m_contact;
+        ObservablePropertyCollection<Message> m_messageCollection;
 
-        public LoginPage()
+
+        public ConversationPage()
         {
             this.InitializeComponent();
 
@@ -33,8 +36,12 @@ namespace ChatClientWP.page
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
+
             m_controller = (Application.Current as App).GetController();
+            m_controller.AddRuntimeListener(this);
         }
+
+
 
         /// <summary>
         /// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
@@ -43,7 +50,6 @@ namespace ChatClientWP.page
         {
             get { return this.navigationHelper; }
         }
-
 
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
@@ -58,25 +64,11 @@ namespace ChatClientWP.page
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            if (e.PageState != null)
-            {
-                if (e.PageState.ContainsKey("userName"))
-                {
-                    userNameInput.Text = e.PageState["userName"] as String;
-                }
-                if (e.PageState.ContainsKey("password"))
-                {
-                    passwordInput.Password = e.PageState["password"] as String;
-                }
-                if (e.PageState.ContainsKey("rememberMe"))
-                {
-                    rememberMeCheckbox.IsChecked = e.PageState["rememberMe"] as bool?;
-                }
-            }
-            else
-            {
-                m_controller.SetLoginListener(this);
-            }
+            m_contact = e.NavigationParameter as Contact;
+            m_contact.UnreadMesssagesCount = 0;
+
+            m_messageCollection = new ObservablePropertyCollection<Message>(m_controller.getMessages(m_contact));
+            MessageListView.ItemsSource = m_messageCollection;
         }
 
         /// <summary>
@@ -89,12 +81,6 @@ namespace ChatClientWP.page
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            if (rememberMeCheckbox.IsChecked == true)
-            {
-                e.PageState["userName"] = userNameInput.Text;
-                e.PageState["password"] = passwordInput.Password;
-                e.PageState["rememberMe"] = rememberMeCheckbox.IsChecked;
-            }
         }
 
         #region NavigationHelper registration
@@ -119,67 +105,78 @@ namespace ChatClientWP.page
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            m_controller.RemoveRuntimeListener(this);
             this.navigationHelper.OnNavigatedFrom(e);
         }
 
         #endregion
 
-        private void loginButton_Click(object sender, RoutedEventArgs e)
+        public void OnDisconnected()
         {
-            String userName = userNameInput.Text;
-            String password = passwordInput.Password;
-
-            m_controller.SetServerProperties("192.168.0.3", 9003);
-            m_controller.Login(userName, password);
-        }
-
-        public void OnConnected()
-        {
-        }
-
-        public async void OnDisconnected() 
-        {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            IAsyncAction action = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                PopupDisplayer.DisplayPopup("Disconnected");
+                m_controller.RemoveRuntimeListener(this);
+                navigationHelper.GoBack();
             });
+            action.AsTask().Wait();
         }
 
-        public async void OnLoginSuccessful()
+        public async void OnContactStatusChanged(Contact c)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                Frame.Navigate(typeof(ContactListPage));
+                PopupDisplayer.DisplayPopup(c.FullName + " is now " + (c.IsOnline ? "online" : "offline"));
             });
         }
 
-        public async void OnLoginFailed(string message)
+
+        public async void OnMessageReceived(Message m)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                PopupDisplayer.DisplayPopup("Login failed");
+                if(m.Sender.Equals(m_contact))
+                {
+                    m_contact.UnreadMesssagesCount = 0;
+                    m_messageCollection.Add(m);
+                }
+                else
+                {
+                    PopupDisplayer.DisplayPopup(m.Sender.FullName + " send you a message");
+                }
             });
         }
 
-
-        public async void OnConnectionError()
+        private void sendButton_Click(object sender, RoutedEventArgs e)
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                PopupDisplayer.DisplayPopup("Connection error");
-            });
+            SendMessage();
         }
 
-        private void input_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void messageInput_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
                 Windows.UI.ViewManagement.InputPane.GetForCurrentView().TryHide();
             }
+        }
+
+        private void SendMessage()
+        {
+            Message message = new Message();
+            message.Sender = m_controller.GetUser();
+            message.MessageText = messageInput.Text;
+            message.Receiver = m_contact;
+
+            messageInput.Text = "";
+            m_controller.SendMessage(message);
+
+            m_messageCollection.Add(message);
+        }
+
+        public void OnContactsReceived()
+        {
         }
     }
 }

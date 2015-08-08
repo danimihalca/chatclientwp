@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatClientWP.Repository
+namespace ChatClientWP.Repository.MessageRepository
 {
     public class InMemoryMessageRepository: IMessageRepository
     {

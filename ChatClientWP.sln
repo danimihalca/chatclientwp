@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatClientWP", "ChatClientWP\ChatClientWP.csproj", "{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}"
 EndProject
@@ -11,10 +11,12 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
+		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|Win32 = Debug|Win32
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
 		Release|ARM = Release|ARM
+		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|Win32 = Release|Win32
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -25,6 +27,9 @@ Global
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Debug|ARM.ActiveCfg = Debug|ARM
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Debug|ARM.Build.0 = Debug|ARM
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Debug|ARM.Deploy.0 = Debug|ARM
+		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Debug|Win32.ActiveCfg = Debug|x86
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Debug|Win32.Build.0 = Debug|x86
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Debug|Win32.Deploy.0 = Debug|x86
@@ -37,6 +42,9 @@ Global
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Release|ARM.ActiveCfg = Release|ARM
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Release|ARM.Build.0 = Release|ARM
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Release|ARM.Deploy.0 = Release|ARM
+		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Release|Mixed Platforms.Build.0 = Release|x86
+		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Release|Mixed Platforms.Deploy.0 = Release|x86
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Release|Win32.ActiveCfg = Release|x86
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Release|Win32.Build.0 = Release|x86
 		{ED2B2870-7CD4-4DF2-BB5B-6F83BF34733F}.Release|Win32.Deploy.0 = Release|x86
@@ -46,6 +54,8 @@ Global
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Debug|ARM.ActiveCfg = Debug|ARM
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Debug|ARM.Build.0 = Debug|ARM
+		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Debug|Win32.ActiveCfg = Debug|Win32
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Debug|Win32.Build.0 = Debug|Win32
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Debug|x86.ActiveCfg = Debug|Win32
@@ -53,6 +63,8 @@ Global
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Release|Any CPU.ActiveCfg = Release|Win32
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Release|ARM.ActiveCfg = Release|ARM
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Release|ARM.Build.0 = Release|ARM
+		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Release|Win32.ActiveCfg = Release|Win32
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Release|Win32.Build.0 = Release|Win32
 		{1CAED67A-81EC-4FC0-B5D3-CA6AB6A2D142}.Release|x86.ActiveCfg = Release|Win32

@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-using ChatClientRC;
 using ChatClientWP.controller;
-using System.Diagnostics;
-using ChatClientWP.Repository;
 using ChatClientWP.Model;
 using ChatClientWP.ChatClient;
 using ChatClientWP.ChatClient.Notifier;
 using ChatClientWP.ChatClient.ChatClientListener;
+using ChatClientWP.Repository.ContactRepository;
+using ChatClientWP.Repository.MessageRepository;
 
 
 namespace ChatClientWP
 {
-    public class RCChatClientController : IChatClientController
+    public class ChatClientController : IChatClientController
     {
         private IContactRepository m_contactRepository;
         private IMessageRepository m_messageRepository;
@@ -24,7 +19,7 @@ namespace ChatClientWP
         private IChatClientNotifier m_notifier;
         private ClientInstanceUser m_user;
 
-        public RCChatClientController()
+        public ChatClientController()
         {
             m_contactRepository = new InMemoryContactRepository();
             m_messageRepository = new InMemoryMessageRepository();
