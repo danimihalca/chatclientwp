@@ -5,6 +5,7 @@ using ChatClientWP.Model;
 using ChatClientWP.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI.Core;
@@ -26,7 +27,6 @@ namespace ChatClientWP.View
         private IChatClientController m_controller;
         ObservablePropertyCollection<Contact> m_contactCollection;
 
-
         private RelayCommand GoBackCommand;
         private bool goBackPressed;
 
@@ -38,9 +38,15 @@ namespace ChatClientWP.View
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+
             GoBackCommand = new RelayCommand(GoBackAction);
             goBackPressed = false;
             this.navigationHelper.GoBackCommand = GoBackCommand;
+
+            m_controller = (Application.Current as App).GetController();
+            m_controller.AddRuntimeListener(this);
+            m_controller.RequestContacts();
         }
 
         private void GoBackAction()
@@ -79,18 +85,6 @@ namespace ChatClientWP.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            m_controller = (Application.Current as App).GetController();
-
-            if (e.PageState == null)
-            {
-                m_controller.AddRuntimeListener(this);
-                m_controller.RequestContacts();
-            }
-            else
-            {
-                m_contactCollection = e.PageState["Contacts"] as ObservablePropertyCollection<Contact>;
-                ContactListView.ItemsSource = m_contactCollection;
-            }
         }
 
         /// <summary>
@@ -103,7 +97,6 @@ namespace ChatClientWP.View
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            e.PageState["Contacts"] = m_contactCollection;
         }
 
         #region NavigationHelper registration
@@ -136,10 +129,10 @@ namespace ChatClientWP.View
 
         public void OnDisconnected()
         {
-            IAsyncAction action = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            m_controller.RemoveRuntimeListener(this);
+            IAsyncAction action = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                m_controller.RemoveRuntimeListener(this);
                 navigationHelper.GoBack();
             });
             action.AsTask().Wait();

@@ -29,7 +29,7 @@ namespace ChatClientWP.Repository.ContactRepository
             }
         }
 
-        public List<Contact> GetContacts()
+        public IList<Contact> GetContacts()
         {
             return m_contacts.Values.ToList();
         }

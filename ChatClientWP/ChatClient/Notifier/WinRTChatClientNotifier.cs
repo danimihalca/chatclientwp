@@ -12,26 +12,36 @@ namespace ChatClientWP.ChatClient.Notifier
 {
     public class WinRTChatClientNotifier : ChatClientNotifier
     {
+        private WinRTChatClientListener m_nativeListenerWrapper;
+
         public WinRTChatClientNotifier(IChatClientController controller):
              base(controller)
         {
+            WinRTChatClientNotifierDelegate notifierDelegate = CreateNotifierDelegate();
+
+            m_nativeListenerWrapper = new WinRTChatClientListener(notifierDelegate);
         }
 
-        public WinRTChatClientNotifierDelegate CreateNotifierDelegate()
+        public WinRTChatClientListener GetListener()
         {
-            WinRTChatClientNotifierDelegate m_nativeNotifier = m_nativeNotifier = new WinRTChatClientNotifierDelegate();
+            return m_nativeListenerWrapper;
+        }
 
-            m_nativeNotifier.OnConnected = NotifyOnConnected;
-            m_nativeNotifier.OnDisconnected = NotifyOnDisconnected;
-            m_nativeNotifier.OnConnectionError = NotifyOnConnectionError;
-            m_nativeNotifier.OnLoginSuccessful = NotifyOnLoginSuccessful;
-            m_nativeNotifier.OnLoginFailed = NotifyOnLoginFailed;
+        private WinRTChatClientNotifierDelegate CreateNotifierDelegate()
+        {
+            WinRTChatClientNotifierDelegate notifierDelegate = new WinRTChatClientNotifierDelegate();
 
-            m_nativeNotifier.OnContactStatusChanged = NotifyOnContactStatusChangedFromNative;
-            m_nativeNotifier.OnMessageReceived = NotifyOnMessageReceivedFromNative;
-            m_nativeNotifier.OnContactsReceived = NotifyOnContactsReceivedFromNative;
+            notifierDelegate.OnConnected = NotifyOnConnected;
+            notifierDelegate.OnDisconnected = NotifyOnDisconnected;
+            notifierDelegate.OnConnectionError = NotifyOnConnectionError;
+            notifierDelegate.OnLoginSuccessful = NotifyOnLoginSuccessful;
+            notifierDelegate.OnLoginFailed = NotifyOnLoginFailed;
 
-            return m_nativeNotifier;
+            notifierDelegate.OnContactStatusChanged = NotifyOnContactStatusChangedFromNative;
+            notifierDelegate.OnMessageReceived = NotifyOnMessageReceivedFromNative;
+            notifierDelegate.OnContactsReceived = NotifyOnContactsReceivedFromNative;
+
+            return notifierDelegate;
         }
 
         private void NotifyOnContactsReceivedFromNative(WinRTContact[] contacts)

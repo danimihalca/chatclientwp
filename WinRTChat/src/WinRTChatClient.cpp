@@ -1,5 +1,4 @@
 #include "WinRTChatClient.hpp"
-#include "WinRTChatClientListener.hpp"
 
 #include "utils.h"
 
@@ -36,10 +35,15 @@ namespace WinRTChat
 		m_chatClient->getContacts();
 	}
 
-
-	void WinRTChatClient::setNotifier(WinRTChatClientNotifierDelegate^ notifier)
+	void WinRTChatClient::addListener(WinRTChatClientListener^ rtListener)
 	{
-		std::shared_ptr<IChatClientListener> listener(new WinRTChatClientListener(notifier));
+		std::shared_ptr<IChatClientListener> listener(rtListener->getListenerImpl());
 		m_chatClient->addListener(listener);
+	}
+
+	void WinRTChatClient::removeListener(WinRTChatClientListener^ rtListener)
+	{
+		std::shared_ptr<IChatClientListener> listener(rtListener->getListenerImpl());
+		m_chatClient->removeListener(listener);
 	}
 }

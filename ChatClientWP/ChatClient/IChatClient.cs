@@ -10,8 +10,8 @@ namespace ChatClientWP.ChatClient
 {
     public interface IChatClient
     {
-        void SetNotifier(IChatClientNotifier notifier);
-
+        void AddListener(IChatClientNotifier notifier);
+        void RemoveListener(IChatClientNotifier notifier);
         void SetServerProperties(string address, int port);
 
         void Login(string userName, String password);

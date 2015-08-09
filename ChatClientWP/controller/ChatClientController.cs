@@ -17,7 +17,7 @@ namespace ChatClientWP
         private IMessageRepository m_messageRepository;
         private IChatClient m_chatClient;
         private IChatClientNotifier m_notifier;
-        private ClientInstanceUser m_user;
+        private User m_user;
 
         public ChatClientController()
         {
@@ -25,15 +25,15 @@ namespace ChatClientWP
             m_messageRepository = new InMemoryMessageRepository();
             m_chatClient = new ChatClientWinRTProxy();
             m_notifier = new WinRTChatClientNotifier(this);
-            m_chatClient.SetNotifier(m_notifier);
+            m_chatClient.AddListener(m_notifier);
 
-            m_user = new ClientInstanceUser();
+            m_user = new User();
             m_user.Id = 9999;
             m_user.FullName="ME";
             m_user.UserName = "me";
         }
 
-        public ClientInstanceUser GetUser()
+        public User GetUser()
         {
             return m_user;
         }

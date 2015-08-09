@@ -97,7 +97,7 @@
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Model\BaseUser.cs" />
-    <Compile Include="Model\ClientInstanceUser.cs" />
+    <Compile Include="Model\User.cs" />
     <Compile Include="Model\Contact.cs" />
     <Compile Include="Controller\IChatClientController.cs" />
     <Compile Include="Controller\ChatClientController.cs" />

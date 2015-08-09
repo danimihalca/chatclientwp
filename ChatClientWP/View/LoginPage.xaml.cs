@@ -33,7 +33,10 @@ namespace ChatClientWP.View
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
+
             m_controller = (Application.Current as App).GetController();
+            m_controller.SetLoginListener(this);
         }
 
         /// <summary>
@@ -58,25 +61,6 @@ namespace ChatClientWP.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            if (e.PageState != null)
-            {
-                if (e.PageState.ContainsKey("userName"))
-                {
-                    userNameInput.Text = e.PageState["userName"] as String;
-                }
-                if (e.PageState.ContainsKey("password"))
-                {
-                    passwordInput.Password = e.PageState["password"] as String;
-                }
-                if (e.PageState.ContainsKey("rememberMe"))
-                {
-                    rememberMeCheckbox.IsChecked = e.PageState["rememberMe"] as bool?;
-                }
-            }
-            else
-            {
-                m_controller.SetLoginListener(this);
-            }
         }
 
         /// <summary>
@@ -89,12 +73,6 @@ namespace ChatClientWP.View
         /// serializable state.</param>
         private void NavigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            if (rememberMeCheckbox.IsChecked == true)
-            {
-                e.PageState["userName"] = userNameInput.Text;
-                e.PageState["password"] = passwordInput.Password;
-                e.PageState["rememberMe"] = rememberMeCheckbox.IsChecked;
-            }
         }
 
         #region NavigationHelper registration

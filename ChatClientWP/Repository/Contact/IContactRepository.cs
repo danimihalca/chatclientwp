@@ -12,7 +12,7 @@ namespace ChatClientWP.Repository.ContactRepository
         void AddContact(Contact c);
 
         void AddContacts(IList<Contact> contacts);
-        List<Contact> GetContacts();
+        IList<Contact> GetContacts();
         void SetContacts(IList<Contact> contacts);
         Contact GetContact(int contactId);
 

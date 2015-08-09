@@ -27,7 +27,6 @@ namespace ChatClientWP.View
         private Contact m_contact;
         ObservablePropertyCollection<Message> m_messageCollection;
 
-
         public ConversationPage()
         {
             this.InitializeComponent();
@@ -36,11 +35,9 @@ namespace ChatClientWP.View
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
-
             m_controller = (Application.Current as App).GetController();
             m_controller.AddRuntimeListener(this);
         }
-
 
 
         /// <summary>
