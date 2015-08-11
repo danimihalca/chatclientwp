@@ -102,6 +102,7 @@
     <Compile Include="Controller\IChatClientController.cs" />
     <Compile Include="Controller\ChatClientController.cs" />
     <Compile Include="Model\Message.cs" />
+    <Compile Include="Model\UserDetails.cs" />
     <Compile Include="View\ContactStateConverter.cs" />
     <Compile Include="View\ContactListPage.xaml.cs">
       <DependentUpon>ContactListPage.xaml</DependentUpon>

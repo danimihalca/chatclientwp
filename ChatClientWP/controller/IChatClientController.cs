@@ -38,5 +38,6 @@ namespace ChatClientWP.controller
         void ClearContacts();
 
         User GetUser();
+        void SetUser(User user);
     }
 }

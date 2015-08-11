@@ -17,7 +17,7 @@ namespace ChatClientWP.ChatClient.Notifier
         void NotifyOnConnected();
         void NotifyOnDisconnected();
         void NotifyOnConnectionError();
-        void NotifyOnLoginSuccessful();
+        void NotifyOnLoginSuccessful(UserDetails userDetails);
         void NotifyOnLoginFailed(string reason);
         void NotifyOnContactsReceived(IList<Contact> contacts);
         void NotifyOnContactStatusChanged(Contact contact);

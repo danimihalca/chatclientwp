@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatClientWP.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace ChatClientWP.ChatClient.ChatClientListener
     {
         void OnConnected();
         void OnConnectionError();
-        void OnLoginSuccessful();
+        void OnLoginSuccessful(UserDetails userDetails);
         void OnLoginFailed(string reason);
     }
 }

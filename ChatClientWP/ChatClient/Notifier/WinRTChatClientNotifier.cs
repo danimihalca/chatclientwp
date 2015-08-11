@@ -34,7 +34,7 @@ namespace ChatClientWP.ChatClient.Notifier
             notifierDelegate.OnConnected = NotifyOnConnected;
             notifierDelegate.OnDisconnected = NotifyOnDisconnected;
             notifierDelegate.OnConnectionError = NotifyOnConnectionError;
-            notifierDelegate.OnLoginSuccessful = NotifyOnLoginSuccessful;
+            notifierDelegate.OnLoginSuccessful = NotifyOnLoginSuccessfulFromNative;
             notifierDelegate.OnLoginFailed = NotifyOnLoginFailed;
 
             notifierDelegate.OnContactStatusChanged = NotifyOnContactStatusChangedFromNative;
@@ -42,6 +42,15 @@ namespace ChatClientWP.ChatClient.Notifier
             notifierDelegate.OnContactsReceived = NotifyOnContactsReceivedFromNative;
 
             return notifierDelegate;
+        }
+
+        private void NotifyOnLoginSuccessfulFromNative(WinRTUserDetails details)
+        {
+            UserDetails userDetails = new UserDetails();
+            userDetails.Id = details.id;
+            userDetails.FirstName = details.firstName;
+            userDetails.LastName = details.lastName;
+            NotifyOnLoginSuccessful(userDetails);
         }
 
         private void NotifyOnContactsReceivedFromNative(WinRTContact[] contacts)

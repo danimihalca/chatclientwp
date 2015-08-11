@@ -12,8 +12,18 @@ namespace WinRTChat
 		property unsigned char state;
 
 	public:
-		WinRTContact();
-		WinRTContact(int id, Platform::String^ userName, Platform::String^ firstName, Platform::String^ lastName, unsigned char state);
+		WinRTContact()
+		{
 
+		}
+
+		WinRTContact(int id, Platform::String^ userName, Platform::String^ firstName, Platform::String^ lastName, unsigned char state)
+		{
+			this->id = id;
+			this->userName = userName;
+			this->firstName = firstName;
+			this->lastName = lastName;
+			this->state = state;
+		}
 	};
 }

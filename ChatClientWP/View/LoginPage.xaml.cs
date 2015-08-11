@@ -25,6 +25,9 @@ namespace ChatClientWP.View
 
         private IChatClientController m_controller;
 
+        private string m_userName;
+        private string m_password;
+
         public LoginPage()
         {
             this.InitializeComponent();
@@ -112,10 +115,10 @@ namespace ChatClientWP.View
         {
               await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
-            {          
-                String userName = userNameInput.Text;
-                  String password = passwordInput.Password;
-              m_controller.Login(userName, password);
+            {
+                m_userName = userNameInput.Text;
+                m_password = passwordInput.Password;
+                m_controller.Login(m_userName, m_password);
             });
         }
 
@@ -128,8 +131,14 @@ namespace ChatClientWP.View
             });
         }
 
-        public async void OnLoginSuccessful()
+        public async void OnLoginSuccessful(UserDetails userDetails)
         {
+            User user = new User();
+            user.UserName = m_userName;
+            user.Password = m_password;
+            user.Details = userDetails;
+            m_controller.SetUser(user);
+
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {

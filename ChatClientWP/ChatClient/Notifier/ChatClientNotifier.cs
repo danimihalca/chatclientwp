@@ -70,11 +70,11 @@ namespace ChatClientWP.ChatClient.Notifier
             }
         }
 
-        public void NotifyOnLoginSuccessful()
+        public void NotifyOnLoginSuccessful(UserDetails userDetails)
         {
             if (m_loginListener != null)
             {
-                m_loginListener.OnLoginSuccessful();
+                m_loginListener.OnLoginSuccessful(userDetails);
             }
         }
 

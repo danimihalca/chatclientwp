@@ -1,5 +1,6 @@
 #pragma once
 #include "WinRTContact.hpp"
+#include "WinRTUserDetails.hpp"
 
 namespace WinRTChat
 {
@@ -8,7 +9,7 @@ namespace WinRTChat
 	public delegate void onMessageReceivedCallback(int senderId, Platform::String^ message);
 	public delegate void onLoginFailedCallback(Platform::String^ message);
 	public delegate void onConnectionErrorCallback();
-	public delegate void onLoginSuccessfulCallback();
+	public delegate void onLoginSuccessfulCallback(WinRTUserDetails^ details);
 	public delegate void onContactsReceivedCallback(const Platform::Array<WinRTContact^>^ contacts);
 	public delegate void onContactStatusChangedCallback(int contactId, unsigned char state);
 

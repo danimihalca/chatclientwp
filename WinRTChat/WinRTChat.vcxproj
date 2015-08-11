@@ -22,7 +22,6 @@
     <ClCompile Include="src\WinRTChatClient.cpp" />
     <ClCompile Include="src\WinRTChatClientListener.cpp" />
     <ClCompile Include="src\WinRTChatClientListenerImpl.cpp" />
-    <ClCompile Include="src\WinRTContact.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +31,7 @@
     <ClInclude Include="inc\WinRTContact.hpp" />
     <ClInclude Include="inc\utils.h" />
     <ClInclude Include="inc\WinRTChatClientListener.hpp" />
+    <ClInclude Include="inc\WinRTUserDetails.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1caed67a-81ec-4fc0-b5d3-ca6ab6a2d142}</ProjectGuid>

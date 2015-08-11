@@ -1,5 +1,6 @@
 #include "WinRTChatClientListenerImpl.hpp"
 #include "WinRTContact.hpp"
+#include "WinRTUserDetails.hpp"
 
 #include "utils.h"
 
@@ -60,7 +61,11 @@ namespace WinRTChat
 	{
 		if (m_notifier != nullptr && m_notifier->OnLoginSuccessful != nullptr)
 		{
-			m_notifier->OnLoginSuccessful();
+			WinRTUserDetails^ details = ref new WinRTUserDetails();
+			details->id = userDetails.getId();
+			details->firstName = ToPlatformString(userDetails.getFirstName());
+			details->lastName = ToPlatformString(userDetails.getLastName());
+			m_notifier->OnLoginSuccessful(details);
 		}
 	}
 

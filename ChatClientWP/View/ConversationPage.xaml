@@ -45,7 +45,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" x:Name="FullNameText" Text="{Binding Sender.FullName}" FontSize="20"/>
+                            <TextBlock Grid.Row="0" x:Name="FullNameText" Text="{Binding Sender.FirstName}" FontSize="20"/>
                             <TextBlock Grid.Row="0" Grid.Column="1" x:Name="DatText" Text="{Binding Date}" HorizontalAlignment="Right" TextWrapping="Wrap" Margin="5,5,15,5" />
                             <TextBlock Grid.Row="1" x:Name="UserNameText" Text="{Binding MessageText}" TextWrapping="Wrap" />
                             <Line Grid.Row="2" X1="0" Y1="0" X2="400" Y2="0" Stroke="Gray" StrokeThickness="2" Stretch="Fill"></Line>

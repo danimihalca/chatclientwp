@@ -26,11 +26,7 @@ namespace ChatClientWP
             m_chatClient = new ChatClientWinRTProxy();
             m_notifier = new WinRTChatClientNotifier(this);
             m_chatClient.AddListener(m_notifier);
-
             m_user = new User();
-            m_user.Id = 9999;
-            m_user.FirstName="ME";
-            m_user.UserName = "me";
         }
 
         public User GetUser()
@@ -116,6 +112,12 @@ namespace ChatClientWP
         public void AddReceivedMessage(Message message)
         {
             m_messageRepository.AddMessage(message);
+        }
+
+
+        public void SetUser(User user)
+        {
+            m_user = user;
         }
     }
 }
