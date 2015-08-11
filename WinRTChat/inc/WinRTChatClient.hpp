@@ -12,7 +12,7 @@ namespace WinRTChat
 
 	public:
 		WinRTChatClient();
-		void setServerProperties(Platform::String^ address, int port);
+		void connect(Platform::String^ address, int port);
 		void login(Platform::String^ userName, Platform::String^ password);
 		void sendMessage(int receiverId, Platform::String^ message);
 		void disconnect();

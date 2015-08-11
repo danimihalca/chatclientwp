@@ -50,10 +50,11 @@ namespace ChatClientWP.ChatClient.Notifier
             for (int i = 0; i < contacts.Length; i++)
             {
                 Contact c = new Contact();
-                c.Id = contacts[i].GetId();
-                c.UserName = contacts[i].GetUserName();
-                c.FullName = contacts[i].GetFullName();
-                c.IsOnline = contacts[i].IsOnline();
+                c.Id = contacts[i].id;
+                c.UserName = contacts[i].userName;
+                c.FirstName = contacts[i].firstName;
+                c.LastName = contacts[i].lastName;
+                c.State = (ContactState) contacts[i].state;
 
                 contactList.Add(c);
             }
@@ -70,10 +71,10 @@ namespace ChatClientWP.ChatClient.Notifier
             NotifyOnMessageReceived(m);
         }
 
-        private void NotifyOnContactStatusChangedFromNative(int contactId, bool isOnline)
+        private void NotifyOnContactStatusChangedFromNative(int contactId, byte state)
         {
             Contact contact = m_controller.GetContact(contactId);
-            contact.IsOnline = isOnline;
+            contact.State = (ContactState) state;
 
             NotifyOnContactStatusChanged(contact);
         }

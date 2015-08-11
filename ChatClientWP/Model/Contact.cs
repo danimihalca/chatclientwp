@@ -12,23 +12,30 @@ using Windows.UI.Core;
 
 namespace ChatClientWP.Model
 {
+    public enum ContactState
+    {
+        OFFLINE = 0,
+        ONLINE
+    }
+
     public class Contact :BaseUser, INotifyPropertyChanged
     {
-        private bool _IsOnline;
+
+        private ContactState _State;
         private int _UnreadMessagesCount = 0;
 
-        public bool IsOnline
+        public ContactState State
         {
             get
             {
-                return _IsOnline;
+                return _State;
             }
             set
             {
-                if (_IsOnline != value)
+                if (_State != value)
                 {
-                    _IsOnline = value;
-                    RaiseIsOnlineChanged("IsOnline");
+                    _State = value;
+                    RaisePropertyChanged("State");
                 }
             }
         }
@@ -43,12 +50,12 @@ namespace ChatClientWP.Model
                 if (_UnreadMessagesCount != value)
                 {
                     _UnreadMessagesCount = value;
-                    RaiseIsOnlineChanged("UnreadMesssagesCount");
+                    RaisePropertyChanged("UnreadMesssagesCount");
                 }
             }
         }
 
-        private async void RaiseIsOnlineChanged(string propertyName)
+        private async void RaisePropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
             {

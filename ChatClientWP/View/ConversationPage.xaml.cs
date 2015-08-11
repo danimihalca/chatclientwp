@@ -124,7 +124,7 @@ namespace ChatClientWP.View
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                PopupDisplayer.DisplayPopup(c.FullName + " is now " + (c.IsOnline ? "online" : "offline"));
+                PopupDisplayer.DisplayPopup(c.FirstName + " is now " + c.State.ToString());
             });
         }
 
@@ -141,7 +141,7 @@ namespace ChatClientWP.View
                 }
                 else
                 {
-                    PopupDisplayer.DisplayPopup(m.Sender.FullName + " send you a message");
+                    PopupDisplayer.DisplayPopup(m.Sender.FirstName + " send you a message");
                 }
             });
         }

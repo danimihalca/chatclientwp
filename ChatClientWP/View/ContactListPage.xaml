@@ -7,9 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
     <Grid x:Name="LayoutRoot">
-
+        <Grid.Resources>
+            <local:ContactStateConverter x:Key="ContactStateConverter" />
+        </Grid.Resources>
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
@@ -40,13 +41,13 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="FullNameText" Text="{Binding FullName}" FontSize="20"/>
-                            <Image x:Name="onlineStatusImage" Width="30" Height="30" Grid.Row="0" Grid.Column="1" xmlns:ic="using:Microsoft.Xaml.Interactions.Core" xmlns:i="using:Microsoft.Xaml.Interactivity" HorizontalAlignment="Right">
+                            <TextBlock Grid.Row="0" Grid.Column="0" x:Name="FullNameText" Text="{Binding FirstName}" FontSize="20"/>
+                            <Image x:Name="onlineStatusImage" Width="30" Height="30" Grid.Row="0" Grid.Column="1" xmlns:ic="using:Microsoft.Xaml.Interactions.Core" xmlns:i="using:Microsoft.Xaml.Interactivity" HorizontalAlignment="Right" >
                                 <i:Interaction.Behaviors>
-                                    <ic:DataTriggerBehavior Binding="{Binding IsOnline, Mode=OneWay}" Value="False" ComparisonCondition="Equal">
+                                    <ic:DataTriggerBehavior Binding="{Binding State, Mode=OneWay, Converter={StaticResource ContactStateConverter}}" Value="OFFLINE" ComparisonCondition="Equal">
                                         <ic:ChangePropertyAction PropertyName="Source" Value="ms-appx:///Assets/offline.png"/>
                                     </ic:DataTriggerBehavior>
-                                    <ic:DataTriggerBehavior Binding="{Binding IsOnline, Mode=OneWay}" Value="True" ComparisonCondition="Equal">
+                                    <ic:DataTriggerBehavior Binding="{Binding State, Mode=OneWay, Converter={StaticResource ContactStateConverter}}" Value="ONLINE" ComparisonCondition="Equal">
                                         <ic:ChangePropertyAction PropertyName="Source" Value="ms-appx:///Assets/online.png"/>
                                     </ic:DataTriggerBehavior>
                                 </i:Interaction.Behaviors>

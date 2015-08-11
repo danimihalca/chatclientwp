@@ -15,12 +15,12 @@ namespace WinRTChat
 
 		void onConnected();
 		void onDisconnected();
-		void onMessageReceived(int senderId, const std::string& message);
+		void onMessageReceived(const Message& message);
 		void onLoginFailed(const std::string& message);
 		void onConnectionError();
-		void onLoginSuccessful();
-		void onContactsReceived(const Contacts& contacts);
-		void onContactOnlineStatusChanged(int contactId, bool isOnline);
+		void onLoginSuccessful(const UserDetails& userDetails);
+		void onContactsReceived(const std::vector<Contact>& contacts);
+		void onContactStateChanged(int contactId, CONTACT_STATE state);
 	private:
 		WinRTChatClientNotifierDelegate^ m_notifier;
 	};

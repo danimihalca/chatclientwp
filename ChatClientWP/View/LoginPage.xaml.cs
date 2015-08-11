@@ -104,15 +104,19 @@ namespace ChatClientWP.View
 
         private void loginButton_Click(object sender, RoutedEventArgs e)
         {
-            String userName = userNameInput.Text;
-            String password = passwordInput.Password;
 
-            m_controller.SetServerProperties("192.168.0.3", 9003);
-            m_controller.Login(userName, password);
+            m_controller.Connect("192.168.0.3", 9003);
         }
 
-        public void OnConnected()
+        public async void OnConnected()
         {
+              await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {          
+                String userName = userNameInput.Text;
+                  String password = passwordInput.Password;
+              m_controller.Login(userName, password);
+            });
         }
 
         public async void OnDisconnected() 

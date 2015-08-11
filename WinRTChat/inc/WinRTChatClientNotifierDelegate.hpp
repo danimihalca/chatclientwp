@@ -10,7 +10,7 @@ namespace WinRTChat
 	public delegate void onConnectionErrorCallback();
 	public delegate void onLoginSuccessfulCallback();
 	public delegate void onContactsReceivedCallback(const Platform::Array<WinRTContact^>^ contacts);
-	public delegate void onContactStatusChangedCallback(int contactId, bool isOnline);
+	public delegate void onContactStatusChangedCallback(int contactId, unsigned char state);
 
 	public ref class WinRTChatClientNotifierDelegate sealed
 	{

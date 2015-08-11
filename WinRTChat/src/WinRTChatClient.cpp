@@ -11,14 +11,15 @@ namespace WinRTChat
 	{
 	}
 
-	void WinRTChatClient::setServerProperties(Platform::String^ address, int port)
+	void WinRTChatClient::connect(Platform::String^ address, int port)
 	{
-		m_chatClient->setServerProperties(ToStdString(address), port);
+		m_chatClient->connect(ToStdString(address), port);
 
 	}
 	void WinRTChatClient::login(Platform::String^ userName, Platform::String^ password)
 	{
-		m_chatClient->login(ToStdString(userName), ToStdString(password));
+		UserCredentials userCredentials(ToStdString(userName), ToStdString(password));
+		m_chatClient->login(userCredentials);
 	}
 
 	void WinRTChatClient::sendMessage(int receiverId, Platform::String^ message)
@@ -37,13 +38,11 @@ namespace WinRTChat
 
 	void WinRTChatClient::addListener(WinRTChatClientListener^ rtListener)
 	{
-		std::shared_ptr<IChatClientListener> listener(rtListener->getListenerImpl());
-		m_chatClient->addListener(listener);
+		m_chatClient->addListener(rtListener->getListenerImpl());
 	}
 
 	void WinRTChatClient::removeListener(WinRTChatClientListener^ rtListener)
 	{
-		std::shared_ptr<IChatClientListener> listener(rtListener->getListenerImpl());
-		m_chatClient->removeListener(listener);
+		m_chatClient->removeListener(rtListener->getListenerImpl());
 	}
 }

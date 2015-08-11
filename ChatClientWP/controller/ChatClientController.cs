@@ -29,7 +29,7 @@ namespace ChatClientWP
 
             m_user = new User();
             m_user.Id = 9999;
-            m_user.FullName="ME";
+            m_user.FirstName="ME";
             m_user.UserName = "me";
         }
 
@@ -38,9 +38,9 @@ namespace ChatClientWP
             return m_user;
         }
 
-        public void SetServerProperties(string address, int port)
+        public void Connect(string address, int port)
         {
-            m_chatClient.SetServerProperties(address, port);
+            m_chatClient.Connect(address, port);
         }
     
         public void Login(string username, string password)

@@ -18,7 +18,7 @@ namespace ChatClientWP.controller
 
         void RequestContacts();
 
-        void SetServerProperties(string address, int port);
+        void Connect(string address, int port);
         void Login(string userName, String password);
 
         void Disconnect();

@@ -32,11 +32,11 @@ namespace WinRTChat
 		}
 	}
 
-	void WinRTChatClientListenerImpl::onMessageReceived(int senderId, const std::string& message)
+	void WinRTChatClientListenerImpl::onMessageReceived(const Message& messagee)
 	{
 		if (m_notifier != nullptr && m_notifier->OnMessageReceived != nullptr)
 		{
-			m_notifier->OnMessageReceived(senderId, ToPlatformString(message));
+			m_notifier->OnMessageReceived(messagee.getSenderId(), ToPlatformString(messagee.getMessageText()));
 		}
 	}
 
@@ -56,7 +56,7 @@ namespace WinRTChat
 		}
 	}
 
-	void WinRTChatClientListenerImpl::onLoginSuccessful()
+	void WinRTChatClientListenerImpl::onLoginSuccessful(const UserDetails& userDetails)
 	{
 		if (m_notifier != nullptr && m_notifier->OnLoginSuccessful != nullptr)
 		{
@@ -64,7 +64,7 @@ namespace WinRTChat
 		}
 	}
 
-	void WinRTChatClientListenerImpl::onContactsReceived(const Contacts& contacts)
+	void WinRTChatClientListenerImpl::onContactsReceived(const std::vector<Contact>& contacts)
 	{
 		if (m_notifier != nullptr && m_notifier->OnContactsReceived != nullptr)
 		{
@@ -73,21 +73,22 @@ namespace WinRTChat
 			int count = 0;
 			for (Contact c : contacts)
 			{
-				contactArray->set(count++, ref new WinRTContact(c.getDetails().getId(),
+				contactArray->set(count++, ref new WinRTContact(c.getId(),
 																ToPlatformString(c.getUserName()),
-																ToPlatformString(c.getDetails().getFullName()),
-																c.isOnline()));
+																ToPlatformString(c.getFirstName()),
+																ToPlatformString(c.getLastName()),
+																static_cast<char>(c.getState())));
 			}
 
 			m_notifier->OnContactsReceived(contactArray);
 		}
 	}
 
-	void WinRTChatClientListenerImpl::onContactOnlineStatusChanged(int contactId, bool isOnline)
+	void WinRTChatClientListenerImpl::onContactStateChanged(int contactId, CONTACT_STATE state)
 	{
 		if (m_notifier != nullptr && m_notifier->OnContactStatusChanged != nullptr)
 		{
-			m_notifier->OnContactStatusChanged(contactId, isOnline);
+			m_notifier->OnContactStatusChanged(contactId, static_cast<char>(state));
 		}
 	}
 }
