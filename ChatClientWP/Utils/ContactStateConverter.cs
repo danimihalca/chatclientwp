@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
-namespace ChatClientWP.View
+namespace ChatClientWP.Utils
 {
     public class ContactStateConverter : IValueConverter
     {
@@ -20,7 +20,7 @@ namespace ChatClientWP.View
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException();
+            return ContactState.OFFLINE;
         }
     }
 }

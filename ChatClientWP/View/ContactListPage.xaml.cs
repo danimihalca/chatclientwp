@@ -116,11 +116,13 @@ namespace ChatClientWP.View
         /// handlers that cannot cancel the navigation request.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            Debug.WriteLine("CL:NAVIGATEDFROM");
             this.navigationHelper.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            Debug.WriteLine("CL:NAVIGATEDTO");
             this.navigationHelper.OnNavigatedFrom(e);
         }
 
@@ -152,7 +154,7 @@ namespace ChatClientWP.View
 
         private void ContactListView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Frame.Navigate(typeof(ConversationPage),e.ClickedItem as Contact);
+            //Frame.Navigate(typeof(ConversationPage),e.ClickedItem as Contact);
         }
 
 
@@ -163,6 +165,40 @@ namespace ChatClientWP.View
 
         public void OnContactStatusChanged(Contact contact)
         {
+        }
+
+        private void ContactListView_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
+        {
+            if (e.HoldingState == Windows.UI.Input.HoldingState.Started)
+            {
+                Debug.WriteLine("HOLDING:" + ((sender as ListViewItem).DataContext as Contact).FirstName);
+                MenuFlyout mf = (Application.Current.Resources["FlyoutBase1"] as MenuFlyout);
+                MenuFlyoutItem a = mf.Items[0] as MenuFlyoutItem;
+                MenuFlyoutItem b = mf.Items[1] as MenuFlyoutItem;
+                a.Click += MenuFlyoutItem_Click;
+                b.Click += MenuFlyoutItem_Click_1;
+                mf.ShowAt((FrameworkElement)sender);
+
+            }
+        }
+
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine(((e.OriginalSource as MenuFlyoutItem).DataContext as Contact).FirstName);
+            (e.OriginalSource as MenuFlyoutItem).Click -= MenuFlyoutItem_Click;
+        }
+
+        private void MenuFlyoutItem_Click_1(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine(e.OriginalSource.ToString());
+
+        }
+
+        private void ListViewItem_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(ConversationPage), (sender as ListViewItem).DataContext as Contact);
+
         }
     }
 }
