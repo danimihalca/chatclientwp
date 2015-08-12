@@ -13,5 +13,7 @@ namespace ChatClientWP.Repository.MessageRepository
         IList<Message> GetMessagesWithContact(Contact c);
 
         void ClearMessages();
+
+        void RemoveMessages(Contact contact);
     }
 }

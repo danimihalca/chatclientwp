@@ -119,5 +119,21 @@ namespace ChatClientWP
         {
             m_user = user;
         }
+
+
+        public void AddContact(string userName)
+        {
+            m_chatClient.AddContact(userName);
+        }
+
+        public void RemoveContact(Contact contact, bool notifyServer)
+        {
+            if (notifyServer)
+            {
+                m_chatClient.RemoveContact(contact.Id);
+            }
+            m_contactRepository.RemoveContact(contact);
+            m_messageRepository.RemoveMessages(contact);
+        }
     }
 }

@@ -122,5 +122,40 @@ namespace ChatClientWP.ChatClient.Notifier
             }
         }
 
+        public bool NotifyOnAddingByContact(string userName)
+        {
+            List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
+            reverseList.Reverse();
+            foreach (IRuntimeListener listener in reverseList)
+            {
+                if (listener.OnAddingByContact(userName))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void NotifyOnAddContactResponse(string userName, bool accepted)
+        {
+            List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
+            reverseList.Reverse();
+            foreach (IRuntimeListener listener in reverseList)
+            {
+                listener.OnAddContactResponse(userName, accepted);
+            }
+        }
+
+        public void NotifyOnRemovedByContact(int contactId)
+        {
+            Contact contact = m_controller.GetContact(contactId);
+            List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
+            reverseList.Reverse();
+            foreach (IRuntimeListener listener in reverseList)
+            {
+                listener.OnRemovedByContact(contact);
+            }
+        }
+
     }
 }

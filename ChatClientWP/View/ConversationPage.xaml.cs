@@ -26,6 +26,7 @@ namespace ChatClientWP.View
         private IChatClientController m_controller;
         private Contact m_contact;
         ObservablePropertyCollection<Message> m_messageCollection;
+        private bool m_isVisible;
 
         public ConversationPage()
         {
@@ -37,6 +38,7 @@ namespace ChatClientWP.View
 
             m_controller = (Application.Current as App).GetController();
             m_controller.AddRuntimeListener(this);
+            m_isVisible = true;
         }
 
 
@@ -97,11 +99,13 @@ namespace ChatClientWP.View
         /// handlers that cannot cancel the navigation request.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            m_isVisible = true;
             this.navigationHelper.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            m_isVisible = false;
             m_controller.RemoveRuntimeListener(this);
             this.navigationHelper.OnNavigatedFrom(e);
         }
@@ -174,6 +178,42 @@ namespace ChatClientWP.View
 
         public void OnContactsReceived()
         {
+        }
+
+
+        public bool OnAddingByContact(string userName)
+        {
+            if (m_isVisible)
+            {
+
+            }
+            throw new NotImplementedException();
+            return false;
+        }
+
+        public void OnAddContactResponse(string userName, bool accepted)
+        {
+            if (m_isVisible)
+            {
+
+            }
+            throw new NotImplementedException();
+        }
+
+        public async void OnRemovedByContact(Contact contact)
+        {
+            if (m_isVisible)
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    PopupDisplayer.DisplayPopup(contact.UserName + " has removed you from contacts");
+                    if (contact.Id == m_contact.Id)
+                    {
+                        navigationHelper.GoBack();
+                    }
+                });
+            }
         }
     }
 }

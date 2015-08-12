@@ -13,6 +13,10 @@ namespace WinRTChat
 	public delegate void onContactsReceivedCallback(const Platform::Array<WinRTContact^>^ contacts);
 	public delegate void onContactStatusChangedCallback(int contactId, unsigned char state);
 
+	public delegate void OnRemovedByContactCallback(int contactId);
+	public delegate void OnAddContactResponseCallback(Platform::String^, bool accepted);
+	public delegate bool OnAddingByContactCallback(Platform::String^);
+
 	public ref class WinRTChatClientNotifierDelegate sealed
 	{
 	public:
@@ -28,5 +32,8 @@ namespace WinRTChat
 		property onLoginSuccessfulCallback^ OnLoginSuccessful;
 		property onContactsReceivedCallback^ OnContactsReceived;
 		property onContactStatusChangedCallback^ OnContactStatusChanged;
+		property OnRemovedByContactCallback^ OnRemovedByContact;
+		property OnAddContactResponseCallback^ OnAddContactResponse;
+		property OnAddingByContactCallback^ OnAddingByContact;
 	};
 }

@@ -21,6 +21,10 @@ namespace WinRTChat
 		void onLoginSuccessful(const UserDetails& userDetails);
 		void onContactsReceived(const std::vector<Contact>& contacts);
 		void onContactStateChanged(int contactId, CONTACT_STATE state);
+
+		void onRemovedByContact(int contactId);
+		void onAddContactResponse(const std::string& userName, bool accepted);
+		bool onAddingByContact(const std::string& userName);
 	private:
 		WinRTChatClientNotifierDelegate^ m_notifier;
 	};

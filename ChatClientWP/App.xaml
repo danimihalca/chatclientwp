@@ -6,9 +6,7 @@
     <Application.Resources>
         <MenuFlyout x:Key="FlyoutBase1">
             <MenuFlyout.Items>
-                <MenuFlyoutItem x:Name="aa"  Text="asda" >
-                </MenuFlyoutItem>
-                <MenuFlyoutItem x:Name="bb" Text="adgssda" >
+                <MenuFlyoutItem x:Name="removeContactFlyoutItem"  Text="Remove contact">
                 </MenuFlyoutItem>
             </MenuFlyout.Items>
         </MenuFlyout>

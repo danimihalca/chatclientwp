@@ -41,8 +41,14 @@ namespace ChatClientWP.ChatClient.Notifier
             notifierDelegate.OnMessageReceived = NotifyOnMessageReceivedFromNative;
             notifierDelegate.OnContactsReceived = NotifyOnContactsReceivedFromNative;
 
+            notifierDelegate.OnRemovedByContact = NotifyOnRemovedByContact;
+		    notifierDelegate.OnAddContactResponse = NotifyOnAddContactResponse;
+            notifierDelegate.OnAddingByContact = NotifyOnAddingByContact;
+
             return notifierDelegate;
         }
+
+    
 
         private void NotifyOnLoginSuccessfulFromNative(WinRTUserDetails details)
         {

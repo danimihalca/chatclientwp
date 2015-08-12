@@ -18,7 +18,19 @@ namespace ChatClientWP.Repository.ContactRepository
 
         public void AddContact(Contact c)
         {
-            m_contacts.Add(c.Id, c);
+            if (!m_contacts.ContainsKey(c.Id))
+            {
+                m_contacts.Add(c.Id, c);
+            }
+            else
+            {
+                Contact existingContact;
+                m_contacts.TryGetValue(c.Id,out existingContact);
+                existingContact.Id = c.Id;
+                existingContact.UserName = c.UserName;
+                existingContact.FirstName = c.FirstName;
+                existingContact.LastName = c.LastName;
+            }
         }
 
         public void AddContacts(IList<Contact> contacts)
@@ -54,8 +66,14 @@ namespace ChatClientWP.Repository.ContactRepository
 
         public void SetContacts(IList<Contact> contacts)
         {
-            ClearContacts();
+            //ClearContacts();
             AddContacts(contacts);
+        }
+
+
+        public void RemoveContact(Contact contact)
+        {
+            m_contacts.Remove(contact.Id);
         }
     }
 }

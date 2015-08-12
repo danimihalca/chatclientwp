@@ -51,5 +51,16 @@ namespace ChatClientWP.ChatClient
         {
             m_nativeChatClient.sendMessage(message.Receiver.Id, message.MessageText);
         }
+
+
+        public void RemoveContact(int contactId)
+        {
+            m_nativeChatClient.removeContact(contactId);
+        }
+
+        public void AddContact(string userName)
+        {
+            m_nativeChatClient.addContact(userName);
+        }
     }
 }

@@ -54,5 +54,11 @@ namespace ChatClientWP.Repository.MessageRepository
         {
             m_messages.Clear();
         }
+
+
+        public void RemoveMessages(Contact contact)
+        {
+            m_messages.Remove(contact);
+        }
     }
 }

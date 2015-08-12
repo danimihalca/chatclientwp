@@ -14,5 +14,11 @@ namespace ChatClientWP.ChatClient.ChatClientListener
         void OnContactStatusChanged(Contact contact);
 
         void OnMessageReceived(Message message);
+
+        bool OnAddingByContact(string userName);
+
+        void OnAddContactResponse(string userName, bool accepted);
+
+        void OnRemovedByContact(Contact contact);
     }
 }

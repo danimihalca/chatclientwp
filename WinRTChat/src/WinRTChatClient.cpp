@@ -33,7 +33,17 @@ namespace WinRTChat
 	}
 	void WinRTChatClient::requestContacts()
 	{
-		m_chatClient->getContacts();
+		m_chatClient->requestContacts();
+	}
+
+	void  WinRTChatClient::addContact(Platform::String^ userName)
+	{
+		m_chatClient->addContact(ToStdString(userName));
+	}
+
+	void  WinRTChatClient::removeContact(int contactId)
+	{
+		m_chatClient->removeContact(contactId);
 	}
 
 	void WinRTChatClient::addListener(WinRTChatClientListener^ rtListener)

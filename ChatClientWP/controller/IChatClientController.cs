@@ -39,5 +39,9 @@ namespace ChatClientWP.controller
 
         User GetUser();
         void SetUser(User user);
+
+        void AddContact(string userName);
+
+        void RemoveContact(Contact contact, bool notifyServer);
     }
 }

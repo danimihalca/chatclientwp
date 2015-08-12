@@ -79,10 +79,10 @@ namespace WinRTChat
 			for (Contact c : contacts)
 			{
 				contactArray->set(count++, ref new WinRTContact(c.getId(),
-																ToPlatformString(c.getUserName()),
-																ToPlatformString(c.getFirstName()),
-																ToPlatformString(c.getLastName()),
-																static_cast<char>(c.getState())));
+					ToPlatformString(c.getUserName()),
+					ToPlatformString(c.getFirstName()),
+					ToPlatformString(c.getLastName()),
+					static_cast<char>(c.getState())));
 			}
 
 			m_notifier->OnContactsReceived(contactArray);
@@ -95,5 +95,31 @@ namespace WinRTChat
 		{
 			m_notifier->OnContactStatusChanged(contactId, static_cast<char>(state));
 		}
+	}
+
+
+	void WinRTChatClientListenerImpl::onRemovedByContact(int contactId)
+	{
+		if (m_notifier != nullptr && m_notifier->OnRemovedByContact != nullptr)
+		{
+			m_notifier->OnRemovedByContact(contactId);
+		}
+	}
+
+	void WinRTChatClientListenerImpl::onAddContactResponse(const std::string& userName, bool accepted)
+	{
+		if (m_notifier != nullptr && m_notifier->OnRemovedByContact != nullptr)
+		{
+			m_notifier->OnAddContactResponse(ToPlatformString(userName),accepted);
+		}
+	}
+
+	bool WinRTChatClientListenerImpl::onAddingByContact(const std::string& userName)
+	{
+		if (m_notifier != nullptr && m_notifier->OnRemovedByContact != nullptr)
+		{
+			return m_notifier->OnAddingByContact(ToPlatformString(userName));
+		}
+		return false;
 	}
 }

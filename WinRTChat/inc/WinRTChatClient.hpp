@@ -15,6 +15,8 @@ namespace WinRTChat
 		void connect(Platform::String^ address, int port);
 		void login(Platform::String^ userName, Platform::String^ password);
 		void sendMessage(int receiverId, Platform::String^ message);
+		void addContact(Platform::String^ userName);
+		void removeContact(int contactId);
 		void disconnect();
 		void requestContacts();
 

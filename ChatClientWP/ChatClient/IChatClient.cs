@@ -20,5 +20,9 @@ namespace ChatClientWP.ChatClient
         void RequestContacts();
 
         void SendMessage(Message message);
+
+        void RemoveContact(int p);
+
+        void AddContact(string userName);
     }
 }

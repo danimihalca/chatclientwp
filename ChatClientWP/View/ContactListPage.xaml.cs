@@ -27,6 +27,8 @@ namespace ChatClientWP.View
         private IChatClientController m_controller;
         ObservablePropertyCollection<Contact> m_contactCollection;
 
+        private bool m_isVisible;
+
         private RelayCommand GoBackCommand;
         private bool goBackPressed;
 
@@ -47,6 +49,8 @@ namespace ChatClientWP.View
             m_controller = (Application.Current as App).GetController();
             m_controller.AddRuntimeListener(this);
             m_controller.RequestContacts();
+
+            m_isVisible = true;
         }
 
         private void GoBackAction()
@@ -117,12 +121,14 @@ namespace ChatClientWP.View
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             Debug.WriteLine("CL:NAVIGATEDFROM");
+            m_isVisible = true;
             this.navigationHelper.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             Debug.WriteLine("CL:NAVIGATEDTO");
+            m_isVisible = false;
             this.navigationHelper.OnNavigatedFrom(e);
         }
 
@@ -173,32 +179,61 @@ namespace ChatClientWP.View
             {
                 Debug.WriteLine("HOLDING:" + ((sender as ListViewItem).DataContext as Contact).FirstName);
                 MenuFlyout mf = (Application.Current.Resources["FlyoutBase1"] as MenuFlyout);
-                MenuFlyoutItem a = mf.Items[0] as MenuFlyoutItem;
-                MenuFlyoutItem b = mf.Items[1] as MenuFlyoutItem;
-                a.Click += MenuFlyoutItem_Click;
-                b.Click += MenuFlyoutItem_Click_1;
+                MenuFlyoutItem removeContactItem = mf.Items[0] as MenuFlyoutItem;
+                removeContactItem.Click += RemoveContactFlyoutItem_Click;
                 mf.ShowAt((FrameworkElement)sender);
 
             }
         }
 
 
-        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private void RemoveContactFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine(((e.OriginalSource as MenuFlyoutItem).DataContext as Contact).FirstName);
-            (e.OriginalSource as MenuFlyoutItem).Click -= MenuFlyoutItem_Click;
-        }
-
-        private void MenuFlyoutItem_Click_1(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine(e.OriginalSource.ToString());
-
+            Contact contact = (e.OriginalSource as MenuFlyoutItem).DataContext as Contact;
+            m_controller.RemoveContact(contact, true);
+            (e.OriginalSource as MenuFlyoutItem).Click -= RemoveContactFlyoutItem_Click;
         }
 
         private void ListViewItem_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             Frame.Navigate(typeof(ConversationPage), (sender as ListViewItem).DataContext as Contact);
 
+        }
+
+
+        public bool OnAddingByContact(string userName)
+        {
+            if (m_isVisible)
+            {
+
+            }
+            throw new NotImplementedException();
+            return false;
+        }
+
+        public void OnAddContactResponse(string userName, bool accepted)
+        {
+            if (m_isVisible)
+            {
+
+            }
+            throw new NotImplementedException();
+        }
+
+        public async void OnRemovedByContact(Contact contact)
+        {
+
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                if (m_isVisible)
+                {
+                   PopupDisplayer.DisplayPopup(contact.UserName + " has removed you from contacts");
+                }
+                m_contactCollection.Remove(contact);
+            });
+            m_controller.RemoveContact(contact, false);
         }
     }
 }
