@@ -10,12 +10,9 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
@@ -36,9 +33,6 @@ namespace ChatClientWP.View
 
         private RelayCommand GoBackCommand;
         private bool goBackPressed;
-
-
-        bool accepted;
 
         public ContactListPage()
         {
@@ -200,6 +194,7 @@ namespace ChatClientWP.View
             Debug.WriteLine(((e.OriginalSource as MenuFlyoutItem).DataContext as Contact).FirstName);
             Contact contact = (e.OriginalSource as MenuFlyoutItem).DataContext as Contact;
             m_controller.RemoveContact(contact, true);
+            m_contactCollection.Remove(contact);
             (e.OriginalSource as MenuFlyoutItem).Click -= RemoveContactFlyoutItem_Click;
         }
 
@@ -212,54 +207,29 @@ namespace ChatClientWP.View
 
         public bool OnAddingByContact(string userName)
         {
-            //MessageDialog mb;
             if (m_isVisible)
             {
 
-                MessagePrompt messagePrompt= null;
+                AddRequestPrompt addRequestPrompt = null;
                
                 IAsyncAction a = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    messagePrompt = new MessagePrompt
-                    {
-                        Title = "Advanced Message",
-                        Body = new TextBlock
-                        {
-                            Text = userName + "wants to add you as a contact",
-                            Foreground = new SolidColorBrush(Colors.Gray),
-                            FontSize = 30.0,
-                            TextWrapping = TextWrapping.Wrap
-                        },
-                        IsCancelVisible = true
-                    };
-                    messagePrompt.Completed += messagePrompt_Completed;
-                    messagePrompt.Show();
-
+                    addRequestPrompt = new AddRequestPrompt(userName);
+                    addRequestPrompt.Show();
                 });
                 a.AsTask().Wait();
-                while (messagePrompt.IsOpen)
+                while (addRequestPrompt.IsOpen)
                 {
                     Task.Delay(TimeSpan.FromMilliseconds(100));
                 }
+                return addRequestPrompt.Accepted;
             }
-            return accepted;
-            //return true;
+            return false;
         }
 
-        private void messagePrompt_Completed(object sender, PopUpEventArgs<string, PopUpResult> e)
-        {
-            if (e.PopUpResult == PopUpResult.Ok)
-            {
-                accepted = true;
-            }
-            else
-            {
-                accepted = false;
-            }
-        }
 
-        private void input_Completed(object sender, PopUpEventArgs<string, PopUpResult> e)
+        private void AddContact_Completed(object sender, PopUpEventArgs<string, PopUpResult> e)
         {
             if (e.PopUpResult == PopUpResult.Ok)
             {
@@ -293,12 +263,13 @@ namespace ChatClientWP.View
                 m_contactCollection.Remove(contact);
             });
             m_controller.RemoveContact(contact, false);
+            m_contactCollection.Remove(contact);
         }
 
         private void AddContactButton_Click(object sender, RoutedEventArgs e)
         {
             InputPrompt input = new InputPrompt();
-            input.Completed += new EventHandler<PopUpEventArgs<string, PopUpResult>>(input_Completed);
+            input.Completed += new EventHandler<PopUpEventArgs<string, PopUpResult>>(AddContact_Completed);
             input.Title = "Add contact";
             input.Message = "Please enter the username";
             input.IsCancelVisible = true;

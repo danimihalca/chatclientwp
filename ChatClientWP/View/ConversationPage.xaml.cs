@@ -4,6 +4,7 @@ using ChatClientWP.controller;
 using ChatClientWP.Model;
 using ChatClientWP.Utils;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI.Core;
@@ -186,8 +187,21 @@ namespace ChatClientWP.View
             if (m_isVisible)
             {
 
+                AddRequestPrompt addRequestPrompt = null;
+
+                IAsyncAction a = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    addRequestPrompt = new AddRequestPrompt(userName);
+                    addRequestPrompt.Show();
+                });
+                a.AsTask().Wait();
+                while (addRequestPrompt.IsOpen)
+                {
+                    Task.Delay(TimeSpan.FromMilliseconds(100));
+                }
+                return addRequestPrompt.Accepted;
             }
-            throw new NotImplementedException();
             return false;
         }
 
