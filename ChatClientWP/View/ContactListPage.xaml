@@ -12,6 +12,12 @@
 
 
     </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton x:Name="AddContactButton" Icon="Add" Label="Add" Click="AddContactButton_Click"/>
+            <AppBarButton Icon="Cancel" Label="appbarbutton"/>
+        </CommandBar>
+    </Page.BottomAppBar>
     <Grid x:Name="LayoutRoot">
         <Grid.Resources>
             <utils:ContactStateConverter x:Key="ContactStateConverter" />
@@ -39,7 +45,7 @@
         
 
         <!--TODO: Content should be placed within the following grid-->
-        <Grid Grid.Row="1" Grid.RowSpan="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
+        <Grid Grid.Row="1" Grid.RowSpan="1" x:Name="ContentRoot" Margin="19,9.667,19,75">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>

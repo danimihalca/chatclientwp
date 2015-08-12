@@ -191,13 +191,17 @@ namespace ChatClientWP.View
             return false;
         }
 
-        public void OnAddContactResponse(string userName, bool accepted)
+        public async void OnAddContactResponse(string userName, bool accepted)
         {
             if (m_isVisible)
             {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    PopupDisplayer.DisplayPopup(userName + " has " + (accepted ? "accepted": "declined"));
 
+                });
             }
-            throw new NotImplementedException();
         }
 
         public async void OnRemovedByContact(Contact contact)
