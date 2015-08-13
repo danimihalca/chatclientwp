@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatClientWP.ChatClient.ChatClientListener
+namespace ChatClientWP.ChatClient.Listener
 {
-    public interface BaseListener
+    public interface IUpdateListener: IRegisterUpdateListener, IRuntimeListener
     {
-        void OnDisconnected();
     }
 }

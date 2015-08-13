@@ -32,9 +32,9 @@ namespace ChatClientWP.ChatClient
             m_nativeChatClient.connect(address, port);
         }
 
-        public void Login(string userName, string password)
+        public void Login(string userName, string password, USER_STATE state)
         {
-            m_nativeChatClient.login(userName, password);
+            m_nativeChatClient.login(userName, password, (int) state);
         }
 
         public void Disconnect()
@@ -61,6 +61,22 @@ namespace ChatClientWP.ChatClient
         public void AddContact(string userName)
         {
             m_nativeChatClient.addContact(userName);
+        }
+
+
+        public void RegisterUser(User user)
+        {
+            m_nativeChatClient.registerUser(user.UserName, user.Password, user.FirstName, user.LastName);
+        }
+
+        public void UpdateUser(User user)
+        {
+            m_nativeChatClient.updateUser(user.UserName, user.Password, user.FirstName, user.LastName);
+        }
+
+        public void ChangeState(USER_STATE state)
+        {
+            m_nativeChatClient.changeState((int)state);
         }
     }
 }

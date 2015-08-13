@@ -1,4 +1,5 @@
-﻿using ChatClientWP.ChatClient.ChatClientListener;
+﻿using ChatClientWP.ChatClient.Listener;
+using ChatClientWP.ChatClient.Notifier;
 using ChatClientWP.Common;
 using ChatClientWP.controller;
 using ChatClientWP.Model;
@@ -237,14 +238,14 @@ namespace ChatClientWP.View
             }
         }
 
-        public async void OnAddContactResponse(string userName, bool accepted)
+        public async void OnAddContactResponse(string userName, ADD_REQUEST_STATUS status)
         {
             if (m_isVisible)
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    PopupDisplayer.DisplayPopup(userName + " has " + (accepted ? "accepted" : "declined"));
+                    PopupDisplayer.DisplayPopup(userName + " has " + status.ToString());
 
                 });
             }

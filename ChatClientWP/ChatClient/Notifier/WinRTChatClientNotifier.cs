@@ -1,5 +1,4 @@
 ﻿using WinRTChat;
-using ChatClientWP.ChatClient.ChatClientListener;
 using ChatClientWP.controller;
 using ChatClientWP.Model;
 using System;
@@ -42,10 +41,26 @@ namespace ChatClientWP.ChatClient.Notifier
             notifierDelegate.OnContactsReceived = NotifyOnContactsReceivedFromNative;
 
             notifierDelegate.OnRemovedByContact = NotifyOnRemovedByContact;
-		    notifierDelegate.OnAddContactResponse = NotifyOnAddContactResponse;
+		    notifierDelegate.OnAddContactResponse = NotifyOnAddContactResponseFromNative;
             notifierDelegate.OnAddingByContact = NotifyOnAddingByContact;
 
+            notifierDelegate.OnRegisterUpdateResponse = NotifyOnRegisterUpdateFromNative;
             return notifierDelegate;
+        }
+
+        private void NotifyOnLoginFailed(byte reason)
+        {
+            NotifyOnLoginFailed((AUTHENTICATION_STATUS) reason);
+        }
+
+        private void NotifyOnAddContactResponseFromNative(string username, byte status)
+        {
+            NotifyOnAddContactResponse(username, (ADD_REQUEST_STATUS)status);
+        }
+
+        private void NotifyOnRegisterUpdateFromNative(byte status)
+        {
+            NotifyOnRegisterUpdate((REGISTER_UPDATE_USER_STATUS)status);
         }
 
     
@@ -69,7 +84,7 @@ namespace ChatClientWP.ChatClient.Notifier
                 c.UserName = contacts[i].userName;
                 c.FirstName = contacts[i].firstName;
                 c.LastName = contacts[i].lastName;
-                c.State = (ContactState) contacts[i].state;
+                c.State = (USER_STATE)contacts[i].state;
 
                 contactList.Add(c);
             }
@@ -89,7 +104,7 @@ namespace ChatClientWP.ChatClient.Notifier
         private void NotifyOnContactStatusChangedFromNative(int contactId, byte state)
         {
             Contact contact = m_controller.GetContact(contactId);
-            contact.State = (ContactState) state;
+            contact.State = (USER_STATE)state;
 
             NotifyOnContactStatusChanged(contact);
         }

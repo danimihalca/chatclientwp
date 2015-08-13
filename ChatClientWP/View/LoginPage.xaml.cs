@@ -1,4 +1,5 @@
-﻿using ChatClientWP.ChatClient.ChatClientListener;
+﻿using ChatClientWP.ChatClient.Listener;
+using ChatClientWP.ChatClient.Notifier;
 using ChatClientWP.Common;
 using ChatClientWP.controller;
 using ChatClientWP.Model;
@@ -39,7 +40,7 @@ namespace ChatClientWP.View
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
             m_controller = (Application.Current as App).GetController();
-            m_controller.SetLoginListener(this);
+            m_controller.AddLoginListener(this);
         }
 
         /// <summary>
@@ -118,7 +119,7 @@ namespace ChatClientWP.View
             {
                 m_userName = userNameInput.Text;
                 m_password = passwordInput.Password;
-                m_controller.Login(m_userName, m_password);
+                m_controller.Login(m_userName, m_password, USER_STATE.ONLINE);
             });
         }
 
@@ -146,12 +147,12 @@ namespace ChatClientWP.View
             });
         }
 
-        public async void OnLoginFailed(string message)
+        public async void OnLoginFailed(AUTHENTICATION_STATUS reason)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                PopupDisplayer.DisplayPopup("Login failed");
+                PopupDisplayer.DisplayPopup("Login failed: " + reason.ToString());
             });
         }
 

@@ -13,13 +13,15 @@ namespace WinRTChat
 	public:
 		WinRTChatClient();
 		void connect(Platform::String^ address, int port);
-		void login(Platform::String^ userName, Platform::String^ password);
+		void login(Platform::String^ userName, Platform::String^ password, int state);
 		void sendMessage(int receiverId, Platform::String^ message);
 		void addContact(Platform::String^ userName);
 		void removeContact(int contactId);
 		void disconnect();
 		void requestContacts();
-
+		void registerUser(Platform::String^ userName, Platform::String^ password, Platform::String^ firstname, Platform::String^ lastname);
+		void updateUser(Platform::String^ userName, Platform::String^ password, Platform::String^ firstname, Platform::String^ lastname);
+		void changeState(int state);
 		void addListener(WinRTChatClientListener^ listener);
 		void removeListener(WinRTChatClientListener^ listener);
 

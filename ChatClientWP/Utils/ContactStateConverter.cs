@@ -13,14 +13,14 @@ namespace ChatClientWP.Utils
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            ContactState myEnumValue = (ContactState)value;
+            USER_STATE myEnumValue = (USER_STATE)value;
             Debug.WriteLine(myEnumValue.ToString());
             return myEnumValue.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return ContactState.OFFLINE;
+            return USER_STATE.OFFLINE;
         }
     }
 }

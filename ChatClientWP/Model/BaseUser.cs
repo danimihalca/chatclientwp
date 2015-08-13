@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace ChatClientWP.Model
 {
+     public enum USER_STATE
+    {
+        OFFLINE,
+        ONLINE,
+        IDLE,
+        BUSY,
+        INVISIBLE
+     }
+
     public abstract class BaseUser
     {
         public int Id { get; set; }

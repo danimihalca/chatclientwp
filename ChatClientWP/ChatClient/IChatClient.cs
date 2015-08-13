@@ -14,7 +14,7 @@ namespace ChatClientWP.ChatClient
         void RemoveListener(IChatClientNotifier notifier);
         void Connect(string address, int port);
 
-        void Login(string userName, String password);
+        void Login(string userName, String password, USER_STATE state);
 
         void Disconnect();
         void RequestContacts();
@@ -24,5 +24,11 @@ namespace ChatClientWP.ChatClient
         void RemoveContact(int p);
 
         void AddContact(string userName);
+
+        void RegisterUser(User user);
+
+        void UpdateUser(User user);
+
+        void ChangeState(USER_STATE state);
     }
 }

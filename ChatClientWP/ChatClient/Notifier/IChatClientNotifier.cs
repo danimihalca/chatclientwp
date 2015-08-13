@@ -1,4 +1,4 @@
-﻿using ChatClientWP.ChatClient.ChatClientListener;
+﻿using ChatClientWP.ChatClient.Listener;
 using ChatClientWP.Model;
 using System;
 using System.Collections.Generic;
@@ -12,15 +12,26 @@ namespace ChatClientWP.ChatClient.Notifier
     {
         void AddRuntimeListener(IRuntimeListener listener);
         void RemoveRuntimeListener(IRuntimeListener listener);
-        void SetLoginListener(ILoginListener listener);
 
         void NotifyOnConnected();
         void NotifyOnDisconnected();
         void NotifyOnConnectionError();
         void NotifyOnLoginSuccessful(UserDetails userDetails);
-        void NotifyOnLoginFailed(string reason);
+        void NotifyOnLoginFailed(AUTHENTICATION_STATUS reason);
         void NotifyOnContactsReceived(IList<Contact> contacts);
         void NotifyOnContactStatusChanged(Contact contact);
         void NotifyOnMessageReceived(Message message);
+
+        void AddLoginListener(ILoginListener listener);
+
+        void RemoveLoginListener(ILoginListener listener);
+
+        void AddUpdateListener(IUpdateListener listener);
+
+        void RemoveRegisterListener(IRegisterListener listener);
+
+        void RemoveUpdateListener(IUpdateListener listener);
+
+        void addRegisterListener(IRegisterListener listener);
     }
 }

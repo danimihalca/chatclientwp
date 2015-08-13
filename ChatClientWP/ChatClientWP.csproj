@@ -86,9 +86,13 @@
     </Compile>
     <Compile Include="ChatClient\ChatClientWinRTProxy.cs" />
     <Compile Include="ChatClient\IChatClient.cs" />
-    <Compile Include="ChatClient\Listener\BaseListener.cs" />
+    <Compile Include="ChatClient\Listener\IBaseListener.cs" />
+    <Compile Include="ChatClient\Listener\IConnectListener.cs" />
     <Compile Include="ChatClient\Listener\ILoginListener.cs" />
+    <Compile Include="ChatClient\Listener\IRegisterListener.cs" />
+    <Compile Include="ChatClient\Listener\IRegisterUpdateListener.cs" />
     <Compile Include="ChatClient\Listener\IRuntimeListener.cs" />
+    <Compile Include="ChatClient\Listener\IUpdateListener.cs" />
     <Compile Include="ChatClient\Notifier\ChatClientNotifier.cs" />
     <Compile Include="ChatClient\Notifier\IChatClientNotifier.cs" />
     <Compile Include="ChatClient\Notifier\WinRTChatClientNotifier.cs" />

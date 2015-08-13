@@ -41,11 +41,11 @@ namespace WinRTChat
 		}
 	}
 
-	void WinRTChatClientListenerImpl::onLoginFailed(const std::string& message)
+	void WinRTChatClientListenerImpl::onLoginFailed(AUTH_STATUS status)
 	{
 		if (m_notifier != nullptr && m_notifier->OnLoginFailed != nullptr)
 		{
-			m_notifier->OnLoginFailed(ToPlatformString(message));
+			m_notifier->OnLoginFailed(status);
 		}
 	}
 
@@ -89,7 +89,7 @@ namespace WinRTChat
 		}
 	}
 
-	void WinRTChatClientListenerImpl::onContactStateChanged(int contactId, CONTACT_STATE state)
+	void WinRTChatClientListenerImpl::onContactStateChanged(int contactId, USER_STATE state)
 	{
 		if (m_notifier != nullptr && m_notifier->OnContactStatusChanged != nullptr)
 		{
@@ -106,11 +106,11 @@ namespace WinRTChat
 		}
 	}
 
-	void WinRTChatClientListenerImpl::onAddContactResponse(const std::string& userName, bool accepted)
+	void WinRTChatClientListenerImpl::onAddContactResponse(const std::string& userName, ADD_STATUS status)
 	{
 		if (m_notifier != nullptr && m_notifier->OnRemovedByContact != nullptr)
 		{
-			m_notifier->OnAddContactResponse(ToPlatformString(userName),accepted);
+			m_notifier->OnAddContactResponse(ToPlatformString(userName), status);
 		}
 	}
 
@@ -122,4 +122,13 @@ namespace WinRTChat
 		}
 		return false;
 	}
+
+	void WinRTChatClientListenerImpl::onRegisterUpdateResponse(REGISTER_UPDATE_USER_STATUS status)
+	{
+		if (m_notifier != nullptr && m_notifier->OnRegisterUpdateResponse != nullptr)
+		{
+			m_notifier->OnRegisterUpdateResponse(status);
+		}
+	}
+
 }

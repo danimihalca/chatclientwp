@@ -4,9 +4,9 @@ using ChatClientWP.controller;
 using ChatClientWP.Model;
 using ChatClientWP.ChatClient;
 using ChatClientWP.ChatClient.Notifier;
-using ChatClientWP.ChatClient.ChatClientListener;
 using ChatClientWP.Repository.ContactRepository;
 using ChatClientWP.Repository.MessageRepository;
+using ChatClientWP.ChatClient.Listener;
 
 
 namespace ChatClientWP
@@ -18,7 +18,8 @@ namespace ChatClientWP
         private IChatClient m_chatClient;
         private IChatClientNotifier m_notifier;
         private User m_user;
-
+        private USER_STATE m_state;
+        private bool m_isConnected;
         public ChatClientController()
         {
             m_contactRepository = new InMemoryContactRepository();
@@ -27,6 +28,7 @@ namespace ChatClientWP
             m_notifier = new WinRTChatClientNotifier(this);
             m_chatClient.AddListener(m_notifier);
             m_user = new User();
+            m_state = USER_STATE.OFFLINE;
         }
 
         public User GetUser()
@@ -39,9 +41,10 @@ namespace ChatClientWP
             m_chatClient.Connect(address, port);
         }
     
-        public void Login(string username, string password)
+        public void Login(string username, string password, USER_STATE state)
         {
-            m_chatClient.Login(username, password);
+            m_chatClient.Login(username, password, state);
+            m_state = state;
         }
         
         public void Disconnect()
@@ -103,11 +106,6 @@ namespace ChatClientWP
             m_notifier.RemoveRuntimeListener(listener);
         }
 
-        public void SetLoginListener(ILoginListener listener)
-        {
-            m_notifier.SetLoginListener(listener);
-        }
-
 
         public void AddReceivedMessage(Message message)
         {
@@ -117,7 +115,10 @@ namespace ChatClientWP
 
         public void SetUser(User user)
         {
-            m_user = user;
+            m_user.UserName=user.UserName;
+            m_user.FirstName=user.FirstName;
+            m_user.LastName=user.LastName;
+            m_user.Password=user.Password;
         }
 
 
@@ -134,6 +135,69 @@ namespace ChatClientWP
             }
             m_contactRepository.RemoveContact(contact);
             m_messageRepository.RemoveMessages(contact);
+        }
+
+        public void AddRegisterListener(IRegisterListener listener)
+        {
+            m_notifier.addRegisterListener(listener);
+        }
+
+        public void RemoveRegisterListener(IRegisterListener listener)
+        {
+            m_notifier.RemoveRegisterListener(listener);
+        }
+
+        public void AddUpdateListener(IUpdateListener listener)
+        {
+            m_notifier.AddUpdateListener(listener);
+        }
+
+        public void RemoveUpdateListener(IUpdateListener listener)
+        {
+            m_notifier.RemoveUpdateListener(listener);
+        }
+
+        public void AddLoginListener(ILoginListener listener)
+        {
+            m_notifier.AddLoginListener(listener);
+        }
+
+        public void RemoveLoginListener(ILoginListener listener)
+        {
+            m_notifier.RemoveLoginListener(listener);
+        }
+
+
+        public void SetConnected(bool connected)
+        {
+            m_isConnected = connected;
+        }
+
+        public bool IsConnected()
+        {
+            return m_isConnected;
+        }
+
+
+        public USER_STATE getState()
+        {
+            return m_state;
+        }
+
+        public void ChangeState(USER_STATE state)
+        {
+            m_state = state;
+            m_chatClient.ChangeState(state);
+        }
+
+        public void RegisterUser(User user)
+        {
+            m_chatClient.RegisterUser(user);
+        }
+
+        public void UpdateUser(User user)
+        {
+            m_chatClient.UpdateUser(user);
         }
     }
 }

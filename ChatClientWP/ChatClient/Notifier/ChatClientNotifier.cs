@@ -1,4 +1,4 @@
-﻿using ChatClientWP.ChatClient.ChatClientListener;
+﻿using ChatClientWP.ChatClient.Listener;
 using ChatClientWP.controller;
 using ChatClientWP.Model;
 using System;
@@ -9,16 +9,46 @@ using System.Threading.Tasks;
 
 namespace ChatClientWP.ChatClient.Notifier
 {
+    
+    public enum AUTHENTICATION_STATUS
+    {
+        AUTH_SUCCESSFUL ,
+        AUTH_ALREADY_LOGGED_IN,
+        AUTH_INVALID_CREDENTIALS,
+        AUTH_INVALID_STATE
+    }
+    public enum ADD_REQUEST_STATUS
+    {
+        ADD_ACCEPTED,
+        ADD_DECLINED,
+        ADD_OFFLINE,
+        ADD_INEXISTENT,
+        ADD_YOURSELF
+    };
+
+
+    public enum REGISTER_UPDATE_USER_STATUS
+    {
+        USER_OK,
+        USER_EXISTING_USERNAME ,
+        USER_INVALID_INPUT 
+    };
+
     public class ChatClientNotifier:IChatClientNotifier
     {
         protected IChatClientController m_controller;
-        private ILoginListener m_loginListener;
         private IList<IRuntimeListener> m_runtimeListeners;
+        private IList<IConnectListener> m_connectListeners;
+        private IList<ILoginListener> m_loginListeners;
+        private IList<IRegisterUpdateListener> m_registerUpdateListeners;
 
         public ChatClientNotifier(IChatClientController controller)
         {
             m_controller = controller;
             m_runtimeListeners = new List<IRuntimeListener>();
+            m_connectListeners = new List<IConnectListener>();
+            m_loginListeners = new List<ILoginListener>();
+            m_registerUpdateListeners = new List<IRegisterUpdateListener>();
         }
 
         public void AddRuntimeListener(IRuntimeListener listener)
@@ -31,21 +61,20 @@ namespace ChatClientWP.ChatClient.Notifier
             m_runtimeListeners.Remove(listener);
         }
 
-        public void SetLoginListener(ILoginListener listener)
-        {
-            m_loginListener = listener;
-        }
 
         public void NotifyOnConnected()
         {
-            if (m_loginListener != null)
+            List<IConnectListener> reverseList = m_connectListeners.ToList<IConnectListener>();
+            reverseList.Reverse();
+            foreach (IConnectListener listener in reverseList)
             {
-                m_loginListener.OnConnected();
+                listener.OnConnected();
             }
         }
 
         public void NotifyOnDisconnected()
         {
+            m_controller.SetConnected(false);
             m_controller.ClearContacts();
             m_controller.ClearMessages();
 
@@ -56,33 +85,47 @@ namespace ChatClientWP.ChatClient.Notifier
                 listener.OnDisconnected();
             }
 
-            if (m_loginListener != null)
+            List<IConnectListener> reverseConnectList = m_connectListeners.ToList<IConnectListener>();
+            reverseConnectList.Reverse();
+            foreach (IConnectListener listener in reverseConnectList)
             {
-                m_loginListener.OnDisconnected();
+                listener.OnDisconnected();
             }
         }
 
         public void NotifyOnConnectionError()
         {
-            if (m_loginListener != null)
+            List<IConnectListener> reverseConnectList = m_connectListeners.ToList<IConnectListener>();
+            reverseConnectList.Reverse();
+            foreach (IConnectListener listener in reverseConnectList)
             {
-                m_loginListener.OnConnectionError();
+                listener.OnConnectionError();
             }
         }
 
         public void NotifyOnLoginSuccessful(UserDetails userDetails)
         {
-            if (m_loginListener != null)
+            List<ILoginListener> reverseList = m_loginListeners.ToList<ILoginListener>();
+            reverseList.Reverse();
+            foreach (ILoginListener listener in reverseList)
             {
-                m_loginListener.OnLoginSuccessful(userDetails);
+                listener.OnLoginSuccessful(userDetails);
             }
+
         }
 
-        public void NotifyOnLoginFailed(string reason)
+        public void NotifyOnLoginFailed(AUTHENTICATION_STATUS reason)
         {
-            if (m_loginListener != null)
+            //if (m_loginListener != null)
+            //{
+            //    m_loginListener.OnLoginFailed(reason);
+            //}
+
+            List<ILoginListener> reverseList = m_loginListeners.ToList<ILoginListener>();
+            reverseList.Reverse();
+            foreach (ILoginListener listener in reverseList)
             {
-                m_loginListener.OnLoginFailed(reason);
+                listener.OnLoginFailed(reason);
             }
         }
 
@@ -136,13 +179,13 @@ namespace ChatClientWP.ChatClient.Notifier
             return false;
         }
 
-        public void NotifyOnAddContactResponse(string userName, bool accepted)
+        public void NotifyOnAddContactResponse(string userName, ADD_REQUEST_STATUS status)
         {
             List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
             reverseList.Reverse();
             foreach (IRuntimeListener listener in reverseList)
             {
-                listener.OnAddContactResponse(userName, accepted);
+                listener.OnAddContactResponse(userName, status);
             }
         }
 
@@ -157,5 +200,50 @@ namespace ChatClientWP.ChatClient.Notifier
             }
         }
 
+        public void NotifyOnRegisterUpdate(REGISTER_UPDATE_USER_STATUS status)
+        {
+            List<IRegisterUpdateListener> reverseList = m_registerUpdateListeners.ToList<IRegisterUpdateListener>();
+            reverseList.Reverse();
+            foreach (IRegisterUpdateListener listener in reverseList)
+            {
+                listener.onRegisterUpdateResponse(status);
+            }
+        }
+
+        public void AddLoginListener(ILoginListener listener)
+        {
+            m_loginListeners.Add(listener);
+            m_connectListeners.Add(listener);
+        }
+
+        public void RemoveLoginListener(ILoginListener listener)
+        {
+            m_loginListeners.Remove(listener);
+            m_connectListeners.Remove(listener);
+        }
+
+        public void AddUpdateListener(IUpdateListener listener)
+        {
+            m_runtimeListeners.Add(listener);
+            m_registerUpdateListeners.Add(listener);
+        }
+
+        public void RemoveRegisterListener(IRegisterListener listener)
+        {
+            m_registerUpdateListeners.Remove(listener);
+            m_connectListeners.Remove(listener);
+        }
+
+        public void RemoveUpdateListener(IUpdateListener listener)
+        {
+            m_runtimeListeners.Remove(listener);
+            m_registerUpdateListeners.Remove(listener);
+        }
+
+        public void addRegisterListener(IRegisterListener listener)
+        {
+            m_registerUpdateListeners.Add(listener);
+            m_connectListeners.Add(listener);
+        }
     }
 }

@@ -12,19 +12,14 @@ using Windows.UI.Core;
 
 namespace ChatClientWP.Model
 {
-    public enum ContactState
-    {
-        OFFLINE = 0,
-        ONLINE
-    }
 
     public class Contact :BaseUser, INotifyPropertyChanged
     {
 
-        private ContactState _State;
+        private USER_STATE _State;
         private int _UnreadMessagesCount = 0;
 
-        public ContactState State
+        public USER_STATE State
         {
             get
             {

@@ -16,10 +16,10 @@ namespace WinRTChat
 		m_chatClient->connect(ToStdString(address), port);
 
 	}
-	void WinRTChatClient::login(Platform::String^ userName, Platform::String^ password)
+	void WinRTChatClient::login(Platform::String^ userName, Platform::String^ password, int state)
 	{
 		UserCredentials userCredentials(ToStdString(userName), ToStdString(password));
-		m_chatClient->login(userCredentials);
+		m_chatClient->login(userCredentials, static_cast<USER_STATE>(state));
 	}
 
 	void WinRTChatClient::sendMessage(int receiverId, Platform::String^ message)
@@ -45,6 +45,23 @@ namespace WinRTChat
 	{
 		m_chatClient->removeContact(contactId);
 	}
+
+	void WinRTChatClient::registerUser(Platform::String^ username, Platform::String^ password, Platform::String^ firstname, Platform::String^ lastname)
+	{
+		User user(-1, ToStdString(username), ToStdString(password), ToStdString(firstname), ToStdString(lastname));
+		m_chatClient->registerUser(user);
+	}
+	void WinRTChatClient::updateUser(Platform::String^ username, Platform::String^ password, Platform::String^ firstname, Platform::String^ lastname)
+	{
+		User user(-1, ToStdString(username), ToStdString(password), ToStdString(firstname), ToStdString(lastname));
+		m_chatClient->updateUser(user);
+	}
+	
+	void WinRTChatClient::changeState(int state)
+	{
+		m_chatClient->changeState(static_cast<USER_STATE>(state));
+	}
+
 
 	void WinRTChatClient::addListener(WinRTChatClientListener^ rtListener)
 	{

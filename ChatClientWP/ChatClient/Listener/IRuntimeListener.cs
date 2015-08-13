@@ -1,13 +1,14 @@
-﻿using ChatClientWP.Model;
+﻿using ChatClientWP.ChatClient.Notifier;
+using ChatClientWP.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatClientWP.ChatClient.ChatClientListener
+namespace ChatClientWP.ChatClient.Listener
 {
-    public interface IRuntimeListener:BaseListener
+    public interface IRuntimeListener:IBaseListener
     {
         void OnContactsReceived();
 
@@ -17,7 +18,7 @@ namespace ChatClientWP.ChatClient.ChatClientListener
 
         bool OnAddingByContact(string userName);
 
-        void OnAddContactResponse(string userName, bool accepted);
+        void OnAddContactResponse(string userName, ADD_REQUEST_STATUS status);
 
         void OnRemovedByContact(Contact contact);
     }
