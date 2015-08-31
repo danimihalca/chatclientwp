@@ -24,6 +24,13 @@ namespace ChatClientWP.Model
                 _Date = value;
             }
         }
+        public String Time
+        {
+            get
+            {
+                return Date.Hour + ":" + Date.Minute + ":" + Date.Second;
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

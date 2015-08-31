@@ -29,6 +29,7 @@ namespace ChatClientWP
             m_chatClient.AddListener(m_notifier);
             m_user = new User();
             m_state = USER_STATE.OFFLINE;
+            m_isConnected = false;
         }
 
         public User GetUser()
@@ -36,9 +37,9 @@ namespace ChatClientWP
             return m_user;
         }
 
-        public void Connect(string address, int port)
+        public void SetServer(string address, int port)
         {
-            m_chatClient.Connect(address, port);
+            m_chatClient.SetServer(address, port);
         }
     
         public void Login(string username, string password, USER_STATE state)
@@ -179,7 +180,7 @@ namespace ChatClientWP
         }
 
 
-        public USER_STATE getState()
+        public USER_STATE GetState()
         {
             return m_state;
         }

@@ -4,10 +4,10 @@ using ChatClientWP.Common;
 using ChatClientWP.controller;
 using ChatClientWP.Model;
 using ChatClientWP.Utils;
+using Coding4Fun.Toolkit.Controls;
 using System;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,16 +21,21 @@ namespace ChatClientWP.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ConversationPage : Page, IRuntimeListener
+    public sealed partial class LoginView : Page, ILoginListener
     {
         private NavigationHelper navigationHelper;
-       
-        private IChatClientController m_controller;
-        private Contact m_contact;
-        ObservablePropertyCollection<Message> m_messageCollection;
-        private bool m_isVisible;
 
-        public ConversationPage()
+        private IChatClientController m_controller;
+
+        private string m_userName;
+        private string m_password;
+        private USER_STATE m_state;
+
+        private bool m_performLogin;
+        private bool m_isVisible;
+        private RelayCommand GoBackCommand;
+
+        public LoginView()
         {
             this.InitializeComponent();
 
@@ -38,9 +43,19 @@ namespace ChatClientWP.View
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
+            this.NavigationCacheMode = NavigationCacheMode.Required;
+            GoBackCommand = new RelayCommand(GoBackAction);
+            this.navigationHelper.GoBackCommand = GoBackCommand;
+
             m_controller = (Application.Current as App).GetController();
-            m_controller.AddRuntimeListener(this);
+            m_controller.AddLoginListener(this);
+
+            m_performLogin = false;
             m_isVisible = true;
+        }
+        private void GoBackAction()
+        {
+            App.Current.Exit();
         }
 
 
@@ -51,6 +66,7 @@ namespace ChatClientWP.View
         {
             get { return this.navigationHelper; }
         }
+
 
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
@@ -65,11 +81,6 @@ namespace ChatClientWP.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            m_contact = e.NavigationParameter as Contact;
-            m_contact.UnreadMesssagesCount = 0;
-
-            m_messageCollection = new ObservablePropertyCollection<Message>(m_controller.getMessages(m_contact));
-            MessageListView.ItemsSource = m_messageCollection;
         }
 
         /// <summary>
@@ -108,56 +119,78 @@ namespace ChatClientWP.View
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             m_isVisible = false;
-            m_controller.RemoveRuntimeListener(this);
             this.navigationHelper.OnNavigatedFrom(e);
         }
 
         #endregion
 
-        public void OnDisconnected()
+        private void loginButton_Click(object sender, RoutedEventArgs e)
         {
-            IAsyncAction action = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                m_controller.RemoveRuntimeListener(this);
-                navigationHelper.GoBack();
-            });
-            action.AsTask().Wait();
+            m_userName = userNameInput.Text;
+            m_password = passwordInput.Password;
+            loginButton.IsEnabled = false;
+            m_state = ((bool) invisibleBox.IsChecked)? USER_STATE.INVISIBLE : USER_STATE.ONLINE;
+            //if (!m_controller.IsConnected())
+            //{
+            //m_controller.SetServer((App.Current as App).ServerAddress, (App.Current as App).ServerPort);
+            //    m_performLogin = true;
+
+            //}
+            //else
+            //{
+                m_controller.Login(m_userName,m_password,m_state);
+            //    m_performLogin = false;
+            //}
         }
 
-        public async void OnContactStatusChanged(Contact c)
+        public async void OnDisconnected() 
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                loginButton.IsEnabled = true;
+                PopupDisplayer.DisplayPopup("Disconnected");
+            });
+        }
+
+        public async void OnLoginSuccessful(UserDetails userDetails)
+        {
+            User user = new User();
+            user.UserName = m_userName;
+            user.Password = m_password;
+            user.Details = userDetails;
+            m_controller.SetUser(user);
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                loginButton.IsEnabled = true;
+                Frame.Navigate(typeof(ContactListView));
+            });
+            m_controller.RequestContacts();
+        }
+
+        public async void OnLoginFailed(AUTHENTICATION_STATUS reason)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                PopupDisplayer.DisplayPopup(c.FirstName + " is now " + c.State.ToString());
+                loginButton.IsEnabled = true;
+                PopupDisplayer.DisplayPopup(EnumCodePrettifier.Prettify(reason));
             });
         }
 
 
-        public async void OnMessageReceived(Message m)
+        public async void OnConnectionError()
         {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
-                if(m.Sender.Equals(m_contact))
-                {
-                    m_contact.UnreadMesssagesCount = 0;
-                    m_messageCollection.Add(m);
-                }
-                else
-                {
-                    PopupDisplayer.DisplayPopup(m.Sender.FirstName + " send you a message");
-                }
+                loginButton.IsEnabled = true;
+                PopupDisplayer.DisplayPopup("Connection error");
             });
         }
 
-        private void sendButton_Click(object sender, RoutedEventArgs e)
-        {
-            SendMessage();
-        }
-
-        private void messageInput_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void input_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == Windows.System.VirtualKey.Enter)
             {
@@ -165,74 +198,16 @@ namespace ChatClientWP.View
             }
         }
 
-        private void SendMessage()
+        private async void settingsButton_Click(object sender, RoutedEventArgs e)
         {
-            Message message = new Message();
-            message.Sender = m_controller.GetUser();
-            message.MessageText = messageInput.Text;
-            message.Receiver = m_contact;
-
-            messageInput.Text = "";
-            m_controller.SendMessage(message);
-
-            m_messageCollection.Add(message);
+            var c = new SettingsDialog();
+            await c.ShowAsync();
         }
 
-        public void OnContactsReceived()
+        private void registerButton_Click(object sender, RoutedEventArgs e)
         {
-        }
+            Frame.Navigate(typeof(RegisterView));
 
-
-        public bool OnAddingByContact(string userName)
-        {
-            if (m_isVisible)
-            {
-
-                AddRequestPrompt addRequestPrompt = null;
-
-                IAsyncAction a = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    addRequestPrompt = new AddRequestPrompt(userName);
-                    addRequestPrompt.Show();
-                });
-                a.AsTask().Wait();
-                while (addRequestPrompt.IsOpen)
-                {
-                    Task.Delay(TimeSpan.FromMilliseconds(100));
-                }
-                return addRequestPrompt.Accepted;
-            }
-            return false;
-        }
-
-        public async void OnAddContactResponse(string userName, ADD_REQUEST_STATUS status)
-        {
-            if (m_isVisible)
-            {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    PopupDisplayer.DisplayPopup(userName + " has " + status.ToString());
-
-                });
-            }
-        }
-
-        public async void OnRemovedByContact(Contact contact)
-        {
-            if (m_isVisible)
-            {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    PopupDisplayer.DisplayPopup(contact.UserName + " has removed you from contacts");
-                    if (contact.Id == m_contact.Id)
-                    {
-                        navigationHelper.GoBack();
-                    }
-                });
-            }
         }
     }
 }

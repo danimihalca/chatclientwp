@@ -10,6 +10,12 @@
                 </MenuFlyoutItem>
             </MenuFlyout.Items>
         </MenuFlyout>
+        <MenuFlyout x:Key="FlyoutBase2">
+            <MenuFlyout.Items>
+                <ToggleMenuFlyoutItem x:Name="raemoveContactFlyoutItem"  Text="Remove contact" IsChecked="True">
+                </ToggleMenuFlyoutItem>
+            </MenuFlyout.Items>
+        </MenuFlyout>
     </Application.Resources>
 
 </Application>

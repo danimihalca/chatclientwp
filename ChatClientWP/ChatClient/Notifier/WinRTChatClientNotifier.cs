@@ -11,17 +11,17 @@ namespace ChatClientWP.ChatClient.Notifier
 {
     public class WinRTChatClientNotifier : ChatClientNotifier
     {
-        private WinRTChatClientListener m_nativeListenerWrapper;
+        private WinRTChatClientListenerWrapper m_nativeListenerWrapper;
 
         public WinRTChatClientNotifier(IChatClientController controller):
              base(controller)
         {
             WinRTChatClientNotifierDelegate notifierDelegate = CreateNotifierDelegate();
 
-            m_nativeListenerWrapper = new WinRTChatClientListener(notifierDelegate);
+            m_nativeListenerWrapper = new WinRTChatClientListenerWrapper(notifierDelegate);
         }
 
-        public WinRTChatClientListener GetListener()
+        public WinRTChatClientListenerWrapper GetListener()
         {
             return m_nativeListenerWrapper;
         }
@@ -30,19 +30,19 @@ namespace ChatClientWP.ChatClient.Notifier
         {
             WinRTChatClientNotifierDelegate notifierDelegate = new WinRTChatClientNotifierDelegate();
 
-            notifierDelegate.OnConnected = NotifyOnConnected;
+            //notifierDelegate.OnConnected = NotifyOnConnected;
             notifierDelegate.OnDisconnected = NotifyOnDisconnected;
             notifierDelegate.OnConnectionError = NotifyOnConnectionError;
             notifierDelegate.OnLoginSuccessful = NotifyOnLoginSuccessfulFromNative;
             notifierDelegate.OnLoginFailed = NotifyOnLoginFailed;
 
-            notifierDelegate.OnContactStatusChanged = NotifyOnContactStatusChangedFromNative;
+            notifierDelegate.OnContactStateChanged = NotifyOnContactStateChangedFromNative;
             notifierDelegate.OnMessageReceived = NotifyOnMessageReceivedFromNative;
             notifierDelegate.OnContactsReceived = NotifyOnContactsReceivedFromNative;
 
             notifierDelegate.OnRemovedByContact = NotifyOnRemovedByContact;
 		    notifierDelegate.OnAddContactResponse = NotifyOnAddContactResponseFromNative;
-            notifierDelegate.OnAddingByContact = NotifyOnAddingByContact;
+            notifierDelegate.OnAddRequest = NotifyOnAddRequest;
 
             notifierDelegate.OnRegisterUpdateResponse = NotifyOnRegisterUpdateFromNative;
             return notifierDelegate;
@@ -101,12 +101,12 @@ namespace ChatClientWP.ChatClient.Notifier
             NotifyOnMessageReceived(m);
         }
 
-        private void NotifyOnContactStatusChangedFromNative(int contactId, byte state)
+        private void NotifyOnContactStateChangedFromNative(int contactId, byte state)
         {
             Contact contact = m_controller.GetContact(contactId);
             contact.State = (USER_STATE)state;
 
-            NotifyOnContactStatusChanged(contact);
+            NotifyOnContactStateChanged(contact);
         }
     }
 }

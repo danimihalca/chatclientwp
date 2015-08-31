@@ -9,7 +9,7 @@
   <ItemGroup>
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\WinRTChatClient.cpp" />
-    <ClCompile Include="src\WinRTChatClientListenerImpl.cpp" />
+    <ClCompile Include="src\WinRTChatClientListenerWrapper.cpp" />
     <ClCompile Include="src\WinRTChatClientListener.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -17,8 +17,8 @@
     <ClInclude Include="inc\WinRTContact.hpp" />
     <ClInclude Include="inc\WinRTChatClient.hpp" />
     <ClInclude Include="inc\WinRTChatClientNotifierDelegate.hpp" />
-    <ClInclude Include="inc\WinRTChatClientListenerImpl.hpp" />
-    <ClInclude Include="inc\WinRTChatClientListener.hpp" />
     <ClInclude Include="inc\WinRTUserDetails.hpp" />
+    <ClInclude Include="inc\WinRTChatClientListenerWrapper.hpp" />
+    <ClInclude Include="inc\WinRTChatClientListener.hpp" />
   </ItemGroup>
 </Project>

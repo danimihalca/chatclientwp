@@ -22,6 +22,14 @@ namespace ChatClientWP.Model
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        public string FullName
+        {
+            get
+            {
+                return FirstName +" "+ LastName;
+            }
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null)

@@ -11,10 +11,9 @@ namespace WinRTChat
 	{
 	}
 
-	void WinRTChatClient::connect(Platform::String^ address, int port)
+	void WinRTChatClient::setServer(Platform::String^ address, int port)
 	{
-		m_chatClient->connect(ToStdString(address), port);
-
+		m_chatClient->setServer(ToStdString(address), port);
 	}
 	void WinRTChatClient::login(Platform::String^ userName, Platform::String^ password, int state)
 	{
@@ -63,12 +62,12 @@ namespace WinRTChat
 	}
 
 
-	void WinRTChatClient::addListener(WinRTChatClientListener^ rtListener)
+	void WinRTChatClient::addListener(WinRTChatClientListenerWrapper^ rtListener)
 	{
 		m_chatClient->addListener(rtListener->getListenerImpl());
 	}
 
-	void WinRTChatClient::removeListener(WinRTChatClientListener^ rtListener)
+	void WinRTChatClient::removeListener(WinRTChatClientListenerWrapper^ rtListener)
 	{
 		m_chatClient->removeListener(rtListener->getListenerImpl());
 	}

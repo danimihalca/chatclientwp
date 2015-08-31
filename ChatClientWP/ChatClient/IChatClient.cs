@@ -12,7 +12,7 @@ namespace ChatClientWP.ChatClient
     {
         void AddListener(IChatClientNotifier notifier);
         void RemoveListener(IChatClientNotifier notifier);
-        void Connect(string address, int port);
+        void SetServer(string address, int port);
 
         void Login(string userName, String password, USER_STATE state);
 

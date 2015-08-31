@@ -5,12 +5,23 @@ using ChatClientWP.controller;
 using ChatClientWP.Model;
 using ChatClientWP.Utils;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.Graphics.Display;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
@@ -20,27 +31,32 @@ namespace ChatClientWP.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class LoginPage : Page, ILoginListener
+    public sealed partial class UpdateView : Page, IUpdateListener
     {
         private NavigationHelper navigationHelper;
+        private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private User updatedUser;
+        IChatClientController m_controller;
 
-        private IChatClientController m_controller;
-
-        private string m_userName;
-        private string m_password;
-
-        public LoginPage()
+        public UpdateView()
         {
             this.InitializeComponent();
 
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
+            updatedUser = new User();
 
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
             m_controller = (Application.Current as App).GetController();
-            m_controller.AddLoginListener(this);
+            m_controller.AddUpdateListener(this);
+
+            User user = m_controller.GetUser();
+            userNameInput.Text = user.UserName;
+            passwordInput.Password = user.Password;
+            firstNameInput.Text = user.FirstName;
+            lastfNameInput.Text = user.LastName;
+
         }
 
         /// <summary>
@@ -51,6 +67,14 @@ namespace ChatClientWP.View
             get { return this.navigationHelper; }
         }
 
+        /// <summary>
+        /// Gets the view model for this <see cref="Page"/>.
+        /// This can be changed to a strongly typed view model.
+        /// </summary>
+        public ObservableDictionary DefaultViewModel
+        {
+            get { return this.defaultViewModel; }
+        }
 
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
@@ -106,64 +130,15 @@ namespace ChatClientWP.View
 
         #endregion
 
-        private void loginButton_Click(object sender, RoutedEventArgs e)
+        private void updateButton_Click(object sender, RoutedEventArgs e)
         {
+            updatedUser.UserName = userNameInput.Text;
+            updatedUser.Password = passwordInput.Password;
+            updatedUser.FirstName = firstNameInput.Text;
+            updatedUser.LastName = lastfNameInput.Text;
 
-            m_controller.Connect("192.168.0.3", 9003);
-        }
-
-        public async void OnConnected()
-        {
-              await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                m_userName = userNameInput.Text;
-                m_password = passwordInput.Password;
-                m_controller.Login(m_userName, m_password, USER_STATE.ONLINE);
-            });
-        }
-
-        public async void OnDisconnected() 
-        {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                PopupDisplayer.DisplayPopup("Disconnected");
-            });
-        }
-
-        public async void OnLoginSuccessful(UserDetails userDetails)
-        {
-            User user = new User();
-            user.UserName = m_userName;
-            user.Password = m_password;
-            user.Details = userDetails;
-            m_controller.SetUser(user);
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                Frame.Navigate(typeof(ContactListPage));
-            });
-        }
-
-        public async void OnLoginFailed(AUTHENTICATION_STATUS reason)
-        {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                PopupDisplayer.DisplayPopup("Login failed: " + reason.ToString());
-            });
-        }
-
-
-        public async void OnConnectionError()
-        {
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
-            () =>
-            {
-                PopupDisplayer.DisplayPopup("Connection error");
-            });
+            m_controller.UpdateUser(updatedUser);
+            updateButton.IsEnabled = false;
         }
 
         private void input_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -172,6 +147,97 @@ namespace ChatClientWP.View
             {
                 Windows.UI.ViewManagement.InputPane.GetForCurrentView().TryHide();
             }
+        }
+
+        public void OnDisconnected()
+        {
+        }
+
+        public async void onRegisterUpdateResponse(ChatClient.Notifier.REGISTER_UPDATE_USER_STATUS status)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
+            () =>
+            {
+                updateButton.IsEnabled = true;
+                PopupDisplayer.DisplayPopup(EnumCodePrettifier.Prettify(status));
+                if (status == ChatClient.Notifier.REGISTER_UPDATE_USER_STATUS.USER_OK)
+                {
+                    m_controller.RemoveUpdateListener(this);
+                    m_controller.SetUser(updatedUser);
+                    Frame.GoBack();
+                }
+            });
+        }
+
+        public void OnContactsReceived()
+        {
+        }
+
+        public async void OnContactStateChanged(Contact contact)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                PopupDisplayer.DisplayPopup(contact.FirstName + " is now " + contact.State.ToString());
+            });
+        }
+
+        public async void OnMessageReceived(Message message)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                PopupDisplayer.DisplayPopup(message.Sender.FirstName + " send you a message");
+            });
+        }
+
+        public bool OnAddRequest(string userName)
+        {
+            //if (m_isVisible)
+            {
+                AddRequestPrompt addRequestPrompt = null;
+
+                IAsyncAction a = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    addRequestPrompt = new AddRequestPrompt(userName);
+                    addRequestPrompt.Show();
+                });
+                a.AsTask().Wait();
+                while (addRequestPrompt.IsOpen)
+                {
+                    Task.Delay(TimeSpan.FromMilliseconds(100));
+                }
+                return addRequestPrompt.Accepted;
+            }
+            //return false;
+        }
+
+        public void OnAddContactResponse(string userName, ChatClient.Notifier.ADD_REQUEST_STATUS status)
+        {
+            //if (m_isVisible)
+            {
+                if (status == ADD_REQUEST_STATUS.ADD_YOURSELF)
+                {
+                    PopupDisplayer.DisplayPopup(EnumCodePrettifier.Prettify(status));
+                }
+                else
+                {
+                    PopupDisplayer.DisplayPopup(userName + " " + EnumCodePrettifier.Prettify(status));
+                }
+            }
+        }
+
+        public async void OnRemovedByContact(Contact contact)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                //if (m_isVisible)
+                {
+                    PopupDisplayer.DisplayPopup(contact.UserName + " has removed you");
+                }
+            });
         }
     }
 }

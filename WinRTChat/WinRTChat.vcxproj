@@ -20,17 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\WinRTChatClient.cpp" />
+    <ClCompile Include="src\WinRTChatClientListenerWrapper.cpp" />
     <ClCompile Include="src\WinRTChatClientListener.cpp" />
-    <ClCompile Include="src\WinRTChatClientListenerImpl.cpp" />
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\WinRTChatClient.hpp" />
-    <ClInclude Include="inc\WinRTChatClientListenerImpl.hpp" />
+    <ClInclude Include="inc\WinRTChatClientListener.hpp" />
     <ClInclude Include="inc\WinRTChatClientNotifierDelegate.hpp" />
     <ClInclude Include="inc\WinRTContact.hpp" />
     <ClInclude Include="inc\utils.h" />
-    <ClInclude Include="inc\WinRTChatClientListener.hpp" />
+    <ClInclude Include="inc\WinRTChatClientListenerWrapper.hpp" />
     <ClInclude Include="inc\WinRTUserDetails.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

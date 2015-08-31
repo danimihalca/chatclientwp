@@ -27,9 +27,9 @@ namespace ChatClientWP.ChatClient
             m_nativeChatClient.removeListener((notifier as WinRTChatClientNotifier).GetListener());
         }
 
-        public void Connect(string address, int port)
+        public void SetServer(string address, int port)
         {
-            m_nativeChatClient.connect(address, port);
+            m_nativeChatClient.setServer(address, port);
         }
 
         public void Login(string userName, string password, USER_STATE state)

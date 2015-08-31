@@ -15,7 +15,7 @@ namespace ChatClientWP.controller
 
         void RequestContacts();
 
-        void Connect(string address, int port);
+        void SetServer(string address, int port);
         void Login(string userName, String password, USER_STATE state);
 
         void Disconnect();
@@ -61,7 +61,7 @@ namespace ChatClientWP.controller
 
         bool IsConnected();
 
-        USER_STATE getState();
+        USER_STATE GetState();
         void ChangeState(USER_STATE state);
 
         void RegisterUser(User user);

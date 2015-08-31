@@ -1,24 +1,34 @@
 #pragma once
 
-#include "WinRTChatClientListenerImpl.hpp"
+#include <ChatClient\IChatClientListener.hpp>
+
 #include "WinRTChatClientNotifierDelegate.hpp"
 
 namespace WinRTChat
 {
 
-	public ref class WinRTChatClientListener sealed
+	class WinRTChatClientListener :public IChatClientListener
 	{
 	public:
 		WinRTChatClientListener(WinRTChatClientNotifierDelegate^ notifier);
-
-	internal:
-		IChatClientListener* getListenerImpl();
-
-	private:
 		~WinRTChatClientListener();
 
+		void onDisconnected();
+		void onMessageReceived(const Message& message);
+		void onLoginFailed(AUTH_STATUS status);
+		void onConnectionError();
+		void onLoginSuccessful(const UserDetails& userDetails);
+		void onContactsReceived(const std::vector<Contact>& contacts);
+		void onContactStateChanged(int contactId, USER_STATE state);
+
+		void onRemovedByContact(int contactId);
+		void onAddContactResponse(const std::string& userName, ADD_STATUS status);
+		bool onAddRequest(const std::string& userName);
+
+		void onRegisterUpdateResponse(REGISTER_UPDATE_USER_STATUS status);
+
 	private:
-		IChatClientListener* p_listenerImpl;
+		WinRTChatClientNotifierDelegate^ m_notifier;
 	};
 }
 

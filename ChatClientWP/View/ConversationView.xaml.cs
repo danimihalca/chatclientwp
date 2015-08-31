@@ -4,16 +4,14 @@ using ChatClientWP.Common;
 using ChatClientWP.controller;
 using ChatClientWP.Model;
 using ChatClientWP.Utils;
-using Coding4Fun.Toolkit.Controls;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
@@ -23,19 +21,16 @@ namespace ChatClientWP.View
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ContactListPage : Page, IRuntimeListener
+    public sealed partial class ConversationView : Page, IRuntimeListener
     {
         private NavigationHelper navigationHelper;
-
+       
         private IChatClientController m_controller;
-        ObservablePropertyCollection<Contact> m_contactCollection;
-
+        private Contact m_contact;
+        ObservablePropertyCollection<Message> m_messageCollection;
         private bool m_isVisible;
 
-        private RelayCommand GoBackCommand;
-        private bool goBackPressed;
-
-        public ContactListPage()
+        public ConversationView()
         {
             this.InitializeComponent();
 
@@ -43,33 +38,11 @@ namespace ChatClientWP.View
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
 
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
-
-            GoBackCommand = new RelayCommand(GoBackAction);
-            goBackPressed = false;
-            this.navigationHelper.GoBackCommand = GoBackCommand;
-
             m_controller = (Application.Current as App).GetController();
             m_controller.AddRuntimeListener(this);
-            m_controller.RequestContacts();
-
             m_isVisible = true;
         }
 
-        private void GoBackAction()
-        {
-            if (!goBackPressed)
-            {
-                goBackPressed = true;
-                PopupDisplayer.DisplayPopup("Press again to log out");
-            }
-            else
-            {
-                m_controller.RemoveRuntimeListener(this);
-                m_controller.Disconnect();
-                navigationHelper.GoBack();
-            }
-        }
 
         /// <summary>
         /// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
@@ -92,6 +65,11 @@ namespace ChatClientWP.View
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            m_contact = e.NavigationParameter as Contact;
+            m_contact.UnreadMesssagesCount = 0;
+
+            m_messageCollection = new ObservablePropertyCollection<Message>(m_controller.getMessages(m_contact));
+            MessageListView.ItemsSource = m_messageCollection;
         }
 
         /// <summary>
@@ -123,96 +101,95 @@ namespace ChatClientWP.View
         /// handlers that cannot cancel the navigation request.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Debug.WriteLine("CL:NAVIGATEDFROM");
             m_isVisible = true;
             this.navigationHelper.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            Debug.WriteLine("CL:NAVIGATEDTO");
             m_isVisible = false;
+            m_controller.RemoveRuntimeListener(this);
             this.navigationHelper.OnNavigatedFrom(e);
         }
 
         #endregion
 
-
         public void OnDisconnected()
         {
-            m_controller.RemoveRuntimeListener(this);
-            IAsyncAction action = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            IAsyncAction action = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
             () =>
             {
+                m_controller.RemoveRuntimeListener(this);
                 navigationHelper.GoBack();
             });
             action.AsTask().Wait();
         }
 
-
-        public async void OnContactsReceived()
+        public async void OnContactStateChanged(Contact c)
         {
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                IList<Contact> contacts = m_controller.GetContacts();
-                m_contactCollection = new ObservablePropertyCollection<Contact>(contacts);
-                ContactListView.ItemsSource = m_contactCollection;
+                PopupDisplayer.DisplayPopup(c.FirstName + " is now " + c.State.ToString());
             });
         }
 
-        private void ContactListView_ItemClick(object sender, ItemClickEventArgs e)
+
+        public async void OnMessageReceived(Message m)
         {
-            //Frame.Navigate(typeof(ConversationPage),e.ClickedItem as Contact);
-        }
-
-
-        public void OnMessageReceived(Message m)
-        {
-        }
-
-
-        public void OnContactStatusChanged(Contact contact)
-        {
-        }
-
-        private void ContactListView_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
-        {
-            if (e.HoldingState == Windows.UI.Input.HoldingState.Started)
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
             {
-                Debug.WriteLine("HOLDING:" + ((sender as ListViewItem).DataContext as Contact).FirstName);
-                MenuFlyout mf = (Application.Current.Resources["FlyoutBase1"] as MenuFlyout);
-                MenuFlyoutItem removeContactItem = mf.Items[0] as MenuFlyoutItem;
-                removeContactItem.Click += RemoveContactFlyoutItem_Click;
-                mf.ShowAt((FrameworkElement)sender);
+                if(m.Sender.Equals(m_contact))
+                {
+                    m_contact.UnreadMesssagesCount = 0;
+                    m_messageCollection.Add(m);
+                }
+                else
+                {
+                    PopupDisplayer.DisplayPopup(m.Sender.FirstName + " send you a message");
+                }
+            });
+        }
 
+        private void sendButton_Click(object sender, RoutedEventArgs e)
+        {
+            SendMessage();
+        }
+
+        private void messageInput_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                Windows.UI.ViewManagement.InputPane.GetForCurrentView().TryHide();
             }
         }
 
-
-        private void RemoveContactFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private void SendMessage()
         {
-            Debug.WriteLine(((e.OriginalSource as MenuFlyoutItem).DataContext as Contact).FirstName);
-            Contact contact = (e.OriginalSource as MenuFlyoutItem).DataContext as Contact;
-            m_controller.RemoveContact(contact, true);
-            m_contactCollection.Remove(contact);
-            (e.OriginalSource as MenuFlyoutItem).Click -= RemoveContactFlyoutItem_Click;
+            Message message = new Message();
+            message.Sender = m_controller.GetUser();
+            message.MessageText = messageInput.Text;
+            message.Receiver = m_contact;
+
+            messageInput.Text = "";
+            m_controller.SendMessage(message);
+
+            m_messageCollection.Add(message);
         }
 
-        private void ListViewItem_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        public void OnContactsReceived()
         {
-            Frame.Navigate(typeof(ConversationPage), (sender as ListViewItem).DataContext as Contact);
-
         }
 
 
-        public bool OnAddingByContact(string userName)
+        public bool OnAddRequest(string userName)
         {
             if (m_isVisible)
             {
 
                 AddRequestPrompt addRequestPrompt = null;
-               
+
                 IAsyncAction a = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
@@ -229,15 +206,6 @@ namespace ChatClientWP.View
             return false;
         }
 
-
-        private void AddContact_Completed(object sender, PopUpEventArgs<string, PopUpResult> e)
-        {
-            if (e.PopUpResult == PopUpResult.Ok)
-            {
-                m_controller.AddContact(e.Result);
-            }
-        }
-
         public async void OnAddContactResponse(string userName, ADD_REQUEST_STATUS status)
         {
             if (m_isVisible)
@@ -245,36 +213,33 @@ namespace ChatClientWP.View
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
                 () =>
                 {
-                    PopupDisplayer.DisplayPopup(userName + " has " + status.ToString());
+                    if (status == ADD_REQUEST_STATUS.ADD_YOURSELF)
+                    {
+                        PopupDisplayer.DisplayPopup(EnumCodePrettifier.Prettify(status));
 
+                    }
+                    else
+                    {
+                        PopupDisplayer.DisplayPopup(userName+" "+EnumCodePrettifier.Prettify(status));
+                    }
                 });
             }
         }
 
         public async void OnRemovedByContact(Contact contact)
         {
-
-            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
+            if (m_isVisible)
             {
-                if (m_isVisible)
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
                 {
-                   PopupDisplayer.DisplayPopup(contact.UserName + " has removed you from contacts");
-                }
-                m_contactCollection.Remove(contact);
-            });
-            m_controller.RemoveContact(contact, false);
-            m_contactCollection.Remove(contact);
-        }
-
-        private void AddContactButton_Click(object sender, RoutedEventArgs e)
-        {
-            InputPrompt input = new InputPrompt();
-            input.Completed += new EventHandler<PopUpEventArgs<string, PopUpResult>>(AddContact_Completed);
-            input.Title = "Add contact";
-            input.Message = "Please enter the username";
-            input.IsCancelVisible = true;
-            input.Show();
+                    PopupDisplayer.DisplayPopup(contact.UserName + " has removed you from contacts");
+                    if (contact.Id == m_contact.Id)
+                    {
+                        navigationHelper.GoBack();
+                    }
+                });
+            }
         }
     }
 }

@@ -31,6 +31,8 @@ namespace ChatClientWP
         private TransitionCollection transitions;
 
         private IChatClientController m_controller;
+        public String ServerAddress;
+        public int ServerPort;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -38,10 +40,14 @@ namespace ChatClientWP
         /// </summary>
         public App()
         {
+
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
 
             m_controller = new ChatClientController();
+            ServerAddress = "192.168.0.3";
+            ServerPort = 9003;
+            m_controller.SetServer(ServerAddress, ServerPort);
         }
 
         public IChatClientController GetController()
@@ -103,7 +109,7 @@ namespace ChatClientWP
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(LoginPage), e.Arguments))
+                if (!rootFrame.Navigate(typeof(LoginView), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }

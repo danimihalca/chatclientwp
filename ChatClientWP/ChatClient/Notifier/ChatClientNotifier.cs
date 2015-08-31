@@ -31,7 +31,7 @@ namespace ChatClientWP.ChatClient.Notifier
     {
         USER_OK,
         USER_EXISTING_USERNAME ,
-        USER_INVALID_INPUT 
+        USER_INVALID_INPUT
     };
 
     public class ChatClientNotifier:IChatClientNotifier
@@ -62,15 +62,15 @@ namespace ChatClientWP.ChatClient.Notifier
         }
 
 
-        public void NotifyOnConnected()
-        {
-            List<IConnectListener> reverseList = m_connectListeners.ToList<IConnectListener>();
-            reverseList.Reverse();
-            foreach (IConnectListener listener in reverseList)
-            {
-                listener.OnConnected();
-            }
-        }
+        //public void NotifyOnConnected()
+        //{
+        //    List<IConnectListener> reverseList = m_connectListeners.ToList<IConnectListener>();
+        //    reverseList.Reverse();
+        //    foreach (IConnectListener listener in reverseList)
+        //    {
+        //        listener.OnConnected();
+        //    }
+        //}
 
         public void NotifyOnDisconnected()
         {
@@ -141,13 +141,13 @@ namespace ChatClientWP.ChatClient.Notifier
             }
         }
 
-        public void NotifyOnContactStatusChanged(Contact contact)
+        public void NotifyOnContactStateChanged(Contact contact)
         {
             List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
             reverseList.Reverse();
             foreach (IRuntimeListener listener in reverseList)
             {
-                listener.OnContactStatusChanged(contact);
+                listener.OnContactStateChanged(contact);
             }
         }
 
@@ -165,13 +165,13 @@ namespace ChatClientWP.ChatClient.Notifier
             }
         }
 
-        public bool NotifyOnAddingByContact(string userName)
+        public bool NotifyOnAddRequest(string userName)
         {
             List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
             reverseList.Reverse();
             foreach (IRuntimeListener listener in reverseList)
             {
-                if (listener.OnAddingByContact(userName))
+                if (listener.OnAddRequest(userName))
                 {
                     return true;
                 }
@@ -192,6 +192,7 @@ namespace ChatClientWP.ChatClient.Notifier
         public void NotifyOnRemovedByContact(int contactId)
         {
             Contact contact = m_controller.GetContact(contactId);
+            m_controller.RemoveContact(contact, false);
             List<IRuntimeListener> reverseList = m_runtimeListeners.ToList<IRuntimeListener>();
             reverseList.Reverse();
             foreach (IRuntimeListener listener in reverseList)

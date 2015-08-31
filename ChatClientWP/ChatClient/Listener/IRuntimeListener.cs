@@ -12,11 +12,11 @@ namespace ChatClientWP.ChatClient.Listener
     {
         void OnContactsReceived();
 
-        void OnContactStatusChanged(Contact contact);
+        void OnContactStateChanged(Contact contact);
 
         void OnMessageReceived(Message message);
 
-        bool OnAddingByContact(string userName);
+        bool OnAddRequest(string userName);
 
         void OnAddContactResponse(string userName, ADD_REQUEST_STATUS status);
 
