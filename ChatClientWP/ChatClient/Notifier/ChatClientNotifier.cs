@@ -61,17 +61,6 @@ namespace ChatClientWP.ChatClient.Notifier
             m_runtimeListeners.Remove(listener);
         }
 
-
-        //public void NotifyOnConnected()
-        //{
-        //    List<IConnectListener> reverseList = m_connectListeners.ToList<IConnectListener>();
-        //    reverseList.Reverse();
-        //    foreach (IConnectListener listener in reverseList)
-        //    {
-        //        listener.OnConnected();
-        //    }
-        //}
-
         public void NotifyOnDisconnected()
         {
             m_controller.SetConnected(false);

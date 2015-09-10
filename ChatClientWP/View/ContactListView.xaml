@@ -80,7 +80,7 @@
                                 <TextBlock Grid.Row="0" Grid.Column="0" x:Name="FullNameText" Text="{Binding FullName}" FontSize="20"/>
                                 <Image x:Name="onlineStatusImage" Width="30" Height="30" Grid.Row="0" Grid.Column="1" xmlns:ic="using:Microsoft.Xaml.Interactions.Core" xmlns:i="using:Microsoft.Xaml.Interactivity" HorizontalAlignment="Right" >
                                     <i:Interaction.Behaviors>
-                                        <ic:DataTriggerBehavior Binding="{Binding State, Mode=OneWay, Converter={StaticResource ContactStateConverter}}" Value="OFFLINE" ComparisonCondition="Equal">
+                                        <ic:DataTriggerBehavior Binding="{Binding State, Mode=OneWay, Converter={StaticResource ContactStateConverter}}" Value="BUSY" ComparisonCondition="Equal">
                                             <ic:ChangePropertyAction PropertyName="Source" Value="ms-appx:///Assets/offline.png"/>
                                         </ic:DataTriggerBehavior>
                                         <ic:DataTriggerBehavior Binding="{Binding State, Mode=OneWay, Converter={StaticResource ContactStateConverter}}" Value="ONLINE" ComparisonCondition="Equal">
@@ -88,6 +88,9 @@
                                         </ic:DataTriggerBehavior>
                                         <ic:DataTriggerBehavior Binding="{Binding State, Mode=OneWay, Converter={StaticResource ContactStateConverter}}" Value="IDLE" ComparisonCondition="Equal">
                                             <ic:ChangePropertyAction PropertyName="Source" Value="ms-appx:///Assets/idle.png"/>
+                                        </ic:DataTriggerBehavior>
+                                        <ic:DataTriggerBehavior Binding="{Binding State, Mode=OneWay, Converter={StaticResource ContactStateConverter}}" Value="OFFLINE" ComparisonCondition="Equal">
+                                            <ic:ChangePropertyAction PropertyName="Source" Value=""/>
                                         </ic:DataTriggerBehavior>
                                     </i:Interaction.Behaviors>
                                 </Image>

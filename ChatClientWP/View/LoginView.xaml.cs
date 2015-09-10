@@ -130,17 +130,7 @@ namespace ChatClientWP.View
             m_password = passwordInput.Password;
             loginButton.IsEnabled = false;
             m_state = ((bool) invisibleBox.IsChecked)? USER_STATE.INVISIBLE : USER_STATE.ONLINE;
-            //if (!m_controller.IsConnected())
-            //{
-            //m_controller.SetServer((App.Current as App).ServerAddress, (App.Current as App).ServerPort);
-            //    m_performLogin = true;
-
-            //}
-            //else
-            //{
-                m_controller.Login(m_userName,m_password,m_state);
-            //    m_performLogin = false;
-            //}
+            m_controller.Login(m_userName,m_password,m_state);
         }
 
         public async void OnDisconnected() 

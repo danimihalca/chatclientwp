@@ -193,38 +193,31 @@ namespace ChatClientWP.View
 
         public bool OnAddRequest(string userName)
         {
-            //if (m_isVisible)
-            {
-                AddRequestPrompt addRequestPrompt = null;
+            AddRequestPrompt addRequestPrompt = null;
 
-                IAsyncAction a = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                () =>
-                {
-                    addRequestPrompt = new AddRequestPrompt(userName);
-                    addRequestPrompt.Show();
-                });
-                a.AsTask().Wait();
-                while (addRequestPrompt.IsOpen)
-                {
-                    Task.Delay(TimeSpan.FromMilliseconds(100));
-                }
-                return addRequestPrompt.Accepted;
+            IAsyncAction a = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                addRequestPrompt = new AddRequestPrompt(userName);
+                addRequestPrompt.Show();
+            });
+            a.AsTask().Wait();
+            while (addRequestPrompt.IsOpen)
+            {
+                Task.Delay(TimeSpan.FromMilliseconds(100));
             }
-            //return false;
+            return addRequestPrompt.Accepted;
         }
 
         public void OnAddContactResponse(string userName, ChatClient.Notifier.ADD_REQUEST_STATUS status)
         {
-            //if (m_isVisible)
+            if (status == ADD_REQUEST_STATUS.ADD_YOURSELF)
             {
-                if (status == ADD_REQUEST_STATUS.ADD_YOURSELF)
-                {
-                    PopupDisplayer.DisplayPopup(EnumCodePrettifier.Prettify(status));
-                }
-                else
-                {
-                    PopupDisplayer.DisplayPopup(userName + " " + EnumCodePrettifier.Prettify(status));
-                }
+                PopupDisplayer.DisplayPopup(EnumCodePrettifier.Prettify(status));
+            }
+            else
+            {
+                PopupDisplayer.DisplayPopup(userName + " " + EnumCodePrettifier.Prettify(status));
             }
         }
 
@@ -233,10 +226,7 @@ namespace ChatClientWP.View
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
             () =>
             {
-                //if (m_isVisible)
-                {
                     PopupDisplayer.DisplayPopup(contact.UserName + " has removed you");
-                }
             });
         }
     }

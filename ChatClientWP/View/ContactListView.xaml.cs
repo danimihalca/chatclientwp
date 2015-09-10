@@ -169,7 +169,6 @@ namespace ChatClientWP.View
 
         private void ContactsView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            //Frame.Navigate(typeof(ConversationPage),e.ClickedItem as Contact);
         }
 
 
@@ -208,7 +207,6 @@ namespace ChatClientWP.View
         private void ListViewItem_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             Frame.Navigate(typeof(ConversationView), (sender as ListViewItem).DataContext as Contact);
-
         }
 
 
@@ -216,7 +214,6 @@ namespace ChatClientWP.View
         {
             if (m_isVisible)
             {
-
                 AddRequestPrompt addRequestPrompt = null;
                
                 IAsyncAction a = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
@@ -288,71 +285,6 @@ namespace ChatClientWP.View
             input.Show();
         }
 
-        //private void ChangeStateButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    MenuFlyout f = new MenuFlyout();
-        //    StackPanel s= new StackPanel();
-        //    TextBlock text = new TextBlock();
-        //    text.FontSize = 30;
-        //    text.Text = "State";
-        //    s.Children.Add(text);
-
-        //    USER_STATE state = m_controller.GetState();
-
-        //    ToggleMenuFlyoutItem r = new ToggleMenuFlyoutItem ();
-        //    RadioButton rb = new RadioButton();
-        //    //rb.con
-
-        //    r.Text = "ONLINE";
-        //    r.IsChecked = true;
-        //    //r.c
-        //    //if (state == USER_STATE.ONLINE)
-        //    //{
-        //    //    r.IsChecked = true;
-        //    //}
-
-        //    ToggleMenuFlyoutItem r1 = new ToggleMenuFlyoutItem();
-        //    r1.Text = "IDLE";
-        //    //if (state == USER_STATE.IDLE)
-        //    //{
-        //    //    r1.IsChecked = true;
-        //    //}
-
-        //    ToggleMenuFlyoutItem r2 = new ToggleMenuFlyoutItem();
-        //    r2.Text = "BUSY";
-        //    //if (state == USER_STATE.BUSY)
-        //    //{
-        //    //    r2.IsChecked = true;
-        //    //}
-
-        //    ToggleMenuFlyoutItem r3 = new ToggleMenuFlyoutItem();
-        //    r3.Text = "INVISIBLE";
-        //    //if (state == USER_STATE.INVISIBLE)
-        //    //{
-        //    //    r3.IsChecked = true;
-        //    //}
-            
-        //    //s.Children.Add(r);
-        //    //s.Children.Add(r1);
-        //    //s.Children.Add(r2);
-        //    //s.Children.Add(r3);
-        //    //r.;
-        //    //r1.Checked += r_Checked;
-        //    //r2.Checked += r_Checked;
-        //    //r3.Checked += r_Checked;
-        //    f.Items.Add(new MenuFlyoutSeparator());
-        //    f.Items.Add(r);
-        //    f.Items.Add(r1);
-        //    f.Items.Add(r2);
-        //    f.Items.Add(r3);
-        //f.ShowAt(ContactListView);
-        //    //r.Checked += f.Hide();
-
-
-        //MenuFlyout f1 = (Application.Current.Resources["FlyoutBase2"]) as MenuFlyout;
-        //f1.ShowAt(ContactListView);
-        //}
-
         private void r_Checked(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine((e.OriginalSource as RadioButton).Content);
@@ -381,7 +313,6 @@ namespace ChatClientWP.View
                         }
             }
             m_controller.ChangeState(newState);
-            //sender.ToString
         }
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
@@ -421,7 +352,6 @@ namespace ChatClientWP.View
             MenuFlyoutItem item = e.OriginalSource as MenuFlyoutItem;
             MenuFlyout menu = ChangeStateButton.Flyout as MenuFlyout;
             int index = menu.Items.IndexOf(item);
-            //USER_STATE state = USER_STATE.OFFLINE;
             switch (index)
             {
                 case 0:

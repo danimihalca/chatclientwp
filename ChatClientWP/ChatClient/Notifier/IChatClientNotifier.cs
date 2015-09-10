@@ -13,7 +13,6 @@ namespace ChatClientWP.ChatClient.Notifier
         void AddRuntimeListener(IRuntimeListener listener);
         void RemoveRuntimeListener(IRuntimeListener listener);
 
-        //void NotifyOnConnected();
         void NotifyOnDisconnected();
         void NotifyOnConnectionError();
         void NotifyOnLoginSuccessful(UserDetails userDetails);

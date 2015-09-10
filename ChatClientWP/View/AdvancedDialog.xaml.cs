@@ -35,6 +35,7 @@ namespace ChatClientWP.View
             {
                 app.ServerPort = Int32.Parse(port.Text);
                 app.ServerAddress = address.Text;
+                app.GetController().SetServer(app.ServerAddress, app.ServerPort);
             }
             catch (System.FormatException)
             {

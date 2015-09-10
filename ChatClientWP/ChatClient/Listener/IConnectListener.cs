@@ -8,7 +8,6 @@ namespace ChatClientWP.ChatClient.Listener
 {
     public interface IConnectListener: IBaseListener
     {
-        //void OnConnected();
         void OnConnectionError();
     }
 

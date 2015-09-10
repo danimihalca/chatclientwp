@@ -4,7 +4,6 @@
 
 namespace WinRTChat
 {
-	//public delegate void onConnectedCallback();
 	public delegate void onDisconnectedCallback();
 	public delegate void onMessageReceivedCallback(int senderId, Platform::String^ message);
 	public delegate void onLoginFailedCallback(unsigned char  reason);
@@ -26,7 +25,6 @@ namespace WinRTChat
 		{
 		}
 
-		//property onConnectedCallback^ OnConnected;
 		property onDisconnectedCallback^ OnDisconnected;
 		property onMessageReceivedCallback^ OnMessageReceived;
 		property onLoginFailedCallback^ OnLoginFailed;

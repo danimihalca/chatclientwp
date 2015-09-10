@@ -17,7 +17,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="ChatClientWP.App">
       <m3:VisualElements DisplayName="NChat" Square150x150Logo="Assets\Untitled150.png" Square44x44Logo="Assets\Untitled44.png" Description="ChatClientWP" ForegroundText="light" BackgroundColor="transparent" ToastCapable="true">
-        <m3:DefaultTile Wide310x150Logo="Assets\WideLogo.png" Square71x71Logo="Assets\Untitled71.png">
+        <m3:DefaultTile Square71x71Logo="Assets\Untitled71.png">
         </m3:DefaultTile>
       </m3:VisualElements>
     </Application>

@@ -3,6 +3,7 @@
 #include "WinRTUserDetails.hpp"
 
 #include "utils.h"
+#include <debug_utils/log_debug.hpp>
 
 namespace WinRTChat
 {
@@ -10,14 +11,17 @@ namespace WinRTChat
 	WinRTChatClientListener::WinRTChatClientListener(WinRTChatClientNotifierDelegate^ notifier) :
 		m_notifier(notifier)
 	{
+		LOG_DEBUG_METHOD;
 	}
 
 	WinRTChatClientListener::~WinRTChatClientListener()
 	{
+		LOG_DEBUG_METHOD;
 	}
 
 	void WinRTChatClientListener::onDisconnected()
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnDisconnected != nullptr)
 		{
 			m_notifier->OnDisconnected();
@@ -27,6 +31,7 @@ namespace WinRTChat
 
 	void WinRTChatClientListener::onMessageReceived(const Message& messagee)
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnMessageReceived != nullptr)
 		{
 			m_notifier->OnMessageReceived(messagee.getSenderId(), ToPlatformString(messagee.getMessageText()));
@@ -35,6 +40,7 @@ namespace WinRTChat
 
 	void WinRTChatClientListener::onLoginFailed(AUTH_STATUS status)
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnLoginFailed != nullptr)
 		{
 			m_notifier->OnLoginFailed(status);
@@ -43,6 +49,7 @@ namespace WinRTChat
 
 	void WinRTChatClientListener::onConnectionError()
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnConnectionError != nullptr)
 		{
 			m_notifier->OnConnectionError();
@@ -51,6 +58,7 @@ namespace WinRTChat
 
 	void WinRTChatClientListener::onLoginSuccessful(const UserDetails& userDetails)
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnLoginSuccessful != nullptr)
 		{
 			WinRTUserDetails^ details = ref new WinRTUserDetails();
@@ -63,9 +71,9 @@ namespace WinRTChat
 
 	void WinRTChatClientListener::onContactsReceived(const std::vector<Contact>& contacts)
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnContactsReceived != nullptr)
 		{
-			//TODO: wrap native contacts to referenced ones
 			Platform::Array<WinRTContact^>^ contactArray = ref new Platform::Array<WinRTContact^>(contacts.size());
 			int count = 0;
 			for (Contact c : contacts)
@@ -83,6 +91,7 @@ namespace WinRTChat
 
 	void WinRTChatClientListener::onContactStateChanged(int contactId, USER_STATE state)
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnContactStateChanged != nullptr)
 		{
 			m_notifier->OnContactStateChanged(contactId, static_cast<char>(state));
@@ -92,6 +101,7 @@ namespace WinRTChat
 
 	void WinRTChatClientListener::onRemovedByContact(int contactId)
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnRemovedByContact != nullptr)
 		{
 			m_notifier->OnRemovedByContact(contactId);
@@ -100,6 +110,7 @@ namespace WinRTChat
 
 	void WinRTChatClientListener::onAddContactResponse(const std::string& userName, ADD_STATUS status)
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnRemovedByContact != nullptr)
 		{
 			m_notifier->OnAddContactResponse(ToPlatformString(userName), status);
@@ -108,6 +119,7 @@ namespace WinRTChat
 
 	bool WinRTChatClientListener::onAddRequest(const std::string& userName)
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnAddRequest != nullptr)
 		{
 			return m_notifier->OnAddRequest(ToPlatformString(userName));
@@ -117,6 +129,7 @@ namespace WinRTChat
 
 	void WinRTChatClientListener::onRegisterUpdateResponse(REGISTER_UPDATE_USER_STATUS status)
 	{
+		LOG_DEBUG_METHOD;
 		if (m_notifier != nullptr && m_notifier->OnRegisterUpdateResponse != nullptr)
 		{
 			m_notifier->OnRegisterUpdateResponse(status);
